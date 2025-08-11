@@ -18,7 +18,7 @@ Inclui exemplos práticos, código em Python e comparações de desempenho.
 ### 📂 Estrutura do Artigo
 - **[ARTICLE.md](article/ARTICLE.md)** - Conteúdo completo do artigo.
 - **`assets/`** - Imagens, diagramas, ilustrações e outros.
-- - **`data/`** - PDFs, datasets, artigos de referência e outros.
+- **`data/`** - PDFs, datasets, artigos de referência e outros.
 - **`notebooks/`** - Jupyter Notebooks com código interativo.
 - **`src/`** - Scripts e funções Python usados nos exemplos.
 
