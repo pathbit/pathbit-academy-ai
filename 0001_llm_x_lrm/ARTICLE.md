@@ -58,7 +58,7 @@ Imagine que você está construindo um sistema de suporte para um banco:
 
 ### 1. Defina o problema antes da tecnologia
 
-> Eu sempre falo isso, mas tem gente que ouve “IA” e já corre para gastar dinheiro antes de saber para quê. É o famoso “vamos comprar o foguete e depois ver pra onde vamos”. Ai ai estes "C-Levels de mer...".
+> Eu sempre falo isso, mas tem gente que ouve “IA” e já corre para gastar dinheiro antes de saber para quê. É o famoso "vamos comprar o foguete e depois ver pra onde vamos". `Ai ai ai né C-Level!`.
 
 - Se precisa de resposta rápida, sem aprofundar em mil variáveis, vá de LLM.
 - Se precisa de raciocínio consistente, com lógica estruturada e justificativa, vá de LRM.
