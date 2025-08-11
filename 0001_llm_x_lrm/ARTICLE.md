@@ -54,9 +54,9 @@ Imagine que você está construindo um sistema de suporte para um banco:
 - **Com LLM:** o cliente pergunta "Qual é a taxa atual do CDI?" => o modelo responde rápido, com contexto atualizado.
 - **Com LRM:** o cliente pergunta "Vale a pena migrar minha carteira de investimentos para um produto atrelado ao CDI considerando meu perfil conservador, inflação projetada e vencimentos futuros?" => aqui o LRM vai brilhar, estruturar a análise, ponderar riscos e explicar todo o raciocínio na sua conclusão.
 
-### Qual eu devo escolher, ambos foram bem legais ...
+## Qual eu devo escolher, ambas foram sensacionais (`ou bizarras`, piada interna)
 
-#### 1. Defina o problema antes da tecnologia
+### 1. Defina o problema antes da tecnologia
 
 > Eu sempre falo isso, mas tem gente que ouve “IA” e já corre para gastar dinheiro antes de saber para quê. É o famoso “vamos comprar o foguete e depois ver pra onde vamos”. Ai ai estes "C-Levels de mer...".
 
@@ -64,7 +64,7 @@ Imagine que você está construindo um sistema de suporte para um banco:
 - Se precisa de raciocínio consistente, com lógica estruturada e justificativa, vá de LRM.
 - E não tente usar um para fazer o trabalho do outro: vai sair caro e ruim.
 
- #### 2. Teste no seu contexto
+ ### 2. Teste no seu contexto
 
 > Benchmark de slide é igual foto de comida em propaganda, bonito na foto e quando chega vem aquela porcaria hehehe.
 
@@ -72,7 +72,7 @@ Imagine que você está construindo um sistema de suporte para um banco:
 - Coloque o modelo para trabalhar nos dados, nas perguntas e nas condições do seu negócio.
 - Só assim você vai ver se ele acerta ou se está vendendo fumaça com cara de “inteligência artificial”.
 
-#### 3. Não seja refém de hype
+### 3. Não seja refém de hype
 
 > Ou, em tradução livre (`para quem ainda não entendeu...`): pare de colocar no pitch que você usa "IA" só para parecer inovador, use de verdade e surpreenda seu público.
 
