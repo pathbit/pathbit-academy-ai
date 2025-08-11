@@ -80,29 +80,29 @@ Imagine que você está construindo um sistema de suporte para um banco:
 - "Tecnologia de ponta" não salva projeto mal pensado.
 - Se você precisa de um adesivo para convencer, talvez a solução não seja tão boa quanto você imagina.
 
-## Conclusão
+## Próximos passos
 
-O mercado adora transformar qualquer avanço tecnológico em modinha. Foi assim com Big Data, foi assim com Blockchain, e agora é assim com LLM e LRM. A consequência é sempre a mesma: uma enxurrada de projetos que nascem para “mostrar que estamos usando” e morrem quando alguém pergunta “mas resolve o quê?”.
+O mercado adora transformar qualquer avanço tecnológico em modinha. Foi assim com `Big Data`, foi assim com `Blockchain (Eterna promessa?)`, e agora é assim com **LLM e LRM**. _A consequência é sempre a mesma: uma enxurrada de projetos que nascem para "mostrar que estamos usando" e morrem quando alguém pergunta "mas resolve o quê?"_.
 
 LLM e LRM não são rivais. São ferramentas diferentes para problemas diferentes. O erro não está em escolher um ou outro, mas em não entender o que você realmente precisa resolver.
 
 Se você não consegue descrever seu problema de forma clara e mensurável, nenhum modelo vai salvar seu projeto. IA não substitui pensamento crítico ... na verdade, ela pune a falta dele.
 
-Então, antes de se apaixonar pela sigla mais quente do momento, faça o básico (o que, curiosamente, muita gente ainda não faz):
+#### Então, antes de se apaixonar pela sigla mais quente do momento, faça o básico (o que, curiosamente, muita gente ainda não faz):
 
 1. **Comece pelo objetivo:** Defina exatamente o que precisa: resposta rápida? Análise profunda? Decisão estratégica?
 2. **Mapeie seus dados:** Sem insumo de qualidade, qualquer modelo vira papagaio eloquente.
-3. **Escolha pela necessidade, não pelo hype:** Um LLM pode ser mais do que suficiente. Um LRM pode ser overkill (`definição hehehe: exagero desnecessário ou uso excessivo de recursos para algo simples. Bot de atendimento, pelo amor de Deus, fale com o time da Pathbit, barato e com qualidade.`).
+3. **Escolha pela necessidade, não pelo hype:** Um LLM pode ser mais do que suficiente. Um LRM pode ser overkill (`definição hehehe: exagero desnecessário ou uso excessivo de recursos para algo simples`). _Para ChatBots de atendimento, agendamento e etc, pelo amor de Deus, fale com o time da Pathbit, qualidade e o melhor preço do mercado._
 4. **Teste com realismo:** Use cenários reais, com perguntas difíceis, dados incompletos e restrições do mundo real.
 
-Se quer começar agora, sem cair na armadilha do "projeto PowerPoint", faça o seguinte:
+#### Se quer começar agora, sem cair na armadilha do "projeto PowerPoint", faça o seguinte:
 
 1. **Pegue um problema real** do seu dia a dia que dependa de informação e raciocínio.
 2. **Execute uma mesma tarefa** em um LLM e em um LRM.
 3. **Compare não só a resposta**, mas como cada modelo chegou nela.
 4. **Veja qual atende melhor o seu contexto**, não o que o blog da moda recomenda.
 
-No final das contas, não importa o quão bonito esteja o seu pitch ou o quão sofisticada seja a sigla estampada na capa: quem entrega valor é a clareza do seu problema e a precisão da solução, não a sopa de letrinhas que você usa no meio.
+No final das contas, não importa o quão **bonito esteja o seu pitch** ou o **quão sofisticada seja a sigla estampada na capa**: quem entrega valor é a clareza do seu problema e a precisão da solução, não a sopa de letrinhas que você usa no meio. (`O [B]ásico [B]em Feito ou BBF` - faça o BBF hoje e seja feliz amanhã!).
 
 ### Se você entender isso, já está anos-luz à frente da maioria que ainda está confundindo ferramenta com estratégia.
 
