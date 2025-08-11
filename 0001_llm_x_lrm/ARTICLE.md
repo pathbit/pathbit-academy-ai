@@ -47,7 +47,7 @@ Um LLM é perfeito para criar um resumo de 10 páginas de um relatório de merca
 
 Um LRM é perfeito para analisar cenários de risco de crédito, considerando múltiplas variáveis históricas e de mercado, e recomendar a melhor estratégia com justificativa clara. Mas se você pedir que ele escreva um post leve para o LinkedIn, é canhão para matar mosquito.
 
-## Como esta diferença entre LLM e LRM afetam a sua solução?
+## Como esta diferença entre LLM e LRM afetam o meu projeto?
 
 Imagine que você está construindo um sistema de suporte para um banco:
 
