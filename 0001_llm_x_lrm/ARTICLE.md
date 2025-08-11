@@ -1,7 +1,10 @@
 # LLM ou LRM? Se você não sabe, já errou
 
 **Resumo rápido:** 
-Com a chegada do modelo GPT-5, que Segundo Altman, oferece uma experiência comparável a uma conversa com um especialista de nível doutorado, resolvemos falar deste assunto. Dá uma olhada neste artigo aqui sobre a matéria do lançamento do GPT-5 [GPT-5 o que muda com o novo modelo...](https://fastcompanybrasil.com/ia/gpt-5-o-que-muda-com-o-novo-modelo-da-openai-para-o-chatgpt/).
+Com a chegada do modelo GPT-5, que Segundo Altman, oferece uma experiência comparável a uma conversa com um especialista de nível doutorado, resolvemos falar deste assunto. 
+
+> Dá uma olhada neste artigo aqui sobre a matéria do lançamento do GPT-5 [GPT-5 o que muda com o novo modelo...](https://fastcompanybrasil.com/ia/gpt-5-o-que-muda-com-o-novo-modelo-da-openai-para-o-chatgpt/).
+
 LLM e LRM não são a mesma coisa jovem gafanhoto. Não é só uma sigla nova para impressionar investidor ou enganar cliente. Se você está tratando ambos como "a IA" e pronto, está construindo sua solução no chute e isso, mais cedo ou mais tarde, vai custar caro.
 
 ## O erro começa na sigla
