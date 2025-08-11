@@ -80,6 +80,15 @@ Imagine que você está construindo um sistema de suporte para um banco:
 - "Tecnologia de ponta" não salva projeto mal pensado.
 - Se você precisa de um adesivo para convencer, talvez a solução não seja tão boa quanto você imagina.
 
+## Ah pare de falar e `Show-Me-The-Code`
+
+**Opção 1:** Baixe o repositório abaixo para o seu computador e faça os testes. (Acesse o arquivo `README.md`)
+
+**Opção 2:** Execute o código diretamente no seu [http://colab.research.google.com/](http://colab.research.google.com/) clicando no link abaixo:
+
+- Você pode executar todos os exemplos deste artigo direto no seu navegador:
+[![Abrir no Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pathbit/pathbit-academy-ai/blob/main/0001_llm_vs_lrm/notebooks/comparacao_llm_lrm.ipynb)
+
 ## Próximos passos
 
 O mercado adora transformar qualquer avanço tecnológico em modinha. Foi assim com `Big Data`, foi assim com `Blockchain (Eterna promessa?)`, e agora é assim com **LLM e LRM**. _A consequência é sempre a mesma: uma enxurrada de projetos que nascem para "mostrar que estamos usando" e morrem quando alguém pergunta "mas resolve o quê?"_.
