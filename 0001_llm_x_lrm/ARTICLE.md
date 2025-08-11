@@ -104,7 +104,7 @@ Se você não consegue descrever seu problema de forma clara e mensurável, nenh
 
 No final das contas, não importa o quão **bonito esteja o seu pitch** ou o **quão sofisticada seja a sigla estampada na capa**: quem entrega valor é a clareza do seu problema e a precisão da solução, não a sopa de letrinhas que você usa no meio. (`O [B]ásico [B]em Feito ou BBF` - faça o BBF hoje e seja feliz amanhã!).
 
-### Se você entender isso, já está anos-luz à frente da maioria que ainda está confundindo ferramenta com estratégia.
+#### <centerSe você entender isso, já está anos-luz à frente da maioria que ainda está confundindo ferramenta com estratégia.</center>
 
 ## Referências
 
