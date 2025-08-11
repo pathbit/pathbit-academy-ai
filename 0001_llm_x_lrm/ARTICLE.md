@@ -54,7 +54,7 @@ Imagine que você está construindo um sistema de suporte para um banco:
 - **Com LLM:** o cliente pergunta "Qual é a taxa atual do CDI?" => o modelo responde rápido, com contexto atualizado.
 - **Com LRM:** o cliente pergunta "Vale a pena migrar minha carteira de investimentos para um produto atrelado ao CDI considerando meu perfil conservador, inflação projetada e vencimentos futuros?" => aqui o LRM vai brilhar, estruturar a análise, ponderar riscos e explicar todo o raciocínio na sua conclusão.
 
-## Qual eu devo escolher, ambas foram sensacionais (`ou bizarras`, piada interna)
+## Qual eu devo escolher, ambas foram sensacionais ou bizarras (`piada interna`)
 
 ### 1. Defina o problema antes da tecnologia
 
