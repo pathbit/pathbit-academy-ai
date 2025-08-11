@@ -16,7 +16,7 @@ Inclui exemplos práticos, código em Python e comparações de desempenho.
 ---
 
 #### 📂 Estrutura do Artigo
-- **article/ARTICLE.md** - Conteúdo do artigo.
+- **`article/ARTICLE.md`** - Conteúdo do artigo.
 - **`assets/`** - Imagens, diagramas e outras mídias.
 - **`data/`** - PDFs, datasets e outros dados em documentos.
 - **`files/`** - Artigos de referência, documentações externas.
