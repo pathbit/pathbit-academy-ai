@@ -86,7 +86,7 @@ Imagine que você está construindo um sistema de suporte para um banco:
 
 **Opção 2:** Você pode executar todos os exemplos deste artigo direto no seu navegador utilizando o [http://colab.research.google.com/](http://colab.research.google.com/).
 
-- Clique no link: [![Abrir no Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pathbit/pathbit-academy-ai/blob/main/0001_llm_vs_lrm/notebooks/comparacao_llm_lrm.ipynb)
+- Clique no link: [![Abrir no Google Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pathbit/pathbit-academy-ai/blob/master/0001_llm_vs_lrm/notebooks/comparacao_llm_lrm.ipynb)
 
 ## Próximos passos
 
