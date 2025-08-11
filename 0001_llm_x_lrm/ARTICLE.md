@@ -20,7 +20,9 @@ Tratar **LRM** como se fosse só um **LLM "premium"** é igual usar um _bisturi 
 ## Por que essa confusão é perigosa?
 
 Quando você não sabe a diferença, acaba pedindo para um LLM resolver problemas que exigem lógica encadeada e consistência e ele vai inventar. Vai responder com confiança, mas errar feio.
+
 O inverso também acontece: colocar um LRM para responder dúvidas rápidas e contextuais é desperdício de recurso. É como contratar um engenheiro sênior para apertar parafuso o dia inteiro.
+
 O perigo real? Você perde tempo, dinheiro e credibilidade. E, no caso de aplicações críticas como saúde, finanças e segurança, um erro de interpretação pode custar muito mais do que um retrabalho.
 
 ## O que é LLM de forma prática?
