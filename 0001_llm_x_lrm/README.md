@@ -1,4 +1,6 @@
-# 0001_llm_x_lrm
+# pathbit-academy-ai
+
+## 0001_llm_x_lrm
 
 **ID do Artigo:** 0001  
 **Autor:** Eliel Sousa  
@@ -7,13 +9,13 @@
 
 ---
 
-## 📌 Resumo
+### 📌 Resumo
 Este artigo explora as diferenças entre **LLM (Large Language Models)** e **LRM (Large Reasoning Models)**, cobrindo conceitos, casos de uso, vantagens e limitações.  
 Inclui exemplos práticos, código em Python e comparações de desempenho.
 
 ---
 
-## 📂 Estrutura do Artigo
+### 📂 Estrutura do Artigo
 - **[ARTICLE.md](article/ARTICLE.md)** - Conteúdo completo do artigo.
 - **`assets/`** - Imagens, diagramas, ilustrações e outros.
 - - **`data/`** - PDFs, datasets, artigos de referência e outros.
@@ -22,7 +24,7 @@ Inclui exemplos práticos, código em Python e comparações de desempenho.
 
 ---
 
-## 🚀 Como Executar os Exemplos
+### 🚀 Como Executar os Exemplos
 
 ```bash
 # Clonar o repositório
