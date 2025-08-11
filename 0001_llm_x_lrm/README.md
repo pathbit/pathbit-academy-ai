@@ -2,9 +2,9 @@
 
 ## 0001_llm_x_lrm
 
+**Ano:** 2025
 **ID do Artigo:** 0001  
 **Autor:** Eliel Sousa  
-**Data:** 2025-08-11  
 **Categoria:** Inteligência Artificial / Modelos de Linguagem
 
 ---
