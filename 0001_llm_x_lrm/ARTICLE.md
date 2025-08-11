@@ -10,7 +10,9 @@ LLM e LRM não são a mesma coisa jovem gafanhoto. Não é só uma sigla nova pa
 ## O erro começa na sigla
 
 A moda agora é colocar "IA" no meio da frase e sair falando como se tudo fosse igual. Antes era chatbot, depois veio "assistente virtual", aí virou "LLM" porque a OpenAI popularizou. Agora aparece o LRM, e pronto: _começa a corrida para ver quem inventa mais `buzzword` sem entender o básico_.
+
 **LLM (Large Language Model)** é um modelo treinado para prever a próxima palavra. É generalista, cheio de conhecimento superficial, mas incapaz de pensar sozinho. É ótimo para gerar texto, resumir, responder perguntas e simular diálogos, desde que o contexto esteja bem definido.
+
 **LRM (Large Reasoning Model)**, por outro lado, é projetado para resolver problemas que exigem raciocínio encadeado, análise de múltiplas variáveis e conclusão lógica. Ele não é "mais inteligente" por magia, mas porque foi treinado e otimizado para pensar em etapas, não apenas cuspir respostas.
 
 Tratar **LRM** como se fosse só um **LLM "premium"** é igual usar um _bisturi para cortar pão_ (`pãozinho com manteiga aviação não tem preço hehehe`), você até consegue, mas está ignorando o propósito real da ferramenta.
