@@ -1,6 +1,7 @@
 # LLM ou LRM? Se você não sabe, já errou
 
 **Vamos dar um contexto no tema:** 
+
 Com a chegada do modelo GPT-5, que Segundo Altman, oferece uma experiência comparável a uma conversa com um especialista de nível doutorado, resolvemos falar deste assunto. 
 
 > Dá uma olhada neste artigo aqui sobre a matéria do lançamento do GPT-5 [GPT-5 o que muda com o novo modelo!](https://fastcompanybrasil.com/ia/gpt-5-o-que-muda-com-o-novo-modelo-da-openai-para-o-chatgpt/).
