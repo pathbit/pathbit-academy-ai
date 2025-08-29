@@ -85,6 +85,11 @@ Imagine que você está construindo um sistema de suporte para um banco:
 
 **Opção 1:** Baixe o repositório abaixo para o seu computador e faça os testes. (Acesse o arquivo `README.md`)
 
+> Clique no link abaixo:
+
+[![Abrir Readme.md]([https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pathbit/pathbit-academy-ai/blob/master/0001_llm_x_lrm/notebooks/comparacao_llm_lrm.ipynb](https://github.com/pathbit/pathbit-academy-ai/blob/master/0001_llm_x_lrm/README.md)
+
+
 **Opção 2:** Você pode executar todos os exemplos deste artigo direto no seu navegador utilizando o [http://colab.research.google.com/](http://colab.research.google.com/).
 
 > Clique no link abaixo:
