@@ -1,0 +1,3 @@
+groq==0.32.0
+jupyter==1.1.1
+ipython==9.5.0
