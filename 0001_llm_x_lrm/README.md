@@ -3,15 +3,15 @@
 ## 0001_llm_x_lrm
 
 **Ano:** 2025
-**ID do Artigo:** 0001  
-**Autor:** Eliel Sousa  
+**ID do Artigo:** 0001
+**Autor:** Eliel Sousa
 **Categoria:** Inteligência Artificial / Modelos de Linguagem
 
 ---
 
 ### 📌 Resumo
 
-Este artigo explora as diferenças entre **LLM (Large Language Models)** e **LRM (Large Reasoning Models)**, cobrindo conceitos, casos de uso, vantagens e limitações.  
+Este artigo explora as diferenças entre **LLM (Large Language Models)** e **LRM (Large Reasoning Models)**, cobrindo conceitos, casos de uso, vantagens e limitações.
 Inclui exemplos práticos, código em Python e comparações de desempenho.
 
 ---
