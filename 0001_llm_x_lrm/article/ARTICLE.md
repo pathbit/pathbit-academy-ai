@@ -1,8 +1,8 @@
 # LLM ou LRM? Se você não sabe, já errou
 
-**Vamos dar um contexto no tema:** 
+**Vamos dar um contexto no tema:**
 
-Com a chegada do modelo GPT-5, que Segundo Altman, oferece uma experiência comparável a uma conversa com um especialista de nível doutorado, resolvemos falar deste assunto. 
+Com a chegada do modelo GPT-5, que Segundo Altman, oferece uma experiência comparável a uma conversa com um especialista de nível doutorado, resolvemos falar deste assunto.
 
 > Dá uma olhada neste artigo aqui sobre a matéria do lançamento do GPT-5 [GPT-5 o que muda com o novo modelo!](https://fastcompanybrasil.com/ia/gpt-5-o-que-muda-com-o-novo-modelo-da-openai-para-o-chatgpt/).
 
@@ -65,7 +65,7 @@ Imagine que você está construindo um sistema de suporte para um banco:
 - Se precisa de raciocínio consistente, com lógica estruturada e justificativa, vá de LRM.
 - E não tente usar um para fazer o trabalho do outro: vai sair caro e ruim.
 
- ### 2. Teste no seu contexto
+### 2. Teste no seu contexto
 
 > Benchmark de slide é igual foto de comida em propaganda, bonito na foto e quando chega vem aquela porcaria hehehe.
 
@@ -87,19 +87,13 @@ Imagine que você está construindo um sistema de suporte para um banco:
 
 > Clique no link abaixo:
 
-
-
-
-
 [Abrir Readme.md](https://github.com/pathbit/pathbit-academy-ai/blob/master/0001_llm_x_lrm/README.md)
-
 
 **Opção 2:** Você pode executar todos os exemplos deste artigo direto no seu navegador utilizando o [http://colab.research.google.com/](http://colab.research.google.com/).
 
 > Clique no link abaixo:
 
 [Abrir no Google Colab](https://colab.research.google.com/github/pathbit/pathbit-academy-ai/blob/master/0001_llm_x_lrm/notebooks/comparacao_llm_lrm.ipynb)
-
 
 ## Próximos passos
 
@@ -109,14 +103,14 @@ LLM e LRM não são rivais. São ferramentas diferentes para problemas diferente
 
 Se você não consegue descrever seu problema de forma clara e mensurável, nenhum modelo vai salvar seu projeto. IA não substitui pensamento crítico ... na verdade, ela pune a falta dele.
 
-#### Então, antes de se apaixonar pela sigla mais quente do momento, faça o básico (o que, curiosamente, muita gente ainda não faz):
+### Então, antes de se apaixonar pela sigla mais quente do momento, faça o básico (o que, curiosamente, muita gente ainda não faz)
 
 1. **Comece pelo objetivo:** Defina exatamente o que precisa: resposta rápida? Análise profunda? Decisão estratégica?
 2. **Mapeie seus dados:** Sem insumo de qualidade, qualquer modelo vira papagaio eloquente.
 3. **Escolha pela necessidade, não pelo hype:** Um LLM pode ser mais do que suficiente. Um LRM pode ser overkill (`definição hehehe: exagero desnecessário ou uso excessivo de recursos para algo simples`). _Para ChatBots de atendimento, agendamento e etc, pelo amor de Deus, fale com o time da Pathbit, qualidade e o melhor preço do mercado._
 4. **Teste com realismo:** Use cenários reais, com perguntas difíceis, dados incompletos e restrições do mundo real.
 
-#### Se quer começar agora, sem cair na armadilha do "projeto PowerPoint", faça o seguinte:
+### Se quer começar agora, sem cair na armadilha do "projeto PowerPoint", faça o seguinte
 
 1. **Pegue um problema real** do seu dia a dia que dependa de informação e raciocínio.
 2. **Execute uma mesma tarefa** em um LLM e em um LRM.
@@ -125,7 +119,7 @@ Se você não consegue descrever seu problema de forma clara e mensurável, nenh
 
 No final das contas, não importa o quão **bonito esteja o seu pitch** ou o **quão sofisticada seja a sigla estampada na capa**: quem entrega valor é a clareza do seu problema e a precisão da solução, não a sopa de letrinhas que você usa no meio. (`O [B]ásico [B]em Feito ou BBF` - faça o BBF hoje e seja feliz amanhã!).
 
-#### `Se você entender isso, já está anos-luz à frente da maioria que ainda está confundindo ferramenta com estratégia.`
+### `Se você entender isso, já está anos-luz à frente da maioria que ainda está confundindo ferramenta com estratégia.`
 
 ## Referências
 
