@@ -68,17 +68,17 @@ Similaridade("cachorro", "gato") = 0.85 (muito similar)
 Similaridade("cachorro", "carro") = 0.12 (pouco similar)
 ```
 
-### 3. **Busca Semântica**
-
-![Busca Semântica](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/05.png)
-
-> Figura 5: O processo completo de busca semântica
+### 3. **Busca Semântica com Embeddings**
 
 - Converta sua consulta em embedding
 - Compare com embeddings de todos os documentos
 - Retorne os mais similares
 
 ## Qual tipo de embedding devo escolher?
+
+![Comparação entre os modelos](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/05.png)
+
+> Figura 5: Comparação entre os modelos
 
 ### **1. Word Embeddings (Word2Vec, GloVe)**
 
@@ -145,15 +145,11 @@ Imagine que você está construindo um sistema de busca para uma biblioteca digi
 
 ## Casos de uso reais onde os embeddings brilham
 
-![Aplicações de Embeddings](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/06.png)
-
-> Figura 6: Principais aplicações dos embeddings na prática
-
 ### **1. Busca Semântica**
 
-![Busca Semântica em Ação](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/07.png)
+![Busca Semântica](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/06.png)
 
-> Figura 7: Como a busca semântica funciona na prática
+> Figura 6: Busca Semântica
 
 ```text
 Consulta: "como investir em ações"
@@ -162,9 +158,9 @@ Resultado: Encontra documentos sobre "aplicações financeiras", "bolsa de valor
 
 ### **2. Sistema de Recomendação**
 
-![Sistema de Recomendação](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/08.png)
+![Sistema de Recomendação](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/07.png)
 
-> Figura 8: Como embeddings alimentam sistemas de recomendação
+> Figura 7: Sistema de Recomendação
 
 ```text
 Usuário gosta de: "Python para data science"
@@ -173,9 +169,9 @@ Recomenda: "Machine Learning com Python", "Análise de Dados", "Pandas e NumPy"
 
 ### **3. Classificação de Documentos**
 
-![Classificação de Documentos](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/09.png)
+![Sistema de Recomendação](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/08.png)
 
-> Figura 9: Classificação automática usando embeddings
+> Figura 8: Como embeddings alimentam sistemas de recomendação
 
 ```text
 Documento: "Reclamação sobre produto defeituoso"
@@ -183,6 +179,10 @@ Classificação: "Atendimento ao Cliente" (não "Vendas" ou "Marketing")
 ```
 
 ### **4. Detecção de Duplicatas**
+
+![Classificação de Documentos](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/09.png)
+
+> Figura 9: Classificação automática usando embeddings
 
 ```text
 Documento A: "Como fazer bolo de chocolate"
