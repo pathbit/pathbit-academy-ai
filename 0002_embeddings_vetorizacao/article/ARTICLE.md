@@ -299,6 +299,13 @@ No final das contas, o que importa é a **clareza do seu problema** e a **precis
 
 ### `Com essa mentalidade, você está pronto para construir soluções incríveis que realmente fazem a diferença.`
 
+## 🚀 Próximos Passos
+
+- Experimente com seus próprios dados e textos
+- Teste diferentes modelos de embeddings
+- Implemente sistemas de busca semântica reais
+- **Em breve, teremos um artigo falando de RAG e Vector Databases, fique ligado!**
+
 ## Referências
 
 - [Groq - Supported Models](https://console.groq.com/docs/models)
