@@ -1,4 +1,4 @@
-# Embeddings e Vetorização: Como a IA Entende Texto
+# Embeddings e vetorização são o segredo da mente da IA
 
 **Vamos dar um contexto no tema:**
 
@@ -10,17 +10,17 @@ Embeddings não são só mais uma buzzword da IA. São a **ponte fundamental** e
 
 ## A revolução silenciosa dos embeddings
 
+![Conceito de Embeddings](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/01.png)
+
+> Figura 1: Como o texto é transformado em vetores numéricos
+
 Enquanto todo mundo fala de "IA que entende texto", poucos realmente sabem como essa magia acontece nos bastidores. A evolução foi fascinante: começou com busca por palavras-chave, evoluiu para "busca inteligente", explodiu com "busca semântica" graças ao ChatGPT, e agora temos "RAG" e "vector databases" em todo lugar. _Mas a verdadeira revolução está nos embeddings - a tecnologia que torna tudo isso possível_.
 
 **Embeddings** são representações numéricas de texto que capturam o significado semântico. É como transformar "cachorro" e "animal de estimação" em números que ficam próximos no espaço matemático, mesmo sendo palavras diferentes.
 
-## ![Conceito de Embeddings](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/01.png)
-
-> Figura 1: Como o texto é transformado em vetores numéricos
-
 **Vetorização** é o processo de converter texto em esses números. Não é mágica, é matemática aplicada com muito texto e poder computacional.
 
-## ![Processo de Vetorização](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/02.png)
+![Processo de Vetorização](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/02.png)
 
 > Figura 2: O processo de conversão de texto em embeddings
 
@@ -78,7 +78,7 @@ Similaridade("cachorro", "carro") = 0.12 (pouco similar)
 - Compare com embeddings de todos os documentos
 - Retorne os mais similares
 
-## Tipos de Embeddings: Qual escolher?
+## Qual tipo de embedding devo escolher?
 
 ### **1. Word Embeddings (Word2Vec, GloVe)**
 
@@ -143,7 +143,7 @@ Imagine que você está construindo um sistema de busca para uma biblioteca digi
 - "Tecnologia de ponta" é ótima, mas só se resolver o problema real.
 - Se você precisa convencer com buzzwords, talvez a solução precise ser repensada.
 
-## Casos de Uso Reais: Onde Embeddings Brilham
+## Casos de uso reais onde os embeddings brilham
 
 ![Aplicações de Embeddings](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/06.png)
 
@@ -215,7 +215,7 @@ Sistema: Busca documentos relevantes → Gera resposta baseada no contexto encon
 
 [**Abrir no Google Colab**](https://colab.research.google.com/github/pathbit/pathbit-academy-ai/blob/master/0002_embeddings_vetorizacao/notebooks/embeddings_vetorizacao.ipynb)
 
-## Modelos de Embeddings: Os Campeões
+## Os melhores modelos de Embeddings
 
 ### **1. Sentence-BERT (all-MiniLM-L6-v2)**
 
@@ -281,6 +281,11 @@ Embeddings não são só uma ferramenta de busca melhorada. São a ponte entre l
 
 Quando você define claramente seu problema e escolhe a solução certa, os resultados podem ser extraordinários.
 
+- Experimente com seus próprios dados e textos
+- Teste diferentes modelos de embeddings
+- Implemente sistemas de busca semântica reais
+- **Em breve, teremos um artigo falando de RAG e Vector Databases, fique ligado!**
+
 ### Para começar sua jornada com embeddings, siga estes passos fundamentais
 
 1. **Comece pelo objetivo:** Defina exatamente o que precisa: busca simples? Busca semântica? Classificação? Recomendação?
@@ -298,13 +303,6 @@ Quando você define claramente seu problema e escolhe a solução certa, os resu
 No final das contas, o que importa é a **clareza do seu problema** e a **precisão da solução**. A tecnologia é apenas o meio - o resultado é o que conta.
 
 ### `Com essa mentalidade, você está pronto para construir soluções incríveis que realmente fazem a diferença.`
-
-## 🚀 Próximos Passos
-
-- Experimente com seus próprios dados e textos
-- Teste diferentes modelos de embeddings
-- Implemente sistemas de busca semântica reais
-- **Em breve, teremos um artigo falando de RAG e Vector Databases, fique ligado!**
 
 ## Referências
 
