@@ -6,15 +6,16 @@ Esta pasta contém toda a documentação técnica do projeto **Pathbit Academy A
 
 ### 🔧 Soluções para Problemas
 
-| Documento | Descrição | Quando Usar |
-|-----------|-----------|-------------|
-| **[SOLUCAO_ERRO_COLAB.md](./SOLUCAO_ERRO_COLAB.md)** | Resolução do erro `ModuleNotFoundError: No module named 'google'` | Ao executar o notebook localmente e encontrar erro do Google Colab |
-| **[SOLUCAO_ERRO_GROQ.md](./SOLUCAO_ERRO_GROQ.md)** | Resolução do erro `TypeError: Client.__init__() got an unexpected keyword argument 'proxies'` | Ao encontrar erro de compatibilidade com a API do Groq |
+| Documento                                            | Descrição                                                                                     | Quando Usar                                                         |
+| ---------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| **[SOLUCAO_ERRO_COLAB.md](./SOLUCAO_ERRO_COLAB.md)** | Resolução de erros do Google Colab (módulo google e conflitos de tqdm)                        | Ao executar notebooks no Colab e encontrar erros de compatibilidade |
+| **[SOLUCAO_ERRO_GROQ.md](./SOLUCAO_ERRO_GROQ.md)**   | Resolução do erro `TypeError: Client.__init__() got an unexpected keyword argument 'proxies'` | Ao encontrar erro de compatibilidade com a API do Groq              |
+| **[COMO_USAR_NOTEBOOKS_COLAB.md](./COMO_USAR_NOTEBOOKS_COLAB.md)** | Guia completo de como usar os notebooks no Google Colab com correção automática | Ao executar notebooks no Colab pela primeira vez |
 
 ### 📦 Gerenciamento de Dependências
 
-| Documento | Descrição | Quando Usar |
-|-----------|-----------|-------------|
+| Documento                                                | Descrição                                    | Quando Usar                                       |
+| -------------------------------------------------------- | -------------------------------------------- | ------------------------------------------------- |
 | **[ATUALIZACOES_VERSOES.md](./ATUALIZACOES_VERSOES.md)** | Histórico de atualizações dos pacotes Python | Para entender as mudanças nas versões dos pacotes |
 
 ## 🚀 Como Usar Esta Documentação
@@ -43,5 +44,5 @@ Se você encontrar um novo problema ou tiver uma solução melhor:
 
 ---
 
-**Última atualização:** $(date)  
+**Última atualização:** $(date)
 **Versão da documentação:** 1.0.0
