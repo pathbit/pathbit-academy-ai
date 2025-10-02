@@ -16,6 +16,26 @@ Explora as diferenças entre **LLM (Large Language Models)** e **LRM (Large Reas
 
 ---
 
+### [0002 - Embeddings e Vetorização](./0002_embeddings_vetorizacao/)
+
+**Ano:** 2025 | **Categoria:** Inteligência Artificial / Embeddings e Vetorização
+
+Explora **Embeddings e Vetorização**, fundamentais para que a IA entenda e processe texto de forma eficiente. Cobrimos conceitos teóricos, implementações práticas, diferentes tipos de embeddings e casos de uso reais. Inclui exemplos práticos, código em Python e comparações de performance entre diferentes modelos.
+
+[📖 Ler Artigo](./0002_embeddings_vetorizacao/) | [🔧 Executar Localmente](./0002_embeddings_vetorizacao/README.md)
+
+---
+
+### [0003 - RAG e Vector Database](./0003_rag_vector_database/)
+
+**Ano:** 2025 | **Categoria:** Inteligência Artificial / RAG e Vector Databases
+
+Explora **RAG (Retrieval Augmented Generation)** e **Vector Databases**, tecnologias fundamentais para construir sistemas de IA que acessam informações específicas e atualizadas. Cobrimos conceitos teóricos, implementações práticas, diferentes tipos de vector databases e casos de uso reais. Inclui exemplos práticos, código em Python e comparações de performance entre diferentes abordagens.
+
+[📖 Ler Artigo](./0003_rag_vector_database/) | [🔧 Executar Localmente](./0003_rag_vector_database/README.md)
+
+---
+
 ## 📖 Documentação
 
 ### 🔧 Soluções para Problemas Comuns
@@ -28,12 +48,26 @@ Explora as diferenças entre **LLM (Large Language Models)** e **LRM (Large Reas
 
 ```bash
 pathbit-academy-ai/
-├── README.md                    # Este arquivo
-├── docs/                       # Documentação técnica
+├── README.md                          # Este arquivo
+├── docs/                              # Documentação técnica
 │   ├── SOLUCAO_ERRO_COLAB.md
 │   ├── SOLUCAO_ERRO_GROQ.md
 │   └── ATUALIZACOES_VERSOES.md
-└── 0001_llm_x_lrm/            # Artigos
+├── 0001_llm_x_lrm/                    # Artigo 0001
+│   ├── README.md
+│   ├── requirements.txt
+│   ├── article/
+│   ├── assets/
+│   ├── notebooks/
+│   └── src/
+├── 0002_embeddings_vetorizacao/       # Artigo 0002
+│   ├── README.md
+│   ├── requirements.txt
+│   ├── article/
+│   ├── assets/
+│   ├── notebooks/
+│   └── src/
+└── 0003_rag_vector_database/          # Artigo 0003
     ├── README.md
     ├── requirements.txt
     ├── article/
