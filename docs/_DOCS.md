@@ -6,17 +6,32 @@ Esta pasta contém toda a documentação técnica do projeto **Pathbit Academy A
 
 ### 🔧 Soluções para Problemas
 
-| Documento                                            | Descrição                                                                                     | Quando Usar                                                         |
-| ---------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| **[SOLUCAO_ERRO_COLAB.md](./SOLUCAO_ERRO_COLAB.md)** | Resolução de erros do Google Colab (módulo google e conflitos de tqdm)                        | Ao executar notebooks no Colab e encontrar erros de compatibilidade |
-| **[SOLUCAO_ERRO_GROQ.md](./SOLUCAO_ERRO_GROQ.md)**   | Resolução do erro `TypeError: Client.__init__() got an unexpected keyword argument 'proxies'` | Ao encontrar erro de compatibilidade com a API do Groq              |
+| Documento                                                                        | Descrição                                                                                     | Quando Usar                                                         |
+| -------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| **[SOLUCAO_ERRO_COLAB.md](./SOLUCAO_ERRO_COLAB.md)**                             | Resolução de erros do Google Colab (módulo google e conflitos de tqdm)                        | Ao executar notebooks no Colab e encontrar erros de compatibilidade |
+| **[SOLUCAO_ERRO_GROQ.md](./SOLUCAO_ERRO_GROQ.md)**                               | Resolução do erro `TypeError: Client.__init__() got an unexpected keyword argument 'proxies'` | Ao encontrar erro de compatibilidade com a API do Groq              |
+| **[SOLUCAO_ERRO_CHROMADB_TELEMETRIA.md](./SOLUCAO_ERRO_CHROMADB_TELEMETRIA.md)** | Resolução dos erros de telemetria do ChromaDB (`capture() takes 1 positional argument`)       | Ao ver mensagens de erro sobre telemetria ao usar ChromaDB          |
+| **[SOLUCAO_ERRO_MATPLOTLIB_EMOJIS.md](./SOLUCAO_ERRO_MATPLOTLIB_EMOJIS.md)**     | Resolução de warnings de fonte do matplotlib com emojis (`Glyph missing from font`)           | Ao ver warnings sobre glifos ausentes nos gráficos                  |
+| **[SOLUCAO_CAPTURA_API_KEY_COLAB.md](./SOLUCAO_CAPTURA_API_KEY_COLAB.md)**       | Como capturar API keys no Google Colab usando getpass vs arquivo .env local                   | Ao configurar APIs no Colab que precisam de captura de chaves       |
+
+### 🚀 Guias de Uso
+
+| Documento                                                          | Descrição                                                                       | Quando Usar                                      |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------- | ------------------------------------------------ |
 | **[COMO_USAR_NOTEBOOKS_COLAB.md](./COMO_USAR_NOTEBOOKS_COLAB.md)** | Guia completo de como usar os notebooks no Google Colab com correção automática | Ao executar notebooks no Colab pela primeira vez |
+| **[REQUIREMENTS_COLAB.md](./REQUIREMENTS_COLAB.md)**               | Guia de instalação específico para Google Colab com requirements otimizados     | Para resolver conflitos de dependências no Colab |
 
 ### 📦 Gerenciamento de Dependências
 
 | Documento                                                | Descrição                                    | Quando Usar                                       |
 | -------------------------------------------------------- | -------------------------------------------- | ------------------------------------------------- |
 | **[ATUALIZACOES_VERSOES.md](./ATUALIZACOES_VERSOES.md)** | Histórico de atualizações dos pacotes Python | Para entender as mudanças nas versões dos pacotes |
+
+### 📋 Documentação do Projeto
+
+| Documento                                            | Descrição                                    | Quando Usar                                  |
+| ---------------------------------------------------- | -------------------------------------------- | -------------------------------------------- |
+| **[RESUMO_ORGANIZACAO.md](./RESUMO_ORGANIZACAO.md)** | Resumo da estrutura e organização do projeto | Para entender a organização geral do projeto |
 
 ## 🚀 Como Usar Esta Documentação
 
@@ -28,7 +43,9 @@ Esta pasta contém toda a documentação técnica do projeto **Pathbit Academy A
 ## 📝 Convenções
 
 - **🔧** = Soluções técnicas
+- **🚀** = Guias de uso e instruções
 - **📦** = Gerenciamento de dependências
+- **📋** = Documentação do projeto
 - **⚠️** = Avisos importantes
 - **✅** = Confirmação de sucesso
 - **❌** = Indicação de erro
@@ -44,5 +61,5 @@ Se você encontrar um novo problema ou tiver uma solução melhor:
 
 ---
 
-**Última atualização:** $(date)
-**Versão da documentação:** 1.0.0
+**Última atualização:** 02/10/2025
+**Versão da documentação:** 1.3.0
