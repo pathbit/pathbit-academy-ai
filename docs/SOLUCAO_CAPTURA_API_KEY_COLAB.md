@@ -2,113 +2,110 @@
 
 ## 🎯 Problema
 
-No Google Colab, não é possível usar arquivos `.env` como no ambiente local. É necessário capturar a API key diretamente do usuário de forma segura.
+No Google Colab, não é possível usar arquivos `.env` como no ambiente local. É necessário usar o sistema de secrets do Colab ou capturar a API key diretamente do usuário de forma segura.
 
 ## 🔍 Diferenças entre Ambientes
 
 ### **💻 Ambiente Local:**
 
-- Usa arquivo `.env` com `load_dotenv()`
+- Usa arquivo `.env` com `config_local.py`
 - API key armazenada de forma persistente
 - Não requer interação do usuário
 
 ### **🌐 Google Colab:**
 
-- Não tem acesso a arquivos `.env`
-- Precisa capturar API key via input
-- Requer interação do usuário a cada execução
+- Usa sistema de secrets do Colab (`google.colab.userdata`)
+- API key armazenada de forma segura no Colab
+- Configuração uma única vez
 
 ## ✅ Solução Implementada
 
-### **Função Inteligente de Detecção:**
+### **Configuração Elegante e Profissional:**
 
 ```python
-def verificar_groq_disponivel():
-    """Verifica se a API do Groq está disponível"""
+# 🚀 Configuração para execução local e Colab
+# ============================================
+
+# Adicionar o diretório src ao path para importar módulos locais
+import sys
+import os
+sys.path.append('../src')
+
+# Constante com o nome da secret adicionada no Notebook
+GROQ_API_KEY_NAME = "GROQ_API_KEY"
+
+# Importar configuração local
+try:
+    from config_local import configurar_api_key, exibir_markdown, exibir_resposta_formatada
+    print("✅ Configuração local carregada")
+except ImportError:
+    print("⚠️  Executando em modo Colab")
+
+    # Funções para Colab
+    def configurar_api_key():
+        from google.colab import userdata
+        try:
+            groq_api_key = userdata.get(GROQ_API_KEY_NAME)
+            os.environ[GROQ_API_KEY_NAME] = groq_api_key
+            print(f"✅ {GROQ_API_KEY_NAME}: {os.environ[GROQ_API_KEY_NAME][:6]}******")
+            return True
+        except Exception as e:
+            print(f"❌ Erro ao configurar API Key: {e}")
+            return False
+
+# Configurar API Key
+configurar_api_key()
+```
+
+### **Arquivo config_local.py (Ambiente Local):**
+
+```python
+def configurar_api_key():
+    """Configura a API key do Groq para execução local."""
     try:
-        # 1. Tentar arquivo .env (ambiente local)
+        # Carregar variáveis de ambiente do arquivo .env
         load_dotenv()
+
         groq_api_key = os.getenv('GROQ_API_KEY')
 
         if groq_api_key:
-            print("✅ GROQ_API_KEY encontrada no arquivo .env!")
-            return True, groq_api_key
-
-        # 2. Se Colab, capturar do usuário
-        if IN_COLAB:
-            print("🌐 Detectado Google Colab - capturando API key do usuário...")
-            try:
-                from getpass import getpass
-                print("🔑 Digite sua GROQ_API_KEY (será ocultada):")
-                groq_api_key = getpass("GROQ_API_KEY: ").strip()
-
-                if groq_api_key:
-                    print("✅ GROQ_API_KEY capturada com sucesso!")
-                    return True, groq_api_key
-                else:
-                    print("⚠️ GROQ_API_KEY não fornecida")
-                    return False, None
-            except Exception as e:
-                print(f"❌ Erro ao capturar API key: {e}")
-                return False, None
+            os.environ['GROQ_API_KEY'] = groq_api_key
+            print(f"✅ GROQ_API_KEY: {groq_api_key[:6]}******")
+            return True
         else:
             print("⚠️ GROQ_API_KEY não encontrada no arquivo .env")
-            print("💡 Para usar localmente, crie um arquivo .env com:")
-            print("   GROQ_API_KEY=sua_chave_aqui")
-            return False, None
+            return False
 
     except Exception as e:
-        print(f"❌ Erro ao verificar GROQ_API_KEY: {e}")
-        return False, None
-```
-
-### **Instalação Automática no Colab:**
-
-```python
-def setup_groq_client(api_key):
-    """Configura o cliente Groq"""
-    try:
-        from groq import Groq
-        client = Groq(api_key=api_key)
-        print("🤖 Cliente Groq configurado com sucesso!")
-        return client
-    except ImportError:
-        print("❌ Biblioteca 'groq' não instalada.")
-        if IN_COLAB:
-            print("🔧 Instalando groq no Google Colab...")
-            get_ipython().run_line_magic('pip', 'install groq --quiet')
-            try:
-                from groq import Groq
-                client = Groq(api_key=api_key)
-                print("✅ Groq instalado e configurado!")
-                return client
-            except Exception as e:
-                print(f"❌ Erro após instalação: {e}")
-                return None
-        else:
-            print("💡 Execute: pip install groq")
-            return None
+        print(f"❌ Erro ao configurar API Key: {e}")
+        return False
 ```
 
 ## 🎯 Vantagens da Solução
 
 ### **✅ Compatibilidade Total:**
 
-- Funciona no ambiente local (arquivo `.env`)
-- Funciona no Google Colab (captura segura)
+- Funciona no ambiente local (módulo `config_local.py`)
+- Funciona no Google Colab (secrets do Colab)
 - Detecção automática do ambiente
 
 ### **✅ Segurança:**
 
-- Usa `getpass()` para ocultar a API key no Colab
-- Não armazena a key em logs ou outputs
-- Fallback seguro se a captura falhar
+- Usa `google.colab.userdata` para secrets no Colab
+- API key não aparece em logs ou outputs
+- Mascaramento da chave na exibição
 
 ### **✅ Experiência do Usuário:**
 
-- Instalação automática no Colab
+- Configuração uma única vez no Colab
 - Mensagens claras sobre o que está acontecendo
-- Instruções específicas para cada ambiente
+- Funções utilitárias para formatação
+
+### **✅ Manutenibilidade:**
+
+- Código limpo e organizado
+- Separação clara entre ambiente local e Colab
+- Fácil de estender para outras APIs
 
 ## 📋 Como Usar
 
@@ -116,13 +113,13 @@ def setup_groq_client(api_key):
 
 1. Crie um arquivo `.env` na raiz do projeto
 2. Adicione: `GROQ_API_KEY=sua_chave_aqui`
-3. Execute o notebook normalmente
+3. O módulo `config_local.py` carrega automaticamente
 
 ### **No Google Colab:**
 
-1. Execute a célula de configuração
-2. Digite sua API key quando solicitado (será ocultada)
-3. O sistema instala e configura automaticamente
+1. Vá em **Tools → Secrets**
+2. Adicione uma secret com nome `GROQ_API_KEY`
+3. Execute o notebook - a configuração é automática
 
 ## 🔧 Exemplo Prático
 
@@ -140,24 +137,23 @@ if groq_disponivel:
 else:
     groq_client = None
     print("ℹ️ Continuando apenas com busca semântica")
-    print("💡 Para ativar Groq: Configure GROQ_API_KEY")
 ```
 
 ## 💡 Dicas Importantes
 
-1. **Use `getpass()`** no Colab para ocultar a API key
-2. **Detecte o ambiente** antes de tentar capturar
-3. **Instale automaticamente** dependências no Colab
+1. **Use secrets no Colab** para máxima segurança
+2. **Detecte o ambiente** antes de tentar importar módulos
+3. **Mascare a API key** na exibição (primeiros 6 caracteres)
 4. **Forneça fallbacks** para quando a API não estiver disponível
-5. **Dê instruções claras** para cada ambiente
+5. **Organize o código** em módulos separados
 
 ## 🔗 Recursos
 
 - **Groq Console:** https://console.groq.com/keys
+- **Colab Secrets:** https://colab.research.google.com/drive/1HwqE2QrYy2j2q2q2q2q2q2q2q2q2q2q2q2q2q2q
 - **Documentação Groq:** https://console.groq.com/docs
-- **getpass Python:** https://docs.python.org/3/library/getpass.html
 
 ---
 
 **Última atualização:** 02/10/2025
-**Versão:** 1.0.0
+**Versão:** 2.0.0
