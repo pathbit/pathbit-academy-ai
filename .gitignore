@@ -1172,3 +1172,11 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,linux,macos,python,vs,visualstudiocode,openframeworks,openframeworks+visualstudio,pycharm+all,jupyternotebooks,pythonvanilla,circuitpython,pycharm+iml,pycharm,pydev,node,monodevelop,sublimetext,replit
+
+
+### Custom ###
+**/.venv/
+**/.DS_Store
+**/.env
+**/*demo*
+**/*test*
