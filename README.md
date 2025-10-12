@@ -36,6 +36,16 @@ Explora **RAG (Retrieval Augmented Generation)** e **Vector Databases**, tecnolo
 
 ---
 
+### [0004 - RAG vs Fine-Tuning](./0004_rag_vs_finetuning/)
+
+**Ano:** 2025 | **Categoria:** Inteligência Artificial / RAG vs Fine-Tuning
+
+Explora as diferenças entre **RAG** e **Fine-Tuning**, ajudando você a escolher a abordagem certa para seu projeto de IA. Cobrimos comparações técnicas, análise de custos, casos práticos de sucesso e fracasso, e quando usar cada estratégia. Inclui fine-tuning REAL com LoRA, matriz de decisão objetiva e exemplos executáveis em Python com caso de uso de assistente de investimentos.
+
+[📖 Ler Artigo](./0004_rag_vs_finetuning/) | [🔧 Executar Localmente](./0004_rag_vs_finetuning/README.md)
+
+---
+
 ## 📖 Documentação
 
 ### 🔧 Soluções para Problemas Comuns
@@ -67,7 +77,14 @@ pathbit-academy-ai/
 │   ├── assets/
 │   ├── notebooks/
 │   └── src/
-└── 0003_rag_vector_database/          # Artigo 0003
+├── 0003_rag_vector_database/          # Artigo 0003
+│   ├── README.md
+│   ├── requirements.txt
+│   ├── article/
+│   ├── assets/
+│   ├── notebooks/
+│   └── src/
+└── 0004_rag_vs_finetuning/            # Artigo 0004
     ├── README.md
     ├── requirements.txt
     ├── article/
