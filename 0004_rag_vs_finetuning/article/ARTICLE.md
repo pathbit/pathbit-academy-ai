@@ -316,7 +316,7 @@ Resultado: Analisa como especialista E com dados atualizados
 
 ## Erros mortais que você deve evitar
 
-![Erros comuns](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0004_rag_vs_finetuning/assets/09.png)
+![Erros comuns](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0004_rag_vs_finetuning/assets/09_.png)
 
 > Figura 9: Armadilhas que podem destruir seu projeto
 
