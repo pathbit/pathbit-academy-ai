@@ -1,0 +1,37 @@
+[
+  {
+    "id": "suporte_estorno",
+    "input": "Cliente reclamou de atraso na entrega, quer estorno imediato e diz que o pedido ainda nao chegou.",
+    "expected_summary": "Cliente relata atraso na entrega e solicita estorno imediato.",
+    "expected_priority": "alta",
+    "required_keywords": ["atraso", "estorno", "entrega"]
+  },
+  {
+    "id": "fatura_janeiro",
+    "input": "Usuario pediu segunda via da fatura de janeiro e nao encontrou a aba financeira no portal.",
+    "expected_summary": "Cliente precisa da segunda via da fatura de janeiro no portal.",
+    "expected_priority": "media",
+    "required_keywords": ["fatura", "janeiro", "portal"]
+  },
+  {
+    "id": "lead_demo",
+    "input": "Lead enterprise pediu demonstracao da plataforma na proxima semana com foco em seguranca e LGPD.",
+    "expected_summary": "Lead solicitou demonstracao da plataforma com foco em seguranca e LGPD.",
+    "expected_priority": "media",
+    "required_keywords": ["demonstracao", "seguranca", "LGPD"]
+  },
+  {
+    "id": "erro_500",
+    "input": "Aplicacao caiu com erro 500 para varios usuarios do plano premium e o time de suporte esta pressionando por resposta.",
+    "expected_summary": "Erro 500 afetando usuarios premium exige resposta imediata do suporte.",
+    "expected_priority": "alta",
+    "required_keywords": ["erro 500", "usuarios", "suporte"]
+  },
+  {
+    "id": "cancelamento",
+    "input": "Cliente quer cancelar o servico antes do vencimento e pergunta se existe multa contratual.",
+    "expected_summary": "Cliente quer cancelar o servico e entender se existe multa contratual.",
+    "expected_priority": "media",
+    "required_keywords": ["cancelar", "servico", "multa"]
+  }
+]

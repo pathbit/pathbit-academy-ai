@@ -1,0 +1,18 @@
+candidate,modelo_geracao,pergunta,categoria,criticidade,gold,resposta,similaridade_semantica,keyword_recall,faithfulness,score_final,score_ponderado,baseline_score,delta_vs_baseline
+qwen_estruturado,Qwen/Qwen2.5-0.5B-Instruct,Como emitir segunda via da fatura?,financeiro,alta,"Para emitir a segunda via, acesse o portal do cliente, abra Financeiro e clique em Segunda Via.","Para emitir a segunda via da fatura, siga os seguintes passos:
+
+1. **Acesse o Portal do Cliente**: Abra o site da sua empresa ou plataforma de pagamento.
+
+2. **Abra a Ação Financeira**: Na aba Financeira, selecione ""Segunda Via"".
+
+3. **Clique Em Segunda Via**: Clique no botão que indica a segunda via na tela.
+
+4. **Escolha Onde",0.8061203956604004,0.6666666666666666,0.4375,0.6367623541090223,0.9551435311635335,1.1549659371376038,-0.1998224059740703
+qwen_estruturado,Qwen/Qwen2.5-0.5B-Instruct,Posso cancelar sem multa?,contrato,alta,O cancelamento sem multa vale por ate 7 dias corridos apos a contratacao.,"Sim, posso cancelar sem multa. Para fazer isso, você deve:
+
+1. Informar o motivo pelo qual deseja cancelar a prestação.
+2. Solicitar o cancelamento antes do prazo estabelecido (até 7 dias corridos).
+3. Entregar o documento comprovante de pagamento ou outro documento que证明a a sua condição de cliente.
+4. Agendar uma nova data para realizar o cancelamento.
+
+Lembre",0.6224249601364136,0.6666666666666666,0.16666666666666666,0.4852527644899156,0.7278791467348734,0.9329787214597065,-0.2050995747248331

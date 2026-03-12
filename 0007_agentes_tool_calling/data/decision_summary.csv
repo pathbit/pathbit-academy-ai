@@ -1,0 +1,3 @@
+decision_source,acao,total,taxa_acerto
+business_rule,buscar_politica,2,1.0
+business_rule,criar_ticket,1,1.0

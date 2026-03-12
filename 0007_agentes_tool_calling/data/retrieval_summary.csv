@@ -1,0 +1,3 @@
+entrada,planned_tool,acao,documento,knowledge_score,decision_source,resposta
+Qual e a politica de devolucao para um produto sem uso?,buscar_politica,buscar_politica,Politica de devolucao,0.6512418389320374,business_rule,A política de devolução permite estorno em até 30 dias corridos para produtos sem uso e com embalagem preservada.
+Quero a segunda via da fatura deste mes,buscar_politica,buscar_politica,Segunda via da fatura,0.42981892824172974,business_rule,"Para emitir a segunda via da sua fatura, siga os passos descritos na ferramenta. Abra o portal do cliente, navegue até a aba Financeiro e clique em Segunda Via."

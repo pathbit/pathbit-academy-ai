@@ -46,6 +46,36 @@ Explora as diferenças entre **RAG** e **Fine-Tuning**, ajudando você a escolhe
 
 ---
 
+### [0005 - Prompt Engineering Avançado](./0005_prompt_engineering_avancado/)
+
+**Ano:** 2026 | **Categoria:** Inteligência Artificial / Prompt Engineering
+
+Transforma prompt engineering em um laboratório comparativo entre `Qwen` e `FLAN`, medindo estrutura, keywords, prioridade e semântica para separar ganho de prompt de ganho de modelo.
+
+[📖 Ler Artigo](./0005_prompt_engineering_avancado/) | [🔧 Executar Localmente](./0005_prompt_engineering_avancado/README.md)
+
+---
+
+### [0006 - LLM Evals e Regressão](./0006_llm_evals_regressao/)
+
+**Ano:** 2026 | **Categoria:** Inteligência Artificial / Avaliação de LLM
+
+Mostra uma esteira de evals que compara candidatos completos, pondera criticidade, detecta regressões por caso e explicita quando o melhor score ainda não é suficiente para liberar deploy.
+
+[📖 Ler Artigo](./0006_llm_evals_regressao/) | [🔧 Executar Localmente](./0006_llm_evals_regressao/README.md)
+
+---
+
+### [0007 - Agentes e Tool Calling](./0007_agentes_tool_calling/)
+
+**Ano:** 2026 | **Categoria:** Inteligência Artificial / Agentes
+
+Apresenta um agente local com guardrail, regra de negócio, planner JSON, roteamento semântico, retrieval e trilha de auditoria para operar com autonomia sem perder controle.
+
+[📖 Ler Artigo](./0007_agentes_tool_calling/) | [🔧 Executar Localmente](./0007_agentes_tool_calling/README.md)
+
+---
+
 ## 📖 Documentação
 
 ### 🔧 Soluções para Problemas Comuns
@@ -84,7 +114,28 @@ pathbit-academy-ai/
 │   ├── assets/
 │   ├── notebooks/
 │   └── src/
-└── 0004_rag_vs_finetuning/            # Artigo 0004
+├── 0004_rag_vs_finetuning/            # Artigo 0004
+│   ├── README.md
+│   ├── requirements.txt
+│   ├── article/
+│   ├── assets/
+│   ├── notebooks/
+│   └── src/
+├── 0005_prompt_engineering_avancado/  # Artigo 0005
+│   ├── README.md
+│   ├── requirements.txt
+│   ├── article/
+│   ├── assets/
+│   ├── notebooks/
+│   └── src/
+├── 0006_llm_evals_regressao/          # Artigo 0006
+│   ├── README.md
+│   ├── requirements.txt
+│   ├── article/
+│   ├── assets/
+│   ├── notebooks/
+│   └── src/
+└── 0007_agentes_tool_calling/         # Artigo 0007
     ├── README.md
     ├── requirements.txt
     ├── article/

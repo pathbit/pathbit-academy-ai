@@ -1,0 +1,27 @@
+[
+  {
+    "id": "politica_devolucao",
+    "titulo": "Politica de devolucao",
+    "conteudo": "A politica de devolucao permite solicitar estorno em ate 30 dias corridos para produtos sem uso e com embalagem preservada."
+  },
+  {
+    "id": "politica_cancelamento",
+    "titulo": "Politica de cancelamento",
+    "conteudo": "O cancelamento sem multa pode ser solicitado em ate 7 dias corridos apos a contratacao. Depois desse prazo, a multa segue o contrato."
+  },
+  {
+    "id": "segunda_via_fatura",
+    "titulo": "Segunda via da fatura",
+    "conteudo": "Para emitir a segunda via da fatura, acesse o portal do cliente, abra a aba Financeiro e clique em Segunda Via."
+  },
+  {
+    "id": "suporte_aplicacao",
+    "titulo": "Erro na aplicacao",
+    "conteudo": "Falhas tecnicas, erros HTTP 500 e indisponibilidade da plataforma devem ser encaminhados para abertura de ticket com prioridade alta."
+  },
+  {
+    "id": "capacidade_assistente",
+    "titulo": "Capacidades do assistente",
+    "conteudo": "O assistente pode responder sobre politicas, localizar documentos internos, resumir textos e encaminhar incidentes para o time de suporte."
+  }
+]
