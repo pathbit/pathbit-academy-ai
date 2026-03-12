@@ -42,9 +42,9 @@ O QUE A ESTEIRA GERA
 - gerações completas por candidato
 
 **Slide 8**
-POR QUE ISSO É MAIS AVANÇADO
-O artigo saiu de “v1 contra v2”
-e virou comparação entre candidatos completos de inferência.
+POR QUE ISSO ELEVA O PADRÃO
+Comparar candidatos completos mostra onde o score médio engana
+e onde a regressão crítica precisa barrar o release.
 
 **Slide 9**
 Link do artigo nos comentários.

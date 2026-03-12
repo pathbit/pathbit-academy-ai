@@ -3,9 +3,9 @@ AGENTES E TOOL CALLING
 Quando a autonomia ajuda e quando ela vira risco.
 
 **Slide 2**
-O QUE FOI ELEVADO NO ARTIGO
-Não é só roteamento por palavra-chave.
-Agora existe planner, fallback, retrieval e auditoria.
+O QUE A ARQUITETURA COMBINA
+O fluxo junta guardrail, planner,
+fallback semântico, retrieval local e auditoria.
 
 **Slide 3**
 O STACK GRATUITO

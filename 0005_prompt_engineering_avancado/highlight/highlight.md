@@ -39,9 +39,9 @@ Mas nem todo modelo aproveita igual a mesma estratégia.
 
 **Slide 7**
 POR QUE ISSO IMPORTA
-Agora a discussão muda de nível:
-Nao é mais “qual prompt ficou bonito?”
-É “qual combinação de modelo e estratégia entrega mais previsibilidade?”
+Prompt bom não é o que soa mais elegante.
+É o que melhora previsibilidade
+na combinação certa de modelo e estratégia.
 
 **Slide 8**
 O QUE VOCÊ CONSEGUE RODAR
