@@ -1,31 +1,32 @@
 # Core LLM and RAG
-groq==0.13.0
-langchain==0.3.7
-langchain-community==0.3.7
-langchain-groq==0.2.1
-langchain-huggingface==0.1.2
+groq
+langchain
+langchain-community
+langchain-groq
+langchain-huggingface
 
 # Embeddings and Vector Store
-sentence-transformers==3.3.1
-chromadb==0.5.23
-faiss-cpu==1.9.0
+sentence-transformers
+chromadb
+faiss-cpu
 
 # Fine-Tuning
-transformers==4.46.3
-datasets==3.1.0
-peft==0.13.2
-accelerate==1.1.1
-bitsandbytes==0.42.0
+transformers
+datasets
+peft
+accelerate
+# Optional para GPU Linux/NVIDIA:
+# bitsandbytes
 
 # Utilities
-python-dotenv==1.0.1
-pandas==2.2.3
-numpy==1.26.4
+python-dotenv
+pandas
+numpy
 
 # Jupyter and development
-jupyter==1.1.1
-ipython==9.5.0
+jupyter
+ipython
 
 # Visualização
-matplotlib==3.9.2
-seaborn==0.13.2
+matplotlib
+seaborn

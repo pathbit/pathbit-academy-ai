@@ -34,7 +34,7 @@ Inclui fine-tuning REAL com LoRA (demonstrativo), exemplos executáveis em Pytho
 
 #### 📋 Pré-requisitos
 
-- Python 3.10 ou superior
+- Python 3.14
 - Conta no [Groq](https://console.groq.com/) com API Key
 
 #### 📦 Versões dos Pacotes
@@ -246,10 +246,7 @@ Sim! Substitua Groq por:
 
 #### **O notebook funciona em qual versão do Python?**
 
-Python 3.10 ou superior. Recomendamos:
-
-- **Python 3.11**: Melhor performance
-- **Python 3.12**: Funciona mas algumas libs podem ter issues
+Python 3.14.
 
 #### **Quanto custa rodar em produção?**
 

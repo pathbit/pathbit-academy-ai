@@ -1180,3 +1180,7 @@ $RECYCLE.BIN/
 **/.env
 **/*demo*
 **/*test*
+
+### Not Ignored ###
+**/.vscode/
+**/highlights/

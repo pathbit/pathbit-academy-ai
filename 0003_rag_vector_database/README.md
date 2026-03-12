@@ -34,7 +34,7 @@ Inclui exemplos práticos, código em Python e comparações de performance entr
 
 ### 📋 Pré-requisitos
 
-- Python 3.8 ou superior
+- Python 3.14
 - Conta no [Groq](https://console.groq.com/) com API Key (opcional)
 
 ### 📦 Versões dos Pacotes

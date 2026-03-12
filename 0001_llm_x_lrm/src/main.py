@@ -30,7 +30,7 @@ def verificar_dependencias():
             ['jupyter', '--version'],
             capture_output=True,
             text=True,
-            timeout=5,
+            timeout=15,
             check=False
         )
         if result.returncode == 0:
@@ -43,7 +43,11 @@ def verificar_dependencias():
         print(f"❌ Dependência não encontrada: {e}")
         print("Execute: pip install -r requirements.txt")
         return False
-    except (subprocess.TimeoutExpired, subprocess.SubprocessError, OSError) as e:
+    except subprocess.TimeoutExpired:
+        print("⚠️  Verificação de Jupyter demorou muito, mas continuando...")
+        print("💡 Se der erro, execute: pip install -r requirements.txt")
+        return True
+    except (subprocess.SubprocessError, OSError) as e:
         print(f"❌ Erro ao verificar dependências: {e}")
         print("Execute: pip install -r requirements.txt")
         return False
@@ -94,6 +98,7 @@ def main():
     """
     Função principal que inicia o notebook de comparação.
     """
+    check_only = "--check" in sys.argv
     print("🚀 Pathbit Academy AI - Artigo 0001: LLM vs LRM")
     print("=" * 50)
 
@@ -103,6 +108,14 @@ def main():
 
     if not verificar_api_key():
         print("\n⚠️  Continuando sem API Key (algumas funcionalidades podem não funcionar)")
+
+    if check_only:
+        notebook_path = Path(__file__).parent.parent / "notebooks" / "comparacao_llm_lrm.ipynb"
+        if notebook_path.exists():
+            print("✅ Verificação concluída com sucesso")
+            return
+        print("❌ Notebook não encontrado")
+        sys.exit(1)
 
     print("\n📓 Iniciando notebook de comparação...")
 

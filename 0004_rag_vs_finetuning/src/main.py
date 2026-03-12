@@ -115,6 +115,7 @@ def main():
     """
     Função principal que inicia o notebook de RAG vs Fine-Tuning.
     """
+    check_only = "--check" in sys.argv
     print("🚀 Pathbit Academy AI - Artigo 0004: RAG vs Fine-Tuning")
     print("=" * 60)
 
@@ -123,6 +124,16 @@ def main():
         sys.exit(1)
 
     verificar_api_keys()
+
+    if check_only:
+        notebook_path = (
+            Path(__file__).parent.parent / "notebooks" / "rag_vs_finetuning.ipynb"
+        )
+        if notebook_path.exists():
+            print("✅ Verificação concluída com sucesso")
+            return
+        print("❌ Notebook não encontrado")
+        sys.exit(1)
 
     print("\n📓 Iniciando notebook de RAG vs Fine-Tuning...")
 
