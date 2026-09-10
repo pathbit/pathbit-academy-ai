@@ -1,4 +1,4 @@
-# Prompt engineering na prática: como medir estratégia, modelo e ganho real antes de escalar custo
+# Prompt engineering na prática - como medir estratégia, modelo e ganho real antes de escalar custo
 
 Prompt engineering costuma ser tratado como ajuste cosmético. Troca-se uma instrução, roda-se meia dúzia de exemplos e conclui-se que o sistema "melhorou". O problema é que esse ritual quase nunca separa duas coisas diferentes: ganho de engenharia de prompt e ganho de capacidade do modelo.
 
@@ -191,6 +191,41 @@ O artigo entrega um laboratório comparativo que permite:
 **Opção 2** Abra o notebook e compare os resultados por estratégia e por modelo.
 
 [**Abrir notebook de testes**](https://github.com/pathbit/pathbit-academy-ai/blob/master/0005_prompt_engineering_avancado/notebooks/prompt_engineering_avancado.ipynb)
+
+### Pré-requisitos para Execução Local
+
+Antes de rodar o laboratório comparativo de prompt engineering localmente, prepare seu ambiente:
+
+1. **Python 3.10 ou superior:**
+   - Crie e ative um ambiente virtual dedicado:
+     ```bash
+     # macOS e Linux
+     python3 -m venv .venv
+     source .venv/bin/activate
+
+     # Windows (PowerShell)
+     python -m venv .venv
+     .venv\Scripts\Activate.ps1
+     ```
+   - Instale as bibliotecas necessárias:
+     ```bash
+     pip install --upgrade pip
+     pip install -r requirements.txt
+     ```
+
+2. **Modelos 100% Locais e Gratuitos:**
+   - Não requer chave de API nem criação de conta em provedores externos.
+   - Conexão com a internet é necessária apenas na primeira execução para baixar os modelos abertos (`Qwen/Qwen2.5-0.5B-Instruct` e `google/flan-t5-small`) do Hugging Face.
+
+3. **Execução Local:**
+   - Execute o runner do laboratório diretamente pelo terminal ou abra o notebook interativo:
+     ```bash
+     # Execução rápida do benchmark
+     python src/prompt_benchmark.py --limit 2
+
+     # Ou abrir o launcher do notebook
+     python src/main.py
+     ```
 
 ## Próximos passos
 

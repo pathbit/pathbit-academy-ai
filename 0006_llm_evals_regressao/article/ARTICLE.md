@@ -166,6 +166,41 @@ O artigo entrega uma esteira de avaliação que permite:
 
 [**Abrir notebook de testes**](https://github.com/pathbit/pathbit-academy-ai/blob/master/0006_llm_evals_regressao/notebooks/llm_evals_regressao.ipynb)
 
+### Pré-requisitos para Execução Local
+
+Antes de rodar a esteira de avaliação e detecção de regressões localmente, configure o ambiente:
+
+1. **Python 3.10 ou superior:**
+   - Crie e ative um ambiente virtual dedicado:
+     ```bash
+     # macOS e Linux
+     python3 -m venv .venv
+     source .venv/bin/activate
+
+     # Windows (PowerShell)
+     python -m venv .venv
+     .venv\Scripts\Activate.ps1
+     ```
+   - Instale as bibliotecas necessárias:
+     ```bash
+     pip install --upgrade pip
+     pip install -r requirements.txt
+     ```
+
+2. **Modelos Abertos sem Necessidade de API Key:**
+   - Todo o pipeline roda localmente com modelos abertos (`Qwen/Qwen2.5-0.5B-Instruct`, `google/flan-t5-small` e embeddings MiniLM).
+   - Não é necessário cadastrar cartão ou criar chaves em provedores externos.
+
+3. **Execução Local:**
+   - Execute o runner de avaliação no terminal ou lance o notebook:
+     ```bash
+     # Executar a esteira completa
+     python src/evals_runner.py --limit 3
+
+     # Ou abrir o launcher interativo
+     python src/main.py
+     ```
+
 ## Próximos passos
 
 Se você quiser endurecer ainda mais essa esteira:

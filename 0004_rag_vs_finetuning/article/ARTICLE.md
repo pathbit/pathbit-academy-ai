@@ -484,6 +484,42 @@ Você precisa de: dados que mudam (✅ RAG), citar fontes (✅ RAG), orçamento 
 
 [**Abrir no Google Colab**](https://colab.research.google.com/github/pathbit/pathbit-academy-ai/blob/master/0004_rag_vs_finetuning/notebooks/rag_vs_finetuning.ipynb)
 
+### Pré-requisitos para Execução Local
+
+Antes de executar os laboratórios de RAG e Fine-Tuning com LoRA localmente, configure o ambiente:
+
+1. **Python 3.10 ou superior:**
+   - Crie e ative um ambiente virtual dedicado:
+     ```bash
+     # macOS e Linux
+     python3 -m venv .venv
+     source .venv/bin/activate
+
+     # Windows (PowerShell)
+     python -m venv .venv
+     .venv\Scripts\Activate.ps1
+     ```
+   - Instale as bibliotecas necessárias:
+     ```bash
+     pip install --upgrade pip
+     pip install -r requirements.txt
+     ```
+
+2. **Conta Groq e Modelos Hugging Face:**
+   - Obtenha sua chave gratuita do Groq Cloud em [console.groq.com/keys](https://console.groq.com/keys) e configure:
+     ```bash
+     export GROQ_API_KEY="sua_chave_aqui"
+     ```
+   - O fine-tuning com LoRA utiliza a biblioteca `peft` e baixa os pesos base do Hugging Face automaticamente sem custos.
+
+3. **Execução Local:**
+   - Execute o script de demonstração ou abra o notebook interativo:
+     ```bash
+     python src/main.py
+     # ou
+     jupyter notebook notebooks/rag_vs_finetuning.ipynb
+     ```
+
 ## Implementação prática no notebook
 
 No notebook você vai encontrar:
@@ -779,8 +815,7 @@ Se você sair deste artigo com apenas uma lição, que seja esta: **comece simpl
 
 A **Pathbit** é especialista em arquiteturas de IA para produção e já ajudou dezenas de empresas a escolher e implementar a solução certa.
 
-### 💼 Serviços Oferecidos:
-
+### 💼 Serviços Oferecidos
 **1. Consultoria e avaliação técnica**
 
 - Análise do seu caso de uso
@@ -808,8 +843,7 @@ A **Pathbit** é especialista em arquiteturas de IA para produção e já ajudou
 - Otimização de custos (média: -40%)
 - Melhoria de qualidade
 
-### 📞 Entre em Contato:
-
+### 📞 Entre em Contato
 - **LinkedIn:** [@pathbit](https://linkedin.com/company/pathbit)
 - **Website:** [pathbit.com.br](https://pathbit.com.br)
 - **Email:** contato@pathbit.com.br

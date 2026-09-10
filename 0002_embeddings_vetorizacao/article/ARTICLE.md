@@ -215,6 +215,42 @@ Sistema: Busca documentos relevantes → Gera resposta baseada no contexto encon
 
 [**Abrir no Google Colab**](https://colab.research.google.com/github/pathbit/pathbit-academy-ai/blob/master/0002_embeddings_vetorizacao/notebooks/embeddings_vetorizacao.ipynb)
 
+### Pré-requisitos para Execução Local
+
+Para rodar os exemplos práticos de geração de embeddings e cálculos de similaridade localmente, prepare seu ambiente:
+
+1. **Python 3.10 ou superior:**
+   - Crie e ative um ambiente virtual dedicado:
+     ```bash
+     # macOS e Linux
+     python3 -m venv .venv
+     source .venv/bin/activate
+
+     # Windows (PowerShell)
+     python -m venv .venv
+     .venv\Scripts\Activate.ps1
+     ```
+   - Instale as bibliotecas necessárias:
+     ```bash
+     pip install --upgrade pip
+     pip install -r requirements.txt
+     ```
+
+2. **Modelos Locais e Chave de API Opcional:**
+   - A biblioteca `sentence-transformers` baixa os modelos de embeddings (`all-MiniLM-L6-v2`) automaticamente do Hugging Face sem custo e sem exigir autenticação prévia.
+   - Caso queira testar a integração com o Groq para geração de respostas a partir de contexto vetorial, crie uma chave gratuita em [console.groq.com/keys](https://console.groq.com/keys) e configure:
+     ```bash
+     export GROQ_API_KEY="sua_chave_aqui"
+     ```
+
+3. **Execução Local:**
+   - Execute o script principal ou abra o notebook interativo:
+     ```bash
+     python src/main.py
+     # ou
+     jupyter notebook notebooks/embeddings_vetorizacao.ipynb
+     ```
+
 ## Os melhores modelos de Embeddings
 
 ### **1. Sentence-BERT (all-MiniLM-L6-v2)**
@@ -249,7 +285,7 @@ Sistema: Busca documentos relevantes → Gera resposta baseada no contexto encon
 - **Uso:** Aplicações comerciais, alta performance
 - **Disponível em:** [Groq Console](https://console.groq.com/docs/models)
 
-## Otimização: Como Escolher o Modelo Certo
+## Otimização - Como Escolher o Modelo Certo
 
 ### **1. Considere o Tamanho do Dataset**
 

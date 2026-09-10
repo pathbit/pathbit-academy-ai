@@ -34,8 +34,9 @@ Inclui fine-tuning REAL com LoRA (demonstrativo), exemplos executáveis em Pytho
 
 #### 📋 Pré-requisitos
 
-- Python 3.14
-- Conta no [Groq](https://console.groq.com/) com API Key
+- Python 3.10 ou superior (testado no Python 3.10 até 3.14)
+- Conta gratuita no [Groq Cloud](https://console.groq.com/keys) com API Key
+- Acesso ao Hugging Face (pesos e datasets públicos baixados automaticamente)
 
 #### 📦 Versões dos Pacotes
 
@@ -86,11 +87,11 @@ python src/main.py
 
 #### 📓 Executar o Jupyter Notebook
 
-#### Opção 1: Google Colab (Recomendado)
+#### Opção 1 - Google Colab (Recomendado)
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pathbit/pathbit-academy-ai/blob/master/0004_rag_vs_finetuning/notebooks/rag_vs_finetuning.ipynb)
 
-#### Opção 2: Execução Local
+#### Opção 2 - Execução Local
 
 ```bash
 # Com o ambiente virtual ativado
@@ -117,8 +118,7 @@ Para problemas específicos, consulte a documentação na pasta `docs/`:
 
 ### 🎯 O que você vai aprender
 
-#### No Artigo Completo:
-
+#### No Artigo Completo
 - ✅ Conceitos de RAG e Fine-Tuning
 - ✅ Quando usar cada abordagem
 - ✅ Comparação técnica detalhada
@@ -130,8 +130,7 @@ Para problemas específicos, consulte a documentação na pasta `docs/`:
 - ✅ Métricas de avaliação
 - ✅ FAQ técnico (7 perguntas)
 
-#### No Notebook Interativo:
-
+#### No Notebook Interativo
 - ✅ Implementação de Modelo Base (baseline)
 - ✅ Implementação completa de RAG
 - ✅ **Fine-tuning REAL com LoRA** (GPT-2 + PyTorch)
@@ -146,15 +145,13 @@ Para problemas específicos, consulte a documentação na pasta `docs/`:
 
 ### 💰 Estimativa de Custos (Produção)
 
-#### Setup Inicial:
-
+#### Setup Inicial
 - **Modelo Base:** $0 (usa APIs)
 - **RAG:** $100-500 (vector store + setup)
 - **Fine-Tuning:** $5.000-15.000 (treino com GPU)
 - **Híbrido:** $10.000-20.000 (ambos)
 
-#### Custo Mensal (10k queries):
-
+#### Custo Mensal (10k queries)
 - **Modelo Base:** ~$100
 - **RAG:** ~$300
 - **Fine-Tuning:** ~$200 (+ $500 manutenção)
@@ -178,8 +175,7 @@ Para problemas específicos, consulte a documentação na pasta `docs/`:
 
 ### 📊 Casos de Uso Abordados
 
-#### Use RAG quando:
-
+#### Use RAG quando
 - ✅ Informações mudam frequentemente (legislação, preços)
 - ✅ Precisa citar fontes (transparência, compliance)
 - ✅ Orçamento limitado (< $5.000)
@@ -188,8 +184,7 @@ Para problemas específicos, consulte a documentação na pasta `docs/`:
 
 **Exemplo:** Assistente de investimentos (nosso caso no notebook)
 
-#### Use Fine-Tuning quando:
-
+#### Use Fine-Tuning quando
 - ✅ Tom/estilo muito específico (marca, compliance)
 - ✅ Domínio ultra-técnico (médico, jurídico)
 - ✅ Volume muito alto (> 1M queries/mês)
@@ -198,8 +193,7 @@ Para problemas específicos, consulte a documentação na pasta `docs/`:
 
 **Exemplo:** Assistente médico especializado
 
-#### Use Híbrido quando:
-
+#### Use Híbrido quando
 - ✅ Precisa especialização + informações atualizadas
 - ✅ Budget não é limitante (> $10k)
 - ✅ Caso mission-critical
@@ -342,7 +336,7 @@ Mas requer modelos especializados (não coberto neste artigo).
 
 ### 🚀 Como Executar
 
-#### Opção 1: Google Colab (Recomendado)
+#### Opção 1 - Google Colab (Recomendado)
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pathbit/pathbit-academy-ai/blob/master/0004_rag_vs_finetuning/notebooks/rag_vs_finetuning.ipynb)
 
@@ -353,7 +347,7 @@ Mas requer modelos especializados (não coberto neste artigo).
 - Execução em minutos
 - Ideal para testes e aprendizado
 
-#### Opção 2: Execução Local
+#### Opção 2 - Execução Local
 
 ```bash
 # 1. Clonar repositório

@@ -45,9 +45,9 @@ Tudo usando modelos gratuitos do Hugging Face.
 
 #### Pré-requisitos
 
-- Python 3.14
-- Sem chave de API
-- Internet apenas para baixar os modelos gratuitos na primeira execução
+- Python 3.10 ou superior (testado no Python 3.10 até 3.14)
+- Sem chave de API (100% local e gratuito)
+- Conexão de internet apenas para baixar os modelos abertos do Hugging Face na primeira execução
 
 #### Preparar o ambiente
 

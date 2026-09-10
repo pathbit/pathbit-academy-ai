@@ -34,8 +34,9 @@ Inclui exemplos práticos, código em Python e comparações de performance entr
 
 ### 📋 Pré-requisitos
 
-- Python 3.14
-- Conta no [Groq](https://console.groq.com/) com API Key (opcional)
+- Python 3.10 ou superior (testado no Python 3.10 até 3.14)
+- Conta gratuita no [Groq Cloud](https://console.groq.com/keys) com API Key (opcional para geração)
+- ChromaDB (embarcado e executado 100% localmente)
 
 ### 📦 Versões dos Pacotes
 
@@ -85,14 +86,14 @@ python src/main.py
 
 ### 📓 Executar o Jupyter Notebook
 
-### Opção 1: Usando o script main.py (Recomendado)
+### Opção 1 - Usando o script main.py (Recomendado)
 
 ```bash
 # Com o ambiente virtual ativado
 python src/main.py
 ```
 
-### Opção 2: Executar diretamente
+### Opção 2 - Executar diretamente
 
 ```bash
 # Com o ambiente virtual ativado

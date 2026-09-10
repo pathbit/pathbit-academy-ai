@@ -1,4 +1,4 @@
-# Agentes e tool calling na prática: como dar autonomia sem perder controle
+# Agentes e tool calling na prática - como dar autonomia sem perder controle
 
 Muita demo de agente parece convincente porque pula exatamente as partes que mais dão trabalho: controle de risco, recuperação de contexto, fallback quando o planner falha e trilha de auditoria para revisar o que aconteceu. A interface conversa bem, a tool dispara e a resposta volta redonda. O problema é que esse tipo de fluxo raramente aguenta o primeiro choque com operação real.
 
@@ -199,6 +199,41 @@ O artigo entrega um agente local com:
 **Opção 2** Abra o notebook e acompanhe planejamento, execução, retrieval e auditoria passo a passo.
 
 [**Abrir notebook de testes**](https://github.com/pathbit/pathbit-academy-ai/blob/master/0007_agentes_tool_calling/notebooks/agentes_tool_calling.ipynb)
+
+### Pré-requisitos para Execução Local
+
+Antes de executar a simulação e o laboratório prático de agentes com tool calling localmente, configure o ambiente:
+
+1. **Python 3.10 ou superior:**
+   - Crie e ative um ambiente virtual dedicado:
+     ```bash
+     # macOS e Linux
+     python3 -m venv .venv
+     source .venv/bin/activate
+
+     # Windows (PowerShell)
+     python -m venv .venv
+     .venv\Scripts\Activate.ps1
+     ```
+   - Instale as bibliotecas necessárias:
+     ```bash
+     pip install --upgrade pip
+     pip install -r requirements.txt
+     ```
+
+2. **Modelos 100% Locais e Gratuitos:**
+   - Não requer chave de API, autenticação ou contas de terceiros.
+   - O planner, o roteador e as tools executam localmente usando `Qwen/Qwen2.5-0.5B-Instruct` e embeddings MiniLM.
+
+3. **Execução Local:**
+   - Execute o simulador de cenários pelo terminal ou abra o notebook:
+     ```bash
+     # Executar os cenários de teste do agente
+     python src/agent_simulator.py --limit 3
+
+     # Ou abrir o launcher do notebook
+     python src/main.py
+     ```
 
 ## Próximos passos
 

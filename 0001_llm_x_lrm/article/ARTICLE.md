@@ -95,6 +95,50 @@ Imagine que você está construindo um sistema de suporte para um banco:
 
 [Abrir no Google Colab](https://colab.research.google.com/github/pathbit/pathbit-academy-ai/blob/master/0001_llm_x_lrm/notebooks/comparacao_llm_lrm.ipynb)
 
+### Pré-requisitos para Execução Local
+
+Antes de rodar os scripts e comparar o LLM com o LRM, configure o ambiente na sua máquina:
+
+1. **Python 3.10 ou superior:**
+   - Verifique a versão com `python3 --version`.
+   - Crie e ative um ambiente virtual isolado:
+     ```bash
+     # macOS e Linux
+     python3 -m venv .venv
+     source .venv/bin/activate
+
+     # Windows (PowerShell)
+     python -m venv .venv
+     .venv\Scripts\Activate.ps1
+     ```
+   - Instale as dependências necessárias:
+     ```bash
+     pip install --upgrade pip
+     pip install -r requirements.txt
+     ```
+
+2. **Conta e Chave de API no Groq Cloud:**
+   - Para executar as chamadas rápidas aos modelos de inferência e raciocínio, você precisa de uma chave gratuita do Groq.
+   - Acesse [console.groq.com/keys](https://console.groq.com/keys) e crie sua conta gratuita.
+   - Gere uma API Key com prefixo `gsk_...` e configure no seu terminal:
+     ```bash
+     # macOS e Linux
+     export GROQ_API_KEY="sua_chave_aqui"
+
+     # Windows (PowerShell)
+     $env:GROQ_API_KEY="sua_chave_aqui"
+     ```
+
+3. **Execução Local:**
+   - Execute o script principal ou abra o notebook interativo:
+     ```bash
+     # Executar via script
+     python src/main.py
+
+     # Ou abrir no Jupyter
+     jupyter notebook notebooks/comparacao_llm_lrm.ipynb
+     ```
+
 ## Próximos passos
 
 O mercado adora transformar qualquer avanço tecnológico em modinha. Foi assim com `Big Data`, foi assim com `Blockchain (Eterna promessa?)`, e agora é assim com **LLM e LRM**. _A consequência é sempre a mesma: uma enxurrada de projetos que nascem para "mostrar que estamos usando" e morrem quando alguém pergunta "mas resolve o quê?"_.

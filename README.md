@@ -146,6 +146,26 @@ pathbit-academy-ai/
 
 ---
 
+## 📋 Pré-requisitos Gerais do Ambiente
+
+Para executar os artigos e notebooks da **Pathbit Academy AI**, recomendamos a seguinte configuração de ambiente:
+
+1. **Python 3.10 ou superior:**
+   - O projeto é compatível com Python 3.10 até Python 3.14.
+   - Sempre utilize um ambiente virtual isolado por artigo:
+     ```bash
+     python3 -m venv .venv
+     source .venv/bin/activate  # No Windows: .venv\Scripts\Activate.ps1
+     pip install --upgrade pip
+     pip install -r requirements.txt
+     ```
+
+2. **Contas e Chaves de API Gratuitas:**
+   - **Groq Cloud (Artigos 0001 a 0004):** Obtenha uma chave gratuita com prefixo `gsk_...` em [console.groq.com/keys](https://console.groq.com/keys) para inferência ultra rápida.
+   - **Hugging Face (Artigos 0002 a 0007):** Acesso a modelos públicos e abertos baixados automaticamente, sem custos ou necessidade de chaves pagas.
+
+---
+
 ## 🛠️ Como Contribuir
 
 1. Clone o repositório

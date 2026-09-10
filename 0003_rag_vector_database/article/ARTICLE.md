@@ -1,4 +1,4 @@
-# RAG e Vector Database: A revolução na busca inteligente de informações
+# RAG e Vector Database - A revolução na busca inteligente de informações
 
 **Vamos direto ao ponto:**
 
@@ -204,8 +204,7 @@ Sistema: Analisa características do produto → Recomenda baseado em similarida
 
 > Figura 9: Arquitetura completa de um sistema RAG
 
-### **Componentes Principais:**
-
+### **Componentes Principais**
 1. **Document Loader** - Carrega documentos de várias fontes
 2. **Text Splitter** - Divide documentos em chunks otimizados
 3. **Embedding Model** - Converte texto em vetores
@@ -213,16 +212,14 @@ Sistema: Analisa características do produto → Recomenda baseado em similarida
 5. **Retriever** - Busca documentos relevantes
 6. **LLM** - Gera respostas baseadas no contexto
 
-### **Fluxo de Dados:**
-
+### **Fluxo de Dados**
 ```
 Documentos → Chunking → Embeddings → Vector Store
      ↓
 Pergunta → Embedding → Busca → Contexto → LLM → Resposta
 ```
 
-### **Exemplos Práticos:**
-
+### **Exemplos Práticos**
 ```
 Manual da Empresa → "Política de devolução: 30 dias" → [0.2, -0.1, 0.8, ...] → Vector Store
      ↓
@@ -442,6 +439,42 @@ Completeness: 0.85 (inclui prazo e condições)
 
 [**Abrir no Google Colab**](https://colab.research.google.com/github/pathbit/pathbit-academy-ai/blob/master/0003_rag_vector_database/notebooks/rag_vector_database.ipynb)
 
+### Pré-requisitos para Execução Local
+
+Antes de rodar a pipeline de RAG e banco vetorial com ChromaDB localmente, prepare seu ambiente:
+
+1. **Python 3.10 ou superior:**
+   - Crie e ative um ambiente virtual isolado:
+     ```bash
+     # macOS e Linux
+     python3 -m venv .venv
+     source .venv/bin/activate
+
+     # Windows (PowerShell)
+     python -m venv .venv
+     .venv\Scripts\Activate.ps1
+     ```
+   - Instale as bibliotecas necessárias:
+     ```bash
+     pip install --upgrade pip
+     pip install -r requirements.txt
+     ```
+
+2. **Banco Vetorial Local e Chave de API Groq:**
+   - O ChromaDB opera de forma 100% embarcada e local, sem necessidade de servidores externos ou banco em nuvem.
+   - Para a etapa de síntese e geração da resposta com a LLM, crie uma chave gratuita no Groq Cloud em [console.groq.com/keys](https://console.groq.com/keys) e configure no seu ambiente:
+     ```bash
+     export GROQ_API_KEY="sua_chave_aqui"
+     ```
+
+3. **Execução Local:**
+   - Execute o script principal ou abra o notebook interativo:
+     ```bash
+     python src/main.py
+     # ou
+     jupyter notebook notebooks/rag_vector_database.ipynb
+     ```
+
 ## Como implementar RAG na prática
 
 > `Show-Me-The-Code` - Toda a implementação prática está no notebook. Aqui vamos focar no conceito.
@@ -456,30 +489,27 @@ A implementação de um sistema RAG envolve alguns passos fundamentais que você
 
 O segredo não está na complexidade do código, `código bonito não resolve problema feio`, mas na qualidade do processamento dos seus documentos e na escolha da estratégia de chunking certa para o seu caso de uso. É como cozinhar: não adianta ter os melhores ingredientes se você não sabe como cortá-los, `e às vezes um corte errado pode estragar o prato inteiro`.
 
-## RAG vs Fine-tuning: Quando usar cada estratégia?
+## RAG vs Fine-tuning - Quando usar cada estratégia?
 
 ![RAG vs Fine-tuning](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0003_rag_vector_database/assets/13.png)
 
 > Figura 13: Comparação entre RAG e Fine-tuning
 
-### **Use RAG quando:**
-
+### **Use RAG quando**
 - Precisa de informações atualizadas frequentemente
 - Tem uma base de conhecimento grande e diversa
 - Quer controle total sobre as fontes de informação
 - Precisa de transparência nas respostas
 - Tem orçamento limitado para treinamento
 
-### **Use Fine-tuning quando:**
-
+### **Use Fine-tuning quando**
 - Precisa de mudanças no comportamento do modelo
 - Tem dados específicos para treinar
 - Quer que o modelo "pense" de forma diferente
 - Tem orçamento e tempo para treinamento
 - Precisa de performance otimizada
 
-### **Use ambos quando:**
-
+### **Use ambos quando**
 - Quer o melhor dos dois mundos
 - Tem casos de uso complexos
 - Precisa de máxima precisão
@@ -512,7 +542,7 @@ Quando você implementa RAG corretamente, os resultados podem ser extraordinári
 3. **Compare não só a precisão**, mas também velocidade, custo e facilidade de implementação (`o mais rápido não é sempre o melhor`)
 4. **Escolha o que funciona melhor** no seu contexto específico (`o que funciona para o Google pode não funcionar para você`)
 
-### `Próximo artigo: Fine-tuning vs RAG quando usar cada estratégia`
+### `Próximo artigo - Fine-tuning vs RAG quando usar cada estratégia`
 
 No nosso próximo artigo, vamos mergulhar fundo na comparação entre **Fine-tuning** e **RAG**, explorando quando cada estratégia é mais adequada, como combinar ambas para máxima eficiência, e casos práticos reais onde essas tecnologias fazem a diferença entre o sucesso e o fracasso.
 
