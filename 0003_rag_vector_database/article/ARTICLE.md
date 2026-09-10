@@ -444,6 +444,10 @@ Completeness: 0.85 (inclui prazo e condições)
 Antes de rodar a pipeline de RAG e banco vetorial com ChromaDB localmente, prepare seu ambiente:
 
 1. **Python 3.10 ou superior:**
+   - Verifique com `python3 --version`. Se necessário, instale:
+     - **macOS:** `brew install python` ou `pyenv install 3.12`
+     - **Linux (Ubuntu/Debian):** `sudo apt update && sudo apt install -y python3 python3-venv python3-pip`
+     - **Windows:** `winget install Python.Python.3.12`
    - Crie e ative um ambiente virtual isolado:
      ```bash
      # macOS e Linux

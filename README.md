@@ -152,6 +152,10 @@ Para executar os artigos e notebooks da **Pathbit Academy AI**, recomendamos a s
 
 1. **Python 3.10 ou superior:**
    - O projeto é compatível com Python 3.10 até Python 3.14.
+   - Caso precise instalar o Python:
+     - **macOS:** Instale via Homebrew com `brew install python` ou pyenv com `pyenv install 3.12`.
+     - **Linux (Ubuntu/Debian):** `sudo apt update && sudo apt install -y python3 python3-venv python3-pip`.
+     - **Windows:** Instale via terminal com `winget install Python.Python.3.12` ou baixe pelo instalador oficial em [python.org](https://www.python.org/downloads/).
    - Sempre utilize um ambiente virtual isolado por artigo:
      ```bash
      python3 -m venv .venv
@@ -161,8 +165,12 @@ Para executar os artigos e notebooks da **Pathbit Academy AI**, recomendamos a s
      ```
 
 2. **Contas e Chaves de API Gratuitas:**
-   - **Groq Cloud (Artigos 0001 a 0004):** Obtenha uma chave gratuita com prefixo `gsk_...` em [console.groq.com/keys](https://console.groq.com/keys) para inferência ultra rápida.
-   - **Hugging Face (Artigos 0002 a 0007):** Acesso a modelos públicos e abertos baixados automaticamente, sem custos ou necessidade de chaves pagas.
+   - **Groq Cloud (Artigos 0001 a 0004):**
+     - Crie uma conta gratuita em [console.groq.com/keys](https://console.groq.com/keys).
+     - Gere uma chave de API com prefixo `gsk_...`.
+     - Defina no terminal com `export GROQ_API_KEY="gsk_..."` (ou `$env:GROQ_API_KEY="gsk_..."` no PowerShell).
+   - **Hugging Face (Artigos 0002 a 0007):**
+     - Acesso a modelos públicos e abertos baixados automaticamente pela biblioteca `transformers` ou `sentence-transformers`, sem necessidade de chave de API ou cobranças.
 
 ---
 

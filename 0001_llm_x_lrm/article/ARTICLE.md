@@ -101,6 +101,10 @@ Antes de rodar os scripts e comparar o LLM com o LRM, configure o ambiente na su
 
 1. **Python 3.10 ou superior:**
    - Verifique a versão com `python3 --version`.
+   - Se necessário, instale:
+     - **macOS:** `brew install python` ou `pyenv install 3.12`
+     - **Linux (Ubuntu/Debian):** `sudo apt update && sudo apt install -y python3 python3-venv python3-pip`
+     - **Windows:** `winget install Python.Python.3.12`
    - Crie e ative um ambiente virtual isolado:
      ```bash
      # macOS e Linux
