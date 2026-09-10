@@ -1,0 +1,17 @@
+[
+  {
+    "name": "buscar_politica",
+    "description": "Consultar politicas de devolucao, cancelamento, faturamento e regras internas.",
+    "argument_name": "consulta"
+  },
+  {
+    "name": "criar_ticket",
+    "description": "Abrir chamado para falhas tecnicas, erro 500, indisponibilidade ou incidente operacional.",
+    "argument_name": "assunto"
+  },
+  {
+    "name": "resposta_direta",
+    "description": "Responder perguntas gerais sobre capacidades do assistente, sem executar nenhuma acao operacional.",
+    "argument_name": "mensagem"
+  }
+]

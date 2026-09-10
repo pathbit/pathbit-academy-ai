@@ -1,0 +1,38 @@
+modelo_geracao,caso,estrategia,strategy_description,score_estrutura,score_keywords,score_prioridade,score_semantico,score_total,missing_fields,saida
+Qwen/Qwen2.5-0.5B-Instruct,suporte_estorno,base,Instrução curta e pouco controlada.,0.0,0.6666666666666666,0.0,0.8704649209976196,0.38428289691607154,"resumo,prioridade,proxima_acao",O cliente reclama de falta de entrega e pede estorno imediato do pedido.
+Qwen/Qwen2.5-0.5B-Instruct,suporte_estorno,estruturado,"Contrato de saída rígido, sem few-shot.",0.6666666666666666,1.0,1.0,0.7714999914169312,0.8595416645208994,proxima_acao,"Resumo: Uma reclamação de atraso na entrega.
+Prioridade: Alta.
+Proxima acção: Estorno imediato.
+Mensagem: O pedido ainda não chegou."
+Qwen/Qwen2.5-0.5B-Instruct,suporte_estorno,few_shot,Contrato de saída com exemplo orientador.,0.6666666666666666,1.0,1.0,0.8362913131713867,0.8757394949595133,proxima_acao,"Resumo: A cliente reclamou de atraso na entrega.
+Prioridade: alta
+Proxima acção: responder imediatamente
+Mensagem: O pedido ainda não foi entregue, solicitando estorno imediato."
+Qwen/Qwen2.5-0.5B-Instruct,suporte_estorno,checklist,Contrato com checklist operacional explícito.,1.0,0.3333333333333333,1.0,0.264218270778656,0.6493879010279973,,"Resumo: Identificando o problema central, identificando prioridade e sugerindo a proxima ação mais segura.
+
+Prioridade: Alta
+
+Proxima Ação: Estorno imediato e resolver o pedido imediatamente."
+Qwen/Qwen2.5-0.5B-Instruct,fatura_janeiro,base,Instrução curta e pouco controlada.,0.0,1.0,0.0,0.7513607740402222,0.43784019351005554,"resumo,prioridade,proxima_acao","O usuário solicitou segunda via da fatura de janeiro, mas não encontrou a aba Financeira no portal."
+Qwen/Qwen2.5-0.5B-Instruct,fatura_janeiro,estruturado,"Contrato de saída rígido, sem few-shot.",0.6666666666666666,1.0,0.0,0.7280949354171753,0.5986904005209605,proxima_acao,"Resumo: Uma solicitação para segunda via da fatura de janeiro, mas sem acesso à aba financeira no portal.
+
+Prioridade: Alta
+
+Proxima acção: Solicitar assistência técnica ao usuário para encontrar a aba financeira na interface do portal."
+Qwen/Qwen2.5-0.5B-Instruct,fatura_janeiro,few_shot,Contrato de saída com exemplo orientador.,0.6666666666666666,1.0,0.0,0.7562354207038879,0.6057255218426386,proxima_acao,"Resumo: Usuário solicitou segunda via da fatura de janeiro, mas não encontrou a aba financeira no portal.
+Prioridade: Alta
+Proxima acção: Solicitar assistência técnica para resolver o problema.
+Mensagem: O cliente solicitou segunda via da fatura de janeiro, mas não encontrou a aba financeira no portal."
+Qwen/Qwen2.5-0.5B-Instruct,fatura_janeiro,checklist,Contrato com checklist operacional explícito.,1.0,0.0,1.0,0.24326613545417786,0.5608165338635445,,"Resumo: Identificando o problema central, identificando prioridade, sugerindo a próxima ação mais segura.
+
+Prioridade: Media
+
+Proxima Ação: Solicitar auxílio técnico para encontrar a aba financeira na primeira vez."
+google/flan-t5-small,suporte_estorno,base,Instrução curta e pouco controlada.,0.0,1.0,0.0,0.8795349597930908,0.4698837399482727,"resumo,prioridade,proxima_acao","Cliente reclamou de atraso na entrega, quer estorno imediato e diz que o pedido ainda nao chegou."
+google/flan-t5-small,suporte_estorno,estruturado,"Contrato de saída rígido, sem few-shot.",0.0,1.0,0.0,0.8795349597930908,0.4698837399482727,"resumo,prioridade,proxima_acao","Cliente reclamou de atraso na entrega, quer estorno imediato e diz que o pedido ainda nao chegou."
+google/flan-t5-small,suporte_estorno,few_shot,Contrato de saída com exemplo orientador.,0.0,1.0,0.0,0.8788732290267944,0.4697183072566986,"resumo,prioridade,proxima_acao","Client reclamou de atraso na entrega, quer estorno imediato e diz que o pedido ainda nao chegou."
+google/flan-t5-small,suporte_estorno,checklist,Contrato com checklist operacional explícito.,0.0,1.0,0.0,0.8785596489906311,0.4696399122476578,"resumo,prioridade,proxima_acao","Mensagem: Client reclamou de atraso na entrega, quer estorno imediato e diz que o pedido ainda nao chegou."
+google/flan-t5-small,fatura_janeiro,base,Instrução curta e pouco controlada.,0.0,0.0,0.0,0.2519357204437256,0.0629839301109314,"resumo,prioridade,proxima_acao",SYSTEM: Voce e um analista de atendimento da Pathbit. Responda em portugues. USER: Leia a mensagem abaixo e devolva um resumo curto em portugues.
+google/flan-t5-small,fatura_janeiro,estruturado,"Contrato de saída rígido, sem few-shot.",0.0,0.0,0.0,0.2840421795845032,0.0710105448961258,"resumo,prioridade,proxima_acao",SYSTEM: Voce e um analista de atendimento da Pathbit. Responda sempre em portugues. resumo: uma frase> prioridade: alta |media|baixa> proxima_acao: uma frase objetiva> Mensagem: Usuario pediu se
+google/flan-t5-small,fatura_janeiro,few_shot,Contrato de saída com exemplo orientador.,0.0,0.0,0.0,0.3438946008682251,0.08597365021705627,"resumo,prioridade,proxima_acao",SYSTEM: Voce e um analista de atendimento da Pathbit. Responda sempre em portugues. USER: Aprenda com o exemplo abaixo e use o mesmo formato. Exemplo 1 Mensagem: Cliente reportou erro 500 e pede retorno urgente
+google/flan-t5-small,fatura_janeiro,checklist,Contrato com checklist operacional explícito.,0.0,1.0,0.0,0.7996689081192017,0.4499172270298004,"resumo,prioridade,proxima_acao",Mensagem: Usuario pediu segunda via da fatura de janeiro e no encontrou a aba financeira no portal.

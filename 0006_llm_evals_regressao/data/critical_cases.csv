@@ -1,0 +1,31 @@
+candidate,modelo_geracao,pergunta,categoria,score_final,score_ponderado,resposta
+qwen_generico,Qwen/Qwen2.5-0.5B-Instruct,Qual e o prazo de devolucao?,politica,0.4717987219492594,0.7076980829238891,"O prazo de devolução é de 30 dias corridos, desde que seja solicitado."
+qwen_estruturado,Qwen/Qwen2.5-0.5B-Instruct,Qual e o prazo de devolucao?,politica,0.7376785145865546,1.106517771879832,O prazo de devolução é de 30 dias corridos. Os produtos sem uso e com embalagem preservadas podem ser solicitados por meio do site da empresa ou através de uma reclamação diretamente à empresa.
+flan_estruturado,google/flan-t5-small,Qual e o prazo de devolucao?,politica,0.9301234086354574,1.395185112953186,A politica de devolucao da empresa permite solicitar estorno em ate 30 dias corridos para produtos sem uso e com embalagem preservada.
+qwen_generico,Qwen/Qwen2.5-0.5B-Instruct,Como emitir segunda via da fatura?,financeiro,0.7699772914250692,1.1549659371376038,"Para emitir a segunda via da sua fatura, siga os passos abaixo:
+
+1. Acesse o portal do cliente no seu dispositivo.
+2. Abra a aba Financeiro.
+3. Clique em Segunda Via.
+
+Lembre-se que pode ser necessário fazer login ou autenticação se for um novo usuário."
+qwen_estruturado,Qwen/Qwen2.5-0.5B-Instruct,Como emitir segunda via da fatura?,financeiro,0.6367623541090223,0.9551435311635335,"Para emitir a segunda via da fatura, siga os seguintes passos:
+
+1. **Acesse o Portal do Cliente**: Abra o site da sua empresa ou plataforma de pagamento.
+
+2. **Abra a Ação Financeira**: Na aba Financeira, selecione ""Segunda Via"".
+
+3. **Clique Em Segunda Via**: Clique no botão que indica a segunda via na tela.
+
+4. **Escolha Onde"
+flan_estruturado,google/flan-t5-small,Como emitir segunda via da fatura?,financeiro,0.9913200537363688,1.4869800806045532,"Para emitir a segunda via da fatura, acesse o portal do cliente, abra a aba Financeiro e clique em Segunda Via."
+qwen_generico,Qwen/Qwen2.5-0.5B-Instruct,Posso cancelar sem multa?,contrato,0.621985814306471,0.9329787214597065,"Sim, você pode cancelar sem multa. A Pathbit garante um prazo de 7 dias corridos após a contratação para realizar o cancelamento sem cobrar multa."
+qwen_estruturado,Qwen/Qwen2.5-0.5B-Instruct,Posso cancelar sem multa?,contrato,0.4852527644899156,0.7278791467348734,"Sim, posso cancelar sem multa. Para fazer isso, você deve:
+
+1. Informar o motivo pelo qual deseja cancelar a prestação.
+2. Solicitar o cancelamento antes do prazo estabelecido (até 7 dias corridos).
+3. Entregar o documento comprovante de pagamento ou outro documento que证明a a sua condição de cliente.
+4. Agendar uma nova data para realizar o cancelamento.
+
+Lembre"
+flan_estruturado,google/flan-t5-small,Posso cancelar sem multa?,contrato,0.7928074333402845,1.1892111500104268,"em ate 7 dias corridos apos a contratacao. Depois desse prazo, a multa segue o contrato."

@@ -1,0 +1,10 @@
+transformers
+sentence-transformers
+sentencepiece
+torch
+accelerate
+numpy
+pandas
+matplotlib
+jupyter
+ipython

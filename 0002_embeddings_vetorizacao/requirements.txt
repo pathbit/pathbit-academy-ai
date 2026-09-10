@@ -1,0 +1,11 @@
+groq
+sentence-transformers
+numpy
+scikit-learn
+matplotlib
+seaborn
+pandas
+plotly
+jupyter
+ipython
+tqdm>=4.67

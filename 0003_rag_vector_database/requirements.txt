@@ -1,0 +1,23 @@
+# Dependências para o artigo 0003 - RAG e Vector Database
+# Apenas modelos open source e gratuitos
+
+# Core dependencies
+tqdm>=4.67
+groq
+chromadb
+sentence-transformers
+
+# Data processing
+numpy
+pandas
+
+# Visualization
+matplotlib
+seaborn
+
+# Jupyter and development
+jupyter
+ipython
+
+# Utilities
+python-dotenv

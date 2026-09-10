@@ -1,0 +1,32 @@
+# Core LLM and RAG
+groq
+langchain
+langchain-community
+langchain-groq
+langchain-huggingface
+
+# Embeddings and Vector Store
+sentence-transformers
+chromadb
+faiss-cpu
+
+# Fine-Tuning
+transformers
+datasets
+peft
+accelerate
+# Optional para GPU Linux/NVIDIA:
+# bitsandbytes
+
+# Utilities
+python-dotenv
+pandas
+numpy
+
+# Jupyter and development
+jupyter
+ipython
+
+# Visualização
+matplotlib
+seaborn
