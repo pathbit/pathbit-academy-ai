@@ -10,27 +10,44 @@ import sys
 from pathlib import Path
 
 
-def verificar_dependencias() -> bool:
+def obter_comando_jupyter() -> list[str] | None:
     try:
-        result = subprocess.run(
+        res = subprocess.run(
+            [sys.executable, "-m", "jupyter", "--version"],
+            capture_output=True,
+            text=True,
+            timeout=15,
+            check=False,
+        )
+        if res.returncode == 0:
+            return [sys.executable, "-m", "jupyter"]
+    except (subprocess.SubprocessError, OSError):
+        pass
+
+    try:
+        res = subprocess.run(
             ["jupyter", "--version"],
             capture_output=True,
             text=True,
             timeout=15,
             check=False,
         )
-        if result.returncode == 0:
-            print("OK: Jupyter encontrado")
-            return True
-        print("ERRO: Jupyter nao encontrado no PATH")
-        print("Dica: pip install -r requirements.txt")
-        return False
-    except subprocess.TimeoutExpired:
-        print("AVISO: verificacao do Jupyter demorou, continuando")
+        if res.returncode == 0:
+            return ["jupyter"]
+    except (subprocess.SubprocessError, OSError):
+        pass
+
+    return None
+
+
+def verificar_dependencias() -> bool:
+    cmd = obter_comando_jupyter()
+    if cmd is not None:
+        print("OK: Jupyter encontrado")
         return True
-    except (subprocess.SubprocessError, OSError) as exc:
-        print(f"ERRO ao verificar dependencias: {exc}")
-        return False
+    print("ERRO: Jupyter nao encontrado no ambiente atual nem no PATH")
+    print("Dica: pip install -r requirements.txt")
+    return False
 
 
 def iniciar_notebook() -> bool:
@@ -41,9 +58,14 @@ def iniciar_notebook() -> bool:
         print(f"ERRO: notebook nao encontrado: {notebook_path}")
         return False
 
+    cmd = obter_comando_jupyter()
+    if cmd is None:
+        print("ERRO: Jupyter nao disponivel para iniciar o notebook")
+        return False
+
     print(f"Iniciando notebook: {notebook_path}")
     try:
-        subprocess.run(["jupyter", "notebook", str(notebook_path)], check=True)
+        subprocess.run([*cmd, "notebook", str(notebook_path)], check=True)
         return True
     except subprocess.CalledProcessError as exc:
         print(f"ERRO ao iniciar jupyter: {exc}")

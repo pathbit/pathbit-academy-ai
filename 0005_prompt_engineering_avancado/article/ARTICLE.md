@@ -128,7 +128,7 @@ Esse arranjo é importante porque impede duas distorções comuns:
 
 ## Como ler o resultado sem se enganar
 
-![Leitura do benchmark real](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0005_prompt_engineering_avancado/assets/06.png)
+![Leitura do benchmark real](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0005_prompt_engineering_avancado/assets/05.png)
 
 > Figura 5: O ranking fica interessante quando mostra não só quem ganhou, mas como ganhou.
 
@@ -160,7 +160,7 @@ Esse conjunto faz diferença porque transforma prompt engineering em análise co
 
 ## Quando o prompt deixa de ser o próximo passo
 
-![Escada de evolução](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0005_prompt_engineering_avancado/assets/05.png)
+![Escada de evolução](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0005_prompt_engineering_avancado/assets/06.png)
 
 > Figura 6: Prompt melhora instrução e formato; RAG e fine-tuning entram quando o gargalo muda de natureza.
 

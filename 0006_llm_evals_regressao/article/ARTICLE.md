@@ -48,7 +48,7 @@ Isso deixa a esteira útil para trabalho real. Você consegue promover uma mudan
 
 ## O dataset carrega contexto, gabarito e criticidade
 
-![Dataset de evals](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0006_llm_evals_regressao/assets/03.png)
+![Dataset de evals](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0006_llm_evals_regressao/assets/02.png)
 
 > Figura 2: Cada caso traz contexto, resposta ideal, palavras críticas, categoria e peso de risco.
 
@@ -64,7 +64,7 @@ Essa diferença importa porque nem todo erro tem o mesmo peso. Um deslize em bai
 
 ## O score técnico mede aderência antes de ponderar risco
 
-![Métricas de avaliação](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0006_llm_evals_regressao/assets/02.png)
+![Métricas de avaliação](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0006_llm_evals_regressao/assets/03.png)
 
 > Figura 3: O runner separa qualidade técnica do peso operacional de cada caso.
 

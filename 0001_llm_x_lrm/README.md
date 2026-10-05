@@ -98,9 +98,9 @@ jupyter notebook notebooks/comparacao_llm_lrm.ipynb
 
 Para problemas específicos, consulte a documentação na pasta `docs/`:
 
-- [Solução para erro do Google Colab](../../docs/SOLUCAO_ERRO_COLAB.md)
-- [Solução para erro do Groq](../../docs/SOLUCAO_ERRO_GROQ.md)
-- [Atualizações de versões](../../docs/ATUALIZACOES_VERSOES.md)
+- [Solução para erro do Google Colab](../docs/SOLUCAO_ERRO_COLAB.md)
+- [Solução para erro do Groq](../docs/SOLUCAO_ERRO_GROQ.md)
+- [Atualizações de versões](../docs/ATUALIZACOES_VERSOES.md)
 
 #### 🔍 Estrutura de Arquivos
 

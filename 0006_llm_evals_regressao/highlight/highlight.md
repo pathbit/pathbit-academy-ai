@@ -11,7 +11,7 @@ Este módulo transforma LLM Evals em critério de release. Em vez de comparar re
 **Slide 2**
 [layout: split]
 [eyebrow: O dado que muda a conversa]
-[image: ../assets/03.png]
+[image: ../assets/02.png]
 [caption: Dataset com contexto, gabarito, categoria e criticidade por caso.]
 
 Sem criticidade, a média engana
@@ -24,7 +24,7 @@ O dataset não tem só pergunta e resposta ideal. Ele carrega contexto, palavras
 **Slide 3**
 [layout: split]
 [eyebrow: Como o score é calculado]
-[image: ../assets/02.png]
+[image: ../assets/03.png]
 [caption: Scorecard da avaliação separando dimensões técnicas antes do peso de risco.]
 
 O score técnico mede aderência antes de ponderar risco
@@ -82,7 +82,7 @@ Aqui o debate sai de "resposta A vs resposta B" e vira "qual combinação de mod
 **Slide 8**
 [layout: cta]
 [eyebrow: O que este módulo entrega]
-[gallery: ../assets/01.png, ../assets/03.png, ../assets/04.png]
+[gallery: ../assets/01.png, ../assets/02.png, ../assets/04.png]
 
 Artigo completo + esteira pronta para rodar
 

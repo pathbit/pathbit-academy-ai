@@ -70,7 +70,7 @@ print("✅ Todas as dependências instaladas com sucesso!")
 
 Para mais detalhes e outras soluções, consulte:
 
-- **[SOLUCAO_ERRO_COLAB.md](./docs/SOLUCAO_ERRO_COLAB.md)**
+- **[SOLUCAO_ERRO_COLAB.md](./SOLUCAO_ERRO_COLAB.md)**
 
 ---
 

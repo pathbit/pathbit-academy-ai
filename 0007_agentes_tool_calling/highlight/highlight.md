@@ -24,7 +24,7 @@ Fluxo fixo resolve o previsível. Agente entra quando a rota depende do contexto
 **Slide 3**
 [layout: split]
 [eyebrow: Contenção de risco]
-[image: ../assets/03.png]
+[image: ../assets/02.png]
 [caption: Guardrail bloqueando ação arriscada antes de qualquer execução.]
 
 Guardrail e regra de negócio vêm antes do planner
@@ -34,7 +34,7 @@ Pedido sensível nem chega ao passo de geração. Intenção óbvia pode seguir 
 **Slide 4**
 [layout: split]
 [eyebrow: Planejamento observável]
-[image: ../assets/02.png]
+[image: ../assets/03.png]
 [caption: Roteamento híbrido com planner em JSON e fallback por embeddings.]
 
 Planner sem contrato explícito continua sendo caixa-preta
@@ -72,14 +72,14 @@ O próprio material mostra o limite: use agente quando há contexto variável, m
 
 Os artefatos atuais provam hoje, e o código suporta mais
 
-Nos arquivos versionados, já dá para observar guardrail, `business_rule`, retrieval, ticket simulado, resposta final e auditoria.
+Nos arquivos versionados, já dá para observar guardrail, `business_rule`, planner escolhendo `resposta_direta`, retrieval, ticket simulado, resposta final e auditoria nos cinco cenários.
 
-> Planner, fallback, override e resposta direta ainda não aparecem em toda a amostra versionada.
+> `router_fallback` e `router_override` ainda não aparecem na amostra versionada.
 
 **Slide 8**
 [layout: cta]
 [eyebrow: O que este módulo entrega]
-[gallery: ../assets/01.png, ../assets/03.png, ../assets/04.png]
+[gallery: ../assets/01.png, ../assets/02.png, ../assets/04.png]
 
 Artigo completo + simulador local do agente
 

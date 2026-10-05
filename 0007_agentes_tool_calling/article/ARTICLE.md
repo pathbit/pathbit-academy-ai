@@ -34,7 +34,7 @@ Nada de API paga. Nada de serviço externo obrigatório. Tudo roda localmente.
 
 ## A cadeia de decisão começa antes do planner
 
-![Guardrails de segurança](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0007_agentes_tool_calling/assets/03.png)
+![Guardrails de segurança](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0007_agentes_tool_calling/assets/02.png)
 
 > Figura 2: O agente só fica interessante quando a decisão começa com restrição, não com geração.
 
@@ -57,7 +57,7 @@ Essa ordem importa. O agente não começa decidindo livremente. Ele começa rest
 
 ## O planner escolhe tool com contrato explícito
 
-![Tool calling na prática](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0007_agentes_tool_calling/assets/02.png)
+![Tool calling na prática](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0007_agentes_tool_calling/assets/03.png)
 
 > Figura 3: Quando o planner precisa devolver JSON válido, tool calling deixa de ser só intenção implícita.
 
@@ -148,25 +148,24 @@ Essa separação de camadas é importante porque evita misturar decisão, recupe
 
 Nos arquivos gerados hoje nesta pasta, a evidência observada é a seguinte:
 
-- `decision_summary.csv` registra decisões vindas de `business_rule` para `buscar_politica` e `criar_ticket`;
+- `decision_summary.csv` registra decisões vindas de `business_rule` para `buscar_politica` e `criar_ticket`, e uma decisão vinda do `planner` para `resposta_direta`;
 - `retrieval_summary.csv` mostra duas execuções de `buscar_politica`, com documento recuperado e `knowledge_score`;
-- `agent_runs.csv` inclui um bloqueio por guardrail e três execuções operacionais bem-sucedidas;
+- `agent_runs.csv` inclui os cinco cenários do `cenarios.json`: um bloqueio por guardrail e quatro execuções operacionais bem-sucedidas, todas com roteamento correto;
 - `agent_audit_log.jsonl` persiste a trilha serializada de cada cenário executado.
 
 Isso significa que os artefatos versionados atualmente demonstram com clareza:
 
 - guardrail em ação;
 - regra de negócio em ação;
+- planner em JSON escolhendo `resposta_direta` com plano parseado sem fallback;
 - retrieval em base local e abertura simulada de ticket;
 - resposta final gerada a partir do resultado da tool;
 - auditoria por cenário.
 
 Ao mesmo tempo, o código suporta caminhos adicionais que não aparecem nos CSVs atualmente versionados:
 
-- `planner`;
 - `router_fallback`;
-- `router_override`;
-- `resposta_direta`.
+- `router_override`.
 
 Essa distinção é importante para não superprometer. A arquitetura implementada é maior do que a amostra persistida, e o artigo precisa tratar isso com precisão.
 
@@ -233,7 +232,7 @@ Antes de executar a simulação e o laboratório prático de agentes com tool ca
    - Execute o simulador de cenários pelo terminal ou abra o notebook:
      ```bash
      # Executar os cenários de teste do agente
-     python src/agent_simulator.py --limit 3
+     python src/agent_runner.py --limit 3
 
      # Ou abrir o launcher do notebook
      python src/main.py
@@ -243,8 +242,8 @@ Antes de executar a simulação e o laboratório prático de agentes com tool ca
 
 Se você quiser endurecer essa base sem sair do stack gratuito:
 
-1. execute todos os cenários do `cenarios.json` para persistir também o caminho de `resposta_direta`;
-2. crie cenários que forcem `planner`, `router_fallback` e `router_override`;
+1. crie cenários que forcem `router_fallback` e `router_override`;
+2. amplie o `cenarios.json` com mais pedidos ambíguos que passem pelo `planner`;
 3. adicione testes específicos para schema do plano e decisão de tool;
 4. avalie a resposta final do agente com um judge local ou outra esteira de evals.
 

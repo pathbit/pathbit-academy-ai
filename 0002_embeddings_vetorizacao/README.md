@@ -109,9 +109,9 @@ jupyter notebook notebooks/embeddings_vetorizacao.ipynb
 
 Para problemas específicos, consulte a documentação na pasta `docs/`:
 
-- [Solução para erro do Google Colab](../../docs/SOLUCAO_ERRO_COLAB.md)
-- [Solução para erro do Groq](../../docs/SOLUCAO_ERRO_GROQ.md)
-- [Atualizações de versões](../../docs/ATUALIZACOES_VERSOES.md)
+- [Solução para erro do Google Colab](../docs/SOLUCAO_ERRO_COLAB.md)
+- [Solução para erro do Groq](../docs/SOLUCAO_ERRO_GROQ.md)
+- [Atualizações de versões](../docs/ATUALIZACOES_VERSOES.md)
 
 ### 🔍 Estrutura de Arquivos
 
@@ -134,7 +134,7 @@ Para problemas específicos, consulte a documentação na pasta `docs/`:
 ### 📚 Artigos Relacionados
 
 - **[Artigo 0001: LLM vs LRM](../0001_llm_x_lrm/README.md)** - Entenda as diferenças entre Large Language Models e Large Reasoning Models
-- **[Próximo Artigo: 0003 - RAG (Retrieval Augmented Generation)](../0003_rag/README.md)** - Como combinar embeddings com LLMs para respostas mais precisas
+- **[Próximo Artigo: 0003 - RAG (Retrieval Augmented Generation)](../0003_rag_vector_database/README.md)** - Como combinar embeddings com LLMs para respostas mais precisas
 
 ---
 

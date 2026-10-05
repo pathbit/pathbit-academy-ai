@@ -59,7 +59,7 @@ O score final combina estrutura, keywords obrigatórias, acerto de prioridade e 
 **Slide 6**
 [layout: split]
 [eyebrow: Resultado observado]
-[image: ../assets/06.png]
+[image: ../assets/05.png]
 [caption: Leitura do benchmark multi-modelo com score total e delta sobre a baseline.]
 
 O ganho muda com o modelo, não só com o prompt
@@ -72,7 +72,7 @@ A leitura correta é simples: o mesmo prompt não rende igual em todo modelo.
 **Slide 7**
 [layout: split]
 [eyebrow: Próximo passo certo]
-[image: ../assets/05.png]
+[image: ../assets/06.png]
 [caption: Escada de evolução técnica entre prompt engineering, RAG, fine-tuning e híbrido.]
 
 Prompt ainda paga a conta, mas só até certo ponto
@@ -82,7 +82,7 @@ Se o problema é formato, instrução e consistência mínima, ainda há ganho b
 **Slide 8**
 [layout: cta]
 [eyebrow: O que este módulo entrega]
-[gallery: ../assets/01.png, ../assets/04.png, ../assets/05.png]
+[gallery: ../assets/01.png, ../assets/04.png, ../assets/06.png]
 
 Artigo completo + código para rodar localmente
 

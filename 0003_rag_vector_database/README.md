@@ -110,9 +110,9 @@ jupyter notebook notebooks/rag_vector_database.ipynb
 
 Para problemas específicos, consulte a documentação na pasta `docs/`:
 
-- [Solução para erro do Google Colab](../../docs/SOLUCAO_ERRO_COLAB.md)
-- [Solução para erro do Groq](../../docs/SOLUCAO_ERRO_GROQ.md)
-- [Atualizações de versões](../../docs/ATUALIZACOES_VERSOES.md)
+- [Solução para erro do Google Colab](../docs/SOLUCAO_ERRO_COLAB.md)
+- [Solução para erro do Groq](../docs/SOLUCAO_ERRO_GROQ.md)
+- [Atualizações de versões](../docs/ATUALIZACOES_VERSOES.md)
 
 ### 🔍 Estrutura de Arquivos
 
@@ -137,7 +137,7 @@ Para problemas específicos, consulte a documentação na pasta `docs/`:
 
 - **[Artigo 0001: LLM vs LRM](../0001_llm_x_lrm/README.md)** - Entenda as diferenças entre Large Language Models e Large Reasoning Models
 - **[Artigo 0002: Embeddings e Vetorização](../0002_embeddings_vetorizacao/README.md)** - O segredo da mente da IA
-- **[Próximo Artigo: 0004 - Fine-tuning vs RAG](../0004_fine_tuning_vs_rag/README.md)** - Quando usar cada estratégia
+- **[Próximo Artigo: 0004 - Fine-tuning vs RAG](../0004_rag_vs_finetuning/README.md)** - Quando usar cada estratégia
 
 ---
 

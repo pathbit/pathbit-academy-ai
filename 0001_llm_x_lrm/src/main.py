@@ -20,6 +20,23 @@ import os
 
 from pathlib import Path
 
+
+def comando_jupyter():
+    """
+    Retorna o comando do Jupyter do interpretador atual (sys.executable -m jupyter),
+    com fallback para o binario 'jupyter' no PATH.
+    """
+    for cmd in ([sys.executable, "-m", "jupyter"], ["jupyter"]):
+        try:
+            res = subprocess.run(
+                [*cmd, "--version"], capture_output=True, text=True, timeout=30, check=False
+            )
+            if res.returncode == 0:
+                return cmd
+        except (subprocess.SubprocessError, OSError):
+            continue
+    return ["jupyter"]
+
 def verificar_dependencias():
     """
     Verifica se as dependências necessárias estão instaladas.
@@ -27,7 +44,7 @@ def verificar_dependencias():
     try:
         # Verificar se jupyter notebook está disponível
         result = subprocess.run(
-            ['jupyter', '--version'],
+            [*comando_jupyter(), "--version"],
             capture_output=True,
             text=True,
             timeout=15,
@@ -83,7 +100,7 @@ def iniciar_notebook():
     try:
         # Inicia o Jupyter Notebook
         subprocess.run([
-            "jupyter", "notebook", str(notebook_path)
+            *comando_jupyter(), "notebook", str(notebook_path)
         ], check=True)
         return True
     except subprocess.CalledProcessError as e:

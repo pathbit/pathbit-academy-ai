@@ -18,7 +18,7 @@ Enquanto todo mundo fala de "IA que entende texto", poucos realmente sabem como 
 
 **Embeddings** são representações numéricas de texto que capturam o significado semântico. É como transformar "cachorro" e "animal de estimação" em números que ficam próximos no espaço matemático, mesmo sendo palavras diferentes.
 
-**Vetorização** é o processo de converter texto em esses números. Não é mágica, é matemática aplicada com muito texto e poder computacional.
+**Vetorização** é o processo de converter texto nesses números. Não é mágica, é matemática aplicada com muito texto e poder computacional.
 
 ![Processo de Vetorização](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/02.png)
 
@@ -35,7 +35,7 @@ O resultado? Você economiza tempo, maximiza recursos e constrói soluções que
 ## O que são Embeddings de forma prática?
 
 - **Foco:** representação numérica de significado semântico.
-- **Treinamento:** modelos neural networks treinados em enormes volumes de texto.
+- **Treinamento:** redes neurais treinadas em enormes volumes de texto.
 - **Ponto forte:** captura relações semânticas entre palavras, frases e conceitos.
 - **Ponto fraco:** qualidade depende do modelo e dados de treinamento.
 
@@ -49,24 +49,30 @@ Um embedding é perfeito para encontrar documentos sobre "investimentos" quando 
 
 ![Transformação Texto para Números](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/03.png)
 
-> Figura 3: Como palavras são convertidas em vetores numéricos
+> Figura 3: Como palavras, frases e documentos são convertidos em vetores numéricos
 
 ```
-"cachorro" → [0.2, -0.1, 0.8, 0.3, ...] (vetor de 384 dimensões)
-"gato"    → [0.1, -0.2, 0.7, 0.4, ...] (vetor similar)
-"carro"   → [0.9, 0.5, -0.3, 0.1, ...] (vetor diferente)
+"O cachorro está brincando no parque" → [0.08, -0.21, 0.13, ...] (384 números)
+"O animal de estimação está feliz"    → [0.11, -0.17, 0.09, ...] (384 números)
+"O carro está na garagem"             → [-0.05, 0.19, -0.02, ...] (384 números)
 ```
+
+_Os valores acima são ilustrativos; o tamanho (384) é o do modelo usado no notebook._
 
 ### 2. **Cálculo de Similaridade**
 
 ![Cálculo de Similaridade](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/04.png)
 
-> Figura 4: Como a similaridade é calculada entre vetores
+> Figura 4: Como a similaridade de cosseno é calculada entre vetores
+
+Valores reais medidos no notebook com o modelo `paraphrase-multilingual-MiniLM-L12-v2`:
 
 ```
-Similaridade("cachorro", "gato") = 0.85 (muito similar)
-Similaridade("cachorro", "carro") = 0.12 (pouco similar)
+Similaridade("O cachorro está brincando no parque", "O animal de estimação está feliz") = 0.304
+Similaridade("O cachorro está brincando no parque", "O carro está na garagem")          = 0.046
 ```
+
+**O que importa é a ordem, não o número absoluto:** a frase do cachorro fica mais perto da frase do animal de estimação do que da frase do carro. E a escolha do modelo pesa: com o `all-MiniLM-L6-v2`, treinado só em inglês, as mesmas frases dão 0.290 e 0.517, ou seja, o modelo erra e acha o carro mais parecido. Para texto em português, use um modelo multilíngue.
 
 ### 3. **Busca Semântica com Embeddings**
 
@@ -101,7 +107,7 @@ Similaridade("cachorro", "carro") = 0.12 (pouco similar)
 - **Desvantagem:** pode perder detalhes específicos
 - **Uso:** clustering de documentos, recomendação
 
-### **4. Multimodal Embeddings (CLIP, DALL-E)**
+### **4. Multimodal Embeddings (CLIP, SigLIP)**
 
 - **Foco:** texto + imagem
 - **Vantagem:** entende relação entre texto e imagem
@@ -116,7 +122,7 @@ Imagine que você está construindo um sistema de busca para uma biblioteca digi
 - **Com Sentence Embeddings:** busca por "como dirigir" encontra documentos sobre "aprender a conduzir"
 - **Com Document Embeddings:** busca por "romance" encontra livros de ficção, mesmo sem essa palavra no título
 
-## Qual tipo de embedding devo escolher?
+## Como decidir na prática?
 
 ### 1. **Defina o problema antes da tecnologia**
 
@@ -169,32 +175,34 @@ Recomenda: "Machine Learning com Python", "Análise de Dados", "Pandas e NumPy"
 
 ### **3. Classificação de Documentos**
 
-![Sistema de Recomendação](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/08.png)
+![Classificação de Documentos](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/08.png)
 
-> Figura 8: Como embeddings alimentam sistemas de recomendação
+> Figura 8: Documentos parecidos ficam próximos e podem ser agrupados ou classificados por tema
 
 ```
 Documento: "Reclamação sobre produto defeituoso"
 Classificação: "Atendimento ao Cliente" (não "Vendas" ou "Marketing")
 ```
 
+> **Atenção:** para chegar nesse resultado, treine um classificador simples (por exemplo, regressão logística) sobre os embeddings de exemplos já rotulados. Comparar o documento só com a descrição de cada categoria pode errar: medimos com o modelo do notebook e a frase acima ficou mais perto de "Vendas" (0.443) do que de "Atendimento ao Cliente" (0.418).
+
 ### **4. Detecção de Duplicatas**
 
-![Classificação de Documentos](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/09.png)
+![Detecção de Duplicatas](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/09.png)
 
-> Figura 9: Classificação automática usando embeddings
+> Figura 9: Detecção de duplicatas por limiar de similaridade
 
 ```
 Documento A: "Como fazer bolo de chocolate"
 Documento B: "Receita de bolo de chocolate"
-Similaridade: 95% (provavelmente duplicata)
+Similaridade: 0.932 (medida com paraphrase-multilingual-MiniLM-L12-v2) → provável duplicata
 ```
 
 ### **5. RAG (Retrieval Augmented Generation)**
 
 ![RAG com Embeddings](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/10.png)
 
-> Figura 10: Como embeddings são usados em sistemas RAG
+> Figura 10: Como embeddings encontram o contexto que o LLM usa em sistemas RAG
 
 ```
 Pergunta: "Qual a política de devolução?"
@@ -241,8 +249,8 @@ Para rodar os exemplos práticos de geração de embeddings e cálculos de simil
      ```
 
 2. **Modelos Locais e Chave de API Opcional:**
-   - A biblioteca `sentence-transformers` baixa os modelos de embeddings (`all-MiniLM-L6-v2`) automaticamente do Hugging Face sem custo e sem exigir autenticação prévia.
-   - Caso queira testar a integração com o Groq para geração de respostas a partir de contexto vetorial, crie uma chave gratuita em [console.groq.com/keys](https://console.groq.com/keys) e configure:
+   - A biblioteca `sentence-transformers` baixa o modelo de embeddings (`paraphrase-multilingual-MiniLM-L12-v2`, multilíngue, 384 dimensões) automaticamente do Hugging Face sem custo e sem exigir autenticação prévia.
+   - Os exemplos deste notebook não chamam o Groq. A chave só será necessária no próximo artigo (RAG), para gerar respostas a partir do contexto vetorial. Se quiser já deixá-la pronta, crie uma chave gratuita em [console.groq.com/keys](https://console.groq.com/keys) e configure:
      ```bash
      export GROQ_API_KEY="sua_chave_aqui"
      ```
@@ -257,12 +265,12 @@ Para rodar os exemplos práticos de geração de embeddings e cálculos de simil
 
 ## Os melhores modelos de Embeddings
 
-### **1. Sentence-BERT (all-MiniLM-L6-v2)**
+### **1. Sentence-BERT (all-MiniLM-L6-v2 e paraphrase-multilingual-MiniLM-L12-v2)**
 
 - **Dimensões:** 384
-- **Qualidade:** Muito boa
+- **Qualidade:** Muito boa para o tamanho
 - **Custo:** Gratuito
-- **Uso:** Projetos open source, desenvolvimento
+- **Uso:** Projetos open source, desenvolvimento. O `all-MiniLM-L6-v2` é só inglês; para português use a versão multilíngue (é a usada no notebook)
 - **Disponível em:** Hugging Face
 
 ### **2. Universal Sentence Encoder (USE)**
@@ -270,48 +278,50 @@ Para rodar os exemplos práticos de geração de embeddings e cálculos de simil
 - **Dimensões:** 512
 - **Qualidade:** Boa
 - **Custo:** Gratuito
-- **Uso:** Aplicações multilíngues
-- **Disponível em:** Hugging Face
+- **Uso:** Aplicações multilíngues (variante *multilingual*)
+- **Disponível em:** TensorFlow Hub / Kaggle Models
 
-### **3. E5 (Embeddings from Everything)**
+### **3. E5 (intfloat/e5 e multilingual-e5)**
 
-- **Dimensões:** 1024
+- **Dimensões:** 768 (base) ou 1024 (large)
 - **Qualidade:** Excelente
 - **Custo:** Gratuito
 - **Uso:** Busca semântica, RAG
 - **Disponível em:** Hugging Face
 
-### **4. Groq Compound System**
+### **4. OpenAI text-embedding-3 (small e large)**
 
-- **Dimensões:** Variável
+- **Dimensões:** 1536 (small) ou 3072 (large)
 - **Qualidade:** Excelente
 - **Custo:** Pago por uso
-- **Uso:** Aplicações comerciais, alta performance
-- **Disponível em:** [Groq Console](https://console.groq.com/docs/models)
+- **Uso:** Aplicações comerciais sem infraestrutura própria
+- **Disponível em:** [OpenAI API](https://platform.openai.com/docs/guides/embeddings)
+
+> **Correção:** a primeira versão deste artigo listava o "Groq Compound System" aqui. Ele não é um modelo de embeddings (era um sistema agêntico de geração de texto) e foi descontinuado pela Groq em 21/09/2026. A Groq não oferece endpoint de embeddings.
 
 ## Otimização - Como Escolher o Modelo Certo
 
 ### **1. Considere o Tamanho do Dataset**
 
 - **< 10K documentos:** Sentence-BERT ou USE
-- **10K - 100K documentos:** E5 ou Groq Compound
-- **> 100K documentos:** Groq Compound ou modelos especializados
+- **10K - 100K documentos:** E5 ou text-embedding-3-small
+- **> 100K documentos:** E5-large, text-embedding-3-large ou modelos especializados
 
 ### **2. Considere o Idioma**
 
-- **Português:** E5-multilingual ou Groq Compound
+- **Português:** multilingual-e5, paraphrase-multilingual-MiniLM ou text-embedding-3
 - **Inglês:** Qualquer modelo
-- **Múltiplos idiomas:** E5-multilingual ou USE
+- **Múltiplos idiomas:** multilingual-e5 ou USE multilingual
 
 ### **3. Considere o Orçamento**
 
 - **Gratuito:** Sentence-BERT, E5, USE
-- **Pago:** Groq Compound System
+- **Pago:** OpenAI text-embedding-3
 
 ### **4. Considere a Latência**
 
-- **Tempo real:** Sentence-BERT, USE
-- **Alta performance:** Groq Compound System
+- **Tempo real:** Sentence-BERT, USE (rodam localmente, sem ida à rede)
+- **Sem infraestrutura própria:** APIs pagas como text-embedding-3
 
 ## Próximos passos
 
@@ -324,19 +334,19 @@ Quando você define claramente seu problema e escolhe a solução certa, os resu
 - Experimente com seus próprios dados e textos
 - Teste diferentes modelos de embeddings
 - Implemente sistemas de busca semântica reais
-- **Em breve, teremos um artigo falando de RAG e Vector Databases, fique ligado!**
+- **Próximo passo: [RAG e Vector Databases](https://github.com/pathbit/pathbit-academy-ai/blob/master/0003_rag_vector_database/article/ARTICLE.md)**
 
 ### Para começar sua jornada com embeddings, siga estes passos fundamentais
 
 1. **Comece pelo objetivo:** Defina exatamente o que precisa: busca simples? Busca semântica? Classificação? Recomendação?
 2. **Mapeie seus dados:** Qualidade dos dados é fundamental - bons dados geram bons resultados.
-3. **Escolha pela necessidade, não pelo hype:** Um Sentence-BERT pode ser perfeito para seu caso. Um Groq Compound System pode ser overkill. _Para soluções personalizadas de busca e recomendação, converse com o time da Pathbit - qualidade e o melhor custo-benefício do mercado._
+3. **Escolha pela necessidade, não pelo hype:** Um Sentence-BERT pode ser perfeito para seu caso. Uma API paga de embeddings pode ser overkill. _Para soluções personalizadas de busca e recomendação, converse com o time da Pathbit - qualidade e o melhor custo-benefício do mercado._
 4. **Teste com realismo:** Use cenários reais, com consultas desafiadoras e dados do mundo real.
 
 ### Se quer começar agora, aqui está seu plano de ação
 
 1. **Identifique um problema real** do seu dia a dia que dependa de busca ou classificação de texto.
-2. **Teste diferentes modelos** de embeddings (Sentence-BERT, E5, Groq) no mesmo problema.
+2. **Teste diferentes modelos** de embeddings (Sentence-BERT, E5, text-embedding-3) no mesmo problema.
 3. **Compare não só a precisão**, mas também velocidade, custo e facilidade de implementação.
 4. **Escolha o que funciona melhor** no seu contexto específico.
 
