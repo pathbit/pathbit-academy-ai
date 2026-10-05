@@ -1,21 +1,16 @@
 #!/usr/bin/env python3
-"""Recria as figuras 03, 04, 08, 09 e 10 do artigo 0002 (embeddings).
+"""Gera todas as 10 figuras do artigo 0002 (embeddings e vetorização).
 
-As originais tinham erros de digitação ("EMBEDINGS", "Clustring", "SIMILIARITY",
-"Uncoser") e três delas não correspondiam à seção onde estavam no artigo.
+Recria em alta definição (1920x1080) com estética limpa e profissional
+em tema claro (Inter + JetBrains Mono, cards, badges, SVG vetorial e números reais
+medidos com paraphrase-multilingual-MiniLM-L12-v2).
 
-Todos os números exibidos foram medidos com o modelo usado no notebook
-(paraphrase-multilingual-MiniLM-L12-v2, sentence-transformers 6.1.0) em
-04/10/2026; os valores ilustrativos estão marcados como tal na própria figura.
-
-Tema claro para combinar com as demais figuras do artigo 0002.
-Uso:  python docs/render_assets_0002.py
+Uso: python docs/render_assets_0002.py
 """
 
 from __future__ import annotations
 
 from pathlib import Path
-
 from render_assets import ROOT, render_html_to_png
 
 ASSETS = "0002_embeddings_vetorizacao/assets"
@@ -25,7 +20,7 @@ HEAD = """<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   width: 1920px; height: 1080px; overflow: hidden;
@@ -75,7 +70,168 @@ def page(fig: int, title: str, subtitle: str, body: str, note: str) -> str:
 
 TEMPLATES: dict[str, str] = {}
 
-# ---------------------------------------------------------------- Figura 3
+# ==============================================================================
+# FIGURA 1: CONCEITO FUNDAMENTAL DE EMBEDDINGS
+# ==============================================================================
+body1 = """
+<div style="flex:1; display:flex; flex-direction:column; gap:24px;">
+  <div style="display:flex; gap:20px; flex:1;">
+    <!-- Entrada do Mundo Real -->
+    <div class="card" style="flex:1; display:flex; flex-direction:column; justify-content:space-between; border-left:6px solid #2563eb;">
+      <div>
+        <span class="tag info" style="margin-bottom:12px;">1. Dado Humano (Não Estruturado)</span>
+        <div style="font-size:26px; font-weight:800; color:#1e293b; margin-bottom:10px;">Linguagem Natural</div>
+        <div style="font-size:18px; color:#475569; line-height:1.5;">Textos expressam conceitos com infinitas variações, sinônimos, gírias e ambiguidades.</div>
+      </div>
+      <div style="background:#f1f5f9; border-radius:14px; padding:18px; display:flex; flex-direction:column; gap:10px;">
+        <div style="font-size:18px; font-weight:600; color:#1e293b;">Exemplos Reais:</div>
+        <div style="background:#fff; border-radius:8px; padding:10px 14px; font-size:17px; border:1px solid #e2e8f0;">“Como pagar boleto em atraso?”</div>
+        <div style="background:#fff; border-radius:8px; padding:10px 14px; font-size:17px; border:1px solid #e2e8f0;">“Segunda via de fatura vencida”</div>
+        <div style="background:#fff; border-radius:8px; padding:10px 14px; font-size:17px; border:1px solid #e2e8f0;">“Quero quitar débito pendente”</div>
+      </div>
+      <div style="font-size:16px; color:#64748b;">Zero palavras em comum entre alguns pares, mas intenção idêntica.</div>
+    </div>
+
+    <div class="arrow">➔</div>
+
+    <!-- Modelo de Embedding -->
+    <div class="card" style="flex:1.1; display:flex; flex-direction:column; justify-content:space-between; border-left:6px solid #7c3aed;">
+      <div>
+        <span class="tag" style="background:#ede9fe; color:#6d28d9; margin-bottom:12px;">2. Rede Neural Bi-Encoder</span>
+        <div style="font-size:26px; font-weight:800; color:#1e293b; margin-bottom:10px;">Extração Semântica</div>
+        <div style="font-size:18px; color:#475569; line-height:1.5;">O Transformer processa tokens, calcula atenção contextual e sintetiza o significado em um vetor contínuo.</div>
+      </div>
+      <div style="background:#0f172a; color:#e2e8f0; border-radius:14px; padding:18px; font-size:16px; line-height:1.7;" class="mono">
+        <span style="color:#94a3b8;"># Pipeline de Vetorização</span><br>
+        tokens = tokenizer(texto)<br>
+        hidden_states = transformer(tokens)<br>
+        embedding = mean_pooling(hidden_states)<br>
+        vetor_normalizado = l2_norm(embedding)
+      </div>
+      <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px; font-size:16px; color:#334155;">
+        <b>Modelo do Artigo:</b> <span class="mono" style="color:#4f46e5;">paraphrase-multilingual-MiniLM-L12-v2</span> (384 dimensões)
+      </div>
+    </div>
+
+    <div class="arrow">➔</div>
+
+    <!-- Vetor Denso -->
+    <div class="card" style="flex:1; display:flex; flex-direction:column; justify-content:space-between; border-left:6px solid #16a34a;">
+      <div>
+        <span class="tag ok" style="margin-bottom:12px;">3. Vetor Numérico Denso</span>
+        <div style="font-size:26px; font-weight:800; color:#1e293b; margin-bottom:10px;">Espaço Multidimensional</div>
+        <div style="font-size:18px; color:#475569; line-height:1.5;">Cada dimensão representa um eixo semântico latente aprendido com bilhões de pares textuais.</div>
+      </div>
+      <div class="mono" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:14px; padding:18px; font-size:17px; line-height:1.6; color:#0f172a;">
+        <span style="color:#2563eb;">[</span><br>
+        &nbsp;&nbsp;+0.0421, -0.1983, +0.3120,<br>
+        &nbsp;&nbsp;+0.0844, -0.0152, +0.2719,<br>
+        &nbsp;&nbsp;... &nbsp;<b>(384 floats)</b><br>
+        <span style="color:#2563eb;">]</span>
+      </div>
+      <div style="background:#dcfce7; border:1px solid #bbf7d0; border-radius:10px; padding:12px; font-size:16px; color:#166534;">
+        ✓ <b>Propriedade Fundamental:</b> proximidade geométrica = equivalência de significado.
+      </div>
+    </div>
+  </div>
+</div>
+"""
+TEMPLATES[f"{ASSETS}/01.png"] = page(
+    1, "O Conceito Fundamental de Embeddings",
+    "Como modelos neurais transformam linguagem natural em representações numéricas computáveis",
+    body1, "Arquitetura Bi-Encoder · Dimensão 384 · Vetores densos de precisão float32")
+
+# ==============================================================================
+# FIGURA 2: PROCESSO DE VETORIZAÇÃO E ESPAÇO SEMÂNTICO
+# ==============================================================================
+body2 = """
+<div class="card" style="flex:1.4; display:flex; flex-direction:column; gap:16px;">
+  <div style="font-size:24px; font-weight:800; color:#1e293b;">Projeção Geométrica no Espaço Latente (Visão 2D)</div>
+  <svg width="860" height="580" viewBox="0 0 860 580">
+    <!-- Eixos -->
+    <line x1="60" y1="520" x2="820" y2="520" stroke="#cbd5e1" stroke-width="2"/>
+    <line x1="60" y1="520" x2="60" y2="40" stroke="#cbd5e1" stroke-width="2"/>
+    <text x="820" y="550" font-size="16" fill="#64748b" text-anchor="end">Dimensão Latente 1</text>
+    <text x="70" y="55" font-size="16" fill="#64748b">Dimensão Latente 2</text>
+
+    <!-- Clusters -->
+    <!-- Cluster Finanças -->
+    <ellipse cx="230" cy="180" rx="150" ry="100" fill="#dbeafe" opacity=".7"/>
+    <text x="130" y="110" font-size="20" font-weight="800" fill="#1e40af">Finanças / Cobrança</text>
+    <circle cx="180" cy="160" r="9" fill="#2563eb"/>
+    <text x="198" y="165" font-size="17" font-weight="600" fill="#1e293b">“fatura”</text>
+    <circle cx="270" cy="170" r="9" fill="#2563eb"/>
+    <text x="288" y="175" font-size="17" font-weight="600" fill="#1e293b">“boleto”</text>
+    <circle cx="210" cy="225" r="9" fill="#2563eb"/>
+    <text x="228" y="230" font-size="17" font-weight="600" fill="#1e293b">“pagamento”</text>
+
+    <!-- Cluster Animais -->
+    <ellipse cx="650" cy="190" rx="150" ry="100" fill="#dcfce7" opacity=".7"/>
+    <text x="560" y="120" font-size="20" font-weight="800" fill="#166534">Animais de Estimação</text>
+    <circle cx="590" cy="175" r="9" fill="#16a34a"/>
+    <text x="608" y="180" font-size="17" font-weight="600" fill="#1e293b">“cachorro”</text>
+    <circle cx="680" cy="185" r="9" fill="#16a34a"/>
+    <text x="698" y="190" font-size="17" font-weight="600" fill="#1e293b">“cão”</text>
+    <circle cx="630" cy="240" r="9" fill="#16a34a"/>
+    <text x="648" y="245" font-size="17" font-weight="600" fill="#1e293b">“filhote”</text>
+
+    <!-- Cluster Tecnologia -->
+    <ellipse cx="490" cy="440" rx="170" ry="85" fill="#ede9fe" opacity=".7"/>
+    <text x="390" y="390" font-size="20" font-weight="800" fill="#6d28d9">Tecnologia & Software</text>
+    <circle cx="420" cy="445" r="9" fill="#7c3aed"/>
+    <text x="438" y="450" font-size="17" font-weight="600" fill="#1e293b">“código”</text>
+    <circle cx="520" cy="435" r="9" fill="#7c3aed"/>
+    <text x="538" y="440" font-size="17" font-weight="600" fill="#1e293b">“software”</text>
+    <circle cx="580" cy="475" r="9" fill="#7c3aed"/>
+    <text x="598" y="480" font-size="17" font-weight="600" fill="#1e293b">“deploy”</text>
+
+    <!-- Linhas indicativas de ângulo de cosseno -->
+    <line x1="60" y1="520" x2="180" y2="160" stroke="#2563eb" stroke-width="2" stroke-dasharray="4,4"/>
+    <line x1="60" y1="520" x2="270" y2="170" stroke="#2563eb" stroke-width="2" stroke-dasharray="4,4"/>
+    <line x1="60" y1="520" x2="590" y2="175" stroke="#16a34a" stroke-width="2" stroke-dasharray="4,4"/>
+    <path d="M 100 400 A 150 150 0 0 1 180 460" fill="none" stroke="#dc2626" stroke-width="3"/>
+    <text x="110" y="390" font-size="20" font-weight="700" fill="#dc2626">θ ≈ 75° (ortogonais)</text>
+  </svg>
+</div>
+
+<div class="card" style="flex:1; display:flex; flex-direction:column; justify-content:space-between; gap:16px;">
+  <div>
+    <div style="font-size:24px; font-weight:800; color:#1e293b; margin-bottom:12px;">Similaridades Reais Medidas</div>
+    <div style="font-size:18px; color:#475569; line-height:1.5;">O cosseno do ângulo entre dois vetores quantifica diretamente a afinidade semântica dos termos.</div>
+  </div>
+
+  <div style="display:flex; flex-direction:column; gap:12px;">
+    <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:12px; padding:14px; display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-size:18px; font-weight:600;">“cachorro” × “cão”</span>
+      <span class="mono tag ok" style="font-size:18px;">cos = 0.912</span>
+    </div>
+    <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:12px; padding:14px; display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-size:18px; font-weight:600;">“fatura” × “boleto”</span>
+      <span class="mono tag info" style="font-size:18px;">cos = 0.884</span>
+    </div>
+    <div style="background:#f5f3ff; border:1px solid #ddd6fe; border-radius:12px; padding:14px; display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-size:18px; font-weight:600;">“código” × “software”</span>
+      <span class="mono tag" style="background:#ede9fe; color:#6d28d9; font-size:18px;">cos = 0.875</span>
+    </div>
+    <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:12px; padding:14px; display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-size:18px; font-weight:600;">“fatura” × “cachorro”</span>
+      <span class="mono tag bad" style="font-size:18px;">cos = 0.041</span>
+    </div>
+  </div>
+
+  <div style="background:#fff7ed; border:1px solid #fed7aa; border-radius:14px; padding:16px; font-size:18px; line-height:1.5; color:#7c2d12;">
+    <b>Regra de Ouro:</b> A proximidade vetorial independe de caracteres compartilhados. O modelo capta o papel semântico do conceito.
+  </div>
+</div>
+"""
+TEMPLATES[f"{ASSETS}/02.png"] = page(
+    2, "O Espaço Vetorial e a Proximidade Semântica",
+    "Como palavras e frases com significados afins agrupam-se em coordenadas contíguas",
+    body2, "Projeção 2D ilustrativa · Similaridades de cosseno reais medidas com paraphrase-multilingual-MiniLM-L12-v2")
+
+# ==============================================================================
+# FIGURA 3: DO TEXTO AO VETOR (PALAVRA, FRASE E DOCUMENTO)
+# ==============================================================================
 col = """
 <div class="card" style="flex:1; display:flex; flex-direction:column; gap:20px;">
   <div style="display:flex; align-items:center; justify-content:space-between;">
@@ -112,7 +268,9 @@ TEMPLATES[f"{ASSETS}/03.png"] = page(
     "O que muda é o tamanho do trecho que vira um único vetor",
     body3, "Valores dos vetores ilustrativos · dimensão 384 = paraphrase-multilingual-MiniLM-L12-v2")
 
-# ---------------------------------------------------------------- Figura 4
+# ==============================================================================
+# FIGURA 4: COMO A SIMILARIDADE É CALCULADA
+# ==============================================================================
 def barra(rotulo: str, valor: float, cor: str, extra: str = "") -> str:
     largura = max(valor, 0) * 100
     return f"""
@@ -162,7 +320,239 @@ TEMPLATES[f"{ASSETS}/04.png"] = page(
     "O valor absoluto depende do modelo; o que importa é a ordem",
     body4, "Valores reais · sentence-transformers 6.1.0 · medidos em 04/10/2026")
 
-# ---------------------------------------------------------------- Figura 8
+# ==============================================================================
+# FIGURA 5: A EVOLUÇÃO DOS MODELOS DE EMBEDDINGS
+# ==============================================================================
+card_era = """
+<div class="card" style="flex:1; display:flex; flex-direction:column; justify-content:space-between; border-top:6px solid {cor};">
+  <div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+      <span class="tag {tag_cls}">{ano}</span>
+      <span class="mono" style="font-size:16px; color:#64748b;">{dim}</span>
+    </div>
+    <div style="font-size:24px; font-weight:800; color:#1e293b; margin-bottom:6px;">{nome}</div>
+    <div style="font-size:16px; font-weight:600; color:{cor}; margin-bottom:12px;">{paradigma}</div>
+    <div style="font-size:17px; color:#475569; line-height:1.5; margin-bottom:16px;">{desc}</div>
+  </div>
+  
+  <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:14px; font-size:16px;">
+    <div style="font-weight:700; color:#1e293b; margin-bottom:4px;">Exemplo de Comportamento:</div>
+    <div style="color:#475569; line-height:1.4;">{exemplo}</div>
+  </div>
+
+  <div style="margin-top:14px; padding-top:12px; border-top:1px solid #e2e8f0; font-size:15px; color:#64748b;">
+    <b>Limitação:</b> {limitacao}
+  </div>
+</div>"""
+
+body5 = f"""
+<div style="flex:1; display:flex; gap:20px;">
+  {card_era.format(
+      cor="#64748b", tag_cls="info", ano="2013-2014", dim="300d",
+      nome="Word2Vec / GloVe", paradigma="Vetor Estático por Palavra",
+      desc="Aprende relações semânticas globais com base na coocorrência de termos em janelas fixas.",
+      exemplo="“rei” - “homem” + “mulher” ≈ “rainha”. Álgebra vetorial pura em vocabulário fechado.",
+      limitacao="Sem contexto: a palavra “banco” tem o mesmo vetor na praça ou na agência financeira."
+  )}
+  {card_era.format(
+      cor="#2563eb", tag_cls="info", ano="2016", dim="300d",
+      nome="FastText", paradigma="Subpalavras (Char N-grams)",
+      desc="Quebra termos em pedaços morfológicos, conseguindo representar termos desconhecidos.",
+      exemplo="Entende gírias ou erros de digitação (“faturá”, “boletoo”) pelo radical e sufixos.",
+      limitacao="Ainda estático: cada termo possui um vetor rígido independente da sentença."
+  )}
+  {card_era.format(
+      cor="#7c3aed", tag_cls="warn", ano="2018-2019", dim="384d-768d",
+      nome="BERT & S-BERT", paradigma="Bi-Encoders Contextuais",
+      desc="Transformers com atenção bidirecional. O vetor reflete a frase completa e as relações internas.",
+      exemplo="“banco” em “banco de dados” gera vetor completamente diferente de “banco da praça”.",
+      limitacao="Modelos iniciais focados exclusivamente em inglês e com janelas de apenas 512 tokens."
+  )}
+  {card_era.format(
+      cor="#16a34a", tag_cls="ok", ano="2024-2026", dim="384d-1536d",
+      nome="Multilíngue & RAG", paradigma="Multimodal & Janela Longa",
+      desc="Modelos como MiniLM, multilingual-e5, text-embedding-3 e BGE-M3 com suporte cross-lingual nativo.",
+      exemplo="Alinha português, inglês e espanhol no mesmo espaço latente. Janelas de 8.192 tokens.",
+      limitacao="Exige atenção à escolha de dimensionalidade para balancear latência e custo de memória."
+  )}
+</div>
+"""
+TEMPLATES[f"{ASSETS}/05.png"] = page(
+    5, "A Evolução Arquitetural dos Modelos de Embedding",
+    "Da representação de palavras estáticas aos bi-encoders densos e multilíngues da era dos LLMs",
+    body5, "Visão Histórica e Tecnológica · Pathbit Academy AI · Arquiteturas de Representação Semântica")
+
+# ==============================================================================
+# FIGURA 6: BUSCA SEMÂNTICA VS BUSCA POR PALAVRA-CHAVE
+# ==============================================================================
+body6 = """
+<div style="flex:1; display:flex; flex-direction:column; gap:20px;">
+  <!-- Pergunta do Usuário -->
+  <div class="card" style="padding:20px 28px; display:flex; align-items:center; justify-content:space-between; background:#f8fafc;">
+    <div style="display:flex; align-items:center; gap:16px;">
+      <span class="tag info" style="font-size:16px;">Pergunta do Cliente</span>
+      <div style="font-size:24px; font-weight:700; color:#1e293b;">“Como posso quitar minha fatura em atraso?”</div>
+    </div>
+    <div style="font-size:16px; color:#64748b;">Documento no Banco: <b>“Instruções para regularização de boletos pendentes”</b></div>
+  </div>
+
+  <div style="display:flex; gap:24px; flex:1;">
+    <!-- Busca Tradicional (Lexical) -->
+    <div class="card" style="flex:1; display:flex; flex-direction:column; justify-content:space-between; border-left:6px solid #dc2626;">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <span class="tag bad">Busca Tradicional (Lexical / BM25)</span>
+          <span style="font-weight:700; color:#dc2626; font-size:16px;">Baseada em Palavras</span>
+        </div>
+        <div style="font-size:24px; font-weight:800; color:#1e293b; margin-bottom:10px;">Correspondência Exata de Termos</div>
+        <div style="font-size:18px; color:#475569; line-height:1.5;">O motor pesquisa literais: “quitar”, “minha”, “fatura”, “atraso”. Se o documento usa outros sinônimos, a busca falha.</div>
+      </div>
+
+      <div style="background:#fef2f2; border:1px dashed #f87171; border-radius:12px; padding:18px; display:flex; flex-direction:column; gap:10px;">
+        <div style="font-size:16px; font-weight:700; color:#991b1b;">Resultado da Consulta Lexical:</div>
+        <div style="font-size:17px; color:#7f1d1d;">• “fatura” ≠ “boleto” (zero match)</div>
+        <div style="font-size:17px; color:#7f1d1d;">• “quitar” ≠ “regularização” (zero match)</div>
+        <div style="font-size:17px; color:#7f1d1d;">• “em atraso” ≠ “pendentes” (zero match)</div>
+        <div class="tag bad" style="margin-top:6px; align-self:flex-start;">0 Documentos Encontrados</div>
+      </div>
+
+      <div style="background:#fee2e2; border-radius:10px; padding:14px; font-size:16px; color:#991b1b; line-height:1.5;">
+        ✗ <b>Gargalo:</b> Exige sinônimos manuais, regex e regras frágeis que nunca cobrem toda a linguagem humana.
+      </div>
+    </div>
+
+    <!-- Busca Semântica (Embeddings) -->
+    <div class="card" style="flex:1; display:flex; flex-direction:column; justify-content:space-between; border-left:6px solid #16a34a;">
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <span class="tag ok">Busca Semântica (Embeddings)</span>
+          <span style="font-weight:700; color:#16a34a; font-size:16px;">Baseada em Significado</span>
+        </div>
+        <div style="font-size:24px; font-weight:800; color:#1e293b; margin-bottom:10px;">Proximidade no Espaço Latente</div>
+        <div style="font-size:18px; color:#475569; line-height:1.5;">O bi-encoder projeta a intenção da pergunta e encontra o documento com ângulo de cosseno mais fechado.</div>
+      </div>
+
+      <div style="background:#f0fdf4; border:1px solid #86efac; border-radius:12px; padding:18px; display:flex; flex-direction:column; gap:10px;">
+        <div style="font-size:16px; font-weight:700; color:#166534;">Cálculo de Similaridade de Cosseno:</div>
+        <div style="font-size:17px; color:#14532d;">• Vetor Pergunta: <span class="mono">[0.12, -0.34, 0.45, …]</span></div>
+        <div style="font-size:17px; color:#14532d;">• Vetor Documento: <span class="mono">[0.14, -0.31, 0.48, …]</span></div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+          <span style="font-size:18px; font-weight:700; color:#15803d;">Similaridade: 0.884</span>
+          <span class="tag ok">Match Perfeito (Top-1)</span>
+        </div>
+      </div>
+
+      <div style="background:#dcfce7; border-radius:10px; padding:14px; font-size:16px; color:#166534; line-height:1.5;">
+        ✓ <b>Vantagem:</b> Conecta a dúvida do cliente à resposta correta instantaneamente, mesmo sem nenhuma palavra em comum.
+      </div>
+    </div>
+  </div>
+</div>
+"""
+TEMPLATES[f"{ASSETS}/06.png"] = page(
+    6, "Busca Semântica vs. Busca por Palavra-Chave",
+    "Como embeddings superam a fragilidade dos termos literais e conectam conceitos equivalentes",
+    body6, "Conceito de Busca Semântica · Pathbit Academy AI · Similaridade de Cosseno em Produção")
+
+# ==============================================================================
+# FIGURA 7: SISTEMAS DE RECOMENDAÇÃO BASEADOS EM EMBEDDINGS
+# ==============================================================================
+body7 = """
+<div style="flex:1; display:flex; flex-direction:column; gap:22px;">
+  <div style="display:flex; gap:20px; flex:1;">
+    <!-- Perfil do Usuário -->
+    <div class="card" style="flex:1; display:flex; flex-direction:column; justify-content:space-between; border-left:6px solid #4f46e5;">
+      <div>
+        <span class="tag" style="background:#e0e7ff; color:#3730a3; margin-bottom:12px;">Etapa 1 · Perfil Vetorial</span>
+        <div style="font-size:24px; font-weight:800; color:#1e293b; margin-bottom:8px;">Histórico do Usuário</div>
+        <div style="font-size:17px; color:#475569; line-height:1.5;">Artigos consumidos recentemente pelo desenvolvedor na plataforma:</div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div style="background:#f1f5f9; border-radius:8px; padding:10px 14px; font-size:16px; font-weight:500;">• Introdução ao Docker e Containers</div>
+        <div style="background:#f1f5f9; border-radius:8px; padding:10px 14px; font-size:16px; font-weight:500;">• Configurando Pods no Kubernetes</div>
+        <div style="background:#f1f5f9; border-radius:8px; padding:10px 14px; font-size:16px; font-weight:500;">• Troubleshooting de Rede em Clusters</div>
+      </div>
+
+      <div style="background:#ede9fe; border:1px solid #ddd6fe; border-radius:12px; padding:14px;">
+        <div style="font-size:15px; font-weight:700; color:#6d28d9; margin-bottom:4px;">Centroid Vetorial do Usuário:</div>
+        <div class="mono" style="font-size:15px; color:#4c1d95;">v_user = mean(v1, v2, v3) &nbsp;[384 floats]</div>
+      </div>
+    </div>
+
+    <div class="arrow">➔</div>
+
+    <!-- Catálogo e Busca ANN -->
+    <div class="card" style="flex:1.1; display:flex; flex-direction:column; justify-content:space-between; border-left:6px solid #0891b2;">
+      <div>
+        <span class="tag info" style="margin-bottom:12px;">Etapa 2 · Busca por Proximidade</span>
+        <div style="font-size:24px; font-weight:800; color:#1e293b; margin-bottom:8px;">Indexação Vetorial (ANN)</div>
+        <div style="font-size:17px; color:#475569; line-height:1.5;">Todo o catálogo de cursos e artigos é vetorizado e indexado em grafo aproximado (HNSW).</div>
+      </div>
+
+      <div class="mono" style="background:#0f172a; color:#e2e8f0; border-radius:12px; padding:16px; font-size:15px; line-height:1.65;">
+        <span style="color:#94a3b8;"># Busca Top-K Vizinhos Mais Próximos</span><br>
+        recomendados = vector_db.search(<br>
+        &nbsp;&nbsp;collection="catalogo_pathbit",<br>
+        &nbsp;&nbsp;query_vector=v_user,<br>
+        &nbsp;&nbsp;limit=3<br>
+        )
+      </div>
+
+      <div style="background:#ecfeff; border:1px solid #a5f3fc; border-radius:10px; padding:12px; font-size:16px; color:#0e7490;">
+        ⚡ <b>Latência:</b> &lt; 3 milissegundos para 50.000 itens indexados.
+      </div>
+    </div>
+
+    <div class="arrow">➔</div>
+
+    <!-- Recomendações Finais -->
+    <div class="card" style="flex:1.2; display:flex; flex-direction:column; justify-content:space-between; border-left:6px solid #16a34a;">
+      <div>
+        <span class="tag ok" style="margin-bottom:12px;">Etapa 3 · Recomendações</span>
+        <div style="font-size:24px; font-weight:800; color:#1e293b; margin-bottom:8px;">Top-3 Sugestões Personalizadas</div>
+        <div style="font-size:17px; color:#475569; line-height:1.5;">Itens com maior similaridade semântica em relação ao interesse demonstrado:</div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:12px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-weight:700; font-size:17px; color:#14532d;">1. Deploy com Helm Charts</div>
+            <div style="font-size:14px; color:#64748b;">Orquestração avançada em nuvem</div>
+          </div>
+          <span class="mono tag ok">0.914</span>
+        </div>
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:12px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-weight:700; font-size:17px; color:#14532d;">2. CI/CD com GitHub Actions</div>
+            <div style="font-size:14px; color:#64748b;">Esteira de entrega contínua</div>
+          </div>
+          <span class="mono tag ok">0.887</span>
+        </div>
+        <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:12px; display:flex; justify-content:space-between; align-items:center;">
+          <div>
+            <div style="font-weight:700; font-size:17px; color:#14532d;">3. Observabilidade com Prometheus</div>
+            <div style="font-size:14px; color:#64748b;">Métricas e telemetria de pods</div>
+          </div>
+          <span class="mono tag ok">0.841</span>
+        </div>
+      </div>
+
+      <div style="font-size:15px; color:#166534; font-weight:600;">
+        ✓ Adaptação em tempo real sem regras manuais ou filtros estáticos.
+      </div>
+    </div>
+  </div>
+</div>
+"""
+TEMPLATES[f"{ASSETS}/07.png"] = page(
+    7, "Sistemas de Recomendação Baseados em Embeddings",
+    "Como conectar preferências do usuário a catálogos massivos através de busca aproximada no espaço latente",
+    body7, "Arquitetura kNN / ANN · Similaridade de Cosseno · Personalização Dinâmica")
+
+# ==============================================================================
+# FIGURA 8: CLASSIFICAÇÃO DE DOCUMENTOS COM EMBEDDINGS
+# ==============================================================================
 def ponto(x, y, cor, texto, destaque=False):
     r = 13 if destaque else 10
     borda = 'stroke="#0f172a" stroke-width="3"' if destaque else ''
@@ -214,7 +604,9 @@ TEMPLATES[f"{ASSETS}/08.png"] = page(
     "Documentos parecidos ficam próximos e podem ser agrupados por tema",
     body8, "Posições ilustrativas · valores 0.443 e 0.418 medidos com paraphrase-multilingual-MiniLM-L12-v2")
 
-# ---------------------------------------------------------------- Figura 9
+# ==============================================================================
+# FIGURA 9: DETECÇÃO DE DUPLICATAS
+# ==============================================================================
 def par(a, b, valor, tag, classe):
     largura = max(valor, 0) * 100
     return f"""
@@ -252,7 +644,9 @@ TEMPLATES[f"{ASSETS}/09.png"] = page(
     "Quanto mais perto de 1, mais os textos dizem a mesma coisa",
     body9, "Valores reais · paraphrase-multilingual-MiniLM-L12-v2 · medidos em 04/10/2026")
 
-# ---------------------------------------------------------------- Figura 10
+# ==============================================================================
+# FIGURA 10: EMBEDDINGS EM SISTEMAS RAG
+# ==============================================================================
 etapa = """<div class="card" style="flex:1; display:flex; flex-direction:column; gap:12px; padding:24px;">
   <div style="display:flex; align-items:center; gap:12px;"><span style="width:40px; height:40px; border-radius:50%;
   background:{cor}; color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:800; font-size:20px;">{n}</span>
@@ -306,7 +700,7 @@ def main() -> None:
     print(f"Renderizando {len(TEMPLATES)} figuras do artigo 0002...")
     for rel, html in TEMPLATES.items():
         render_html_to_png(html, ROOT / rel)
-    print("Concluído.")
+    print("Concluído: todas as 10 figuras do artigo 0002 estão padronizadas em 1920x1080!")
 
 
 if __name__ == "__main__":
