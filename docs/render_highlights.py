@@ -31,6 +31,8 @@ DEFAULT_INPUTS = [
     ROOT / "0006_llm_evals_regressao" / "highlight" / "highlight.md",
     ROOT / "0007_agentes_tool_calling" / "highlight" / "highlight.md",
     ROOT / "0008_llms_locais_ollama" / "highlight" / "highlight.md",
+    ROOT / "0009_saida_estruturada" / "highlight" / "highlight.md",
+    ROOT / "0010_mcp_local" / "highlight" / "highlight.md",
 ]
 
 
@@ -76,6 +78,22 @@ THEMES = {
         badge_border="rgba(245, 158, 11, 0.45)",
         badge_text="#fbbf24",
         callout_border="#f59e0b",
+    ),
+    "0009_saida_estruturada": Theme(
+        accent="#06b6d4",
+        accent_glow="rgba(6, 182, 212, 0.25)",
+        badge_bg="rgba(6, 182, 212, 0.18)",
+        badge_border="rgba(6, 182, 212, 0.45)",
+        badge_text="#22d3ee",
+        callout_border="#06b6d4",
+    ),
+    "0010_mcp_local": Theme(
+        accent="#f43f5e",
+        accent_glow="rgba(244, 63, 94, 0.25)",
+        badge_bg="rgba(244, 63, 94, 0.18)",
+        badge_border="rgba(244, 63, 94, 0.45)",
+        badge_text="#fb7185",
+        callout_border="#f43f5e",
     ),
 }
 

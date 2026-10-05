@@ -1,0 +1,58 @@
+[
+  {
+    "nome": "buscar_politica",
+    "descricao": "Busca uma politica interna da empresa pelo topico (devolucao, cancelamento, segunda_via, prazos, seguranca).",
+    "input_schema": {
+      "properties": {
+        "topico": {
+          "title": "Topico",
+          "type": "string"
+        }
+      },
+      "required": [
+        "topico"
+      ],
+      "type": "object",
+      "title": "buscar_politicaArguments"
+    }
+  },
+  {
+    "nome": "criar_ticket",
+    "descricao": "Abre um ticket de suporte tecnico. Prioridades aceitas: baixa, media, alta.",
+    "input_schema": {
+      "properties": {
+        "titulo": {
+          "title": "Titulo",
+          "type": "string"
+        },
+        "prioridade": {
+          "default": "media",
+          "title": "Prioridade",
+          "type": "string"
+        }
+      },
+      "required": [
+        "titulo"
+      ],
+      "type": "object",
+      "title": "criar_ticketArguments"
+    }
+  },
+  {
+    "nome": "resumo_atendimento",
+    "descricao": "Resume o historico de atendimento de um cliente pelo nome.",
+    "input_schema": {
+      "properties": {
+        "nome_cliente": {
+          "title": "Nome Cliente",
+          "type": "string"
+        }
+      },
+      "required": [
+        "nome_cliente"
+      ],
+      "type": "object",
+      "title": "resumo_atendimentoArguments"
+    }
+  }
+]

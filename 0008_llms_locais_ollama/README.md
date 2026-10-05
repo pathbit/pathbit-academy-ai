@@ -36,7 +36,8 @@ Tudo medido na própria máquina, em CPU.
 ### Estrutura do Artigo
 
 - `article/ARTICLE.md` - Conteúdo completo.
-- `article/ARTICLE_LINKEDIN.md` - Versão resumida e pronta para postar no LinkedIn (limite de caracteres respeitado).
+- `article/ARTICLE_LINKEDIN.md` - Versão resumida para publicação em artigo no LinkedIn Pulse.
+- `article/POST_LINKEDIN.md` - Post direto e conciso para o feed do LinkedIn.
 - `assets/` e `highlight/` - Imagens técnicas e material de apoio visual.
 - `data/` - Artefatos medidos: CSVs, relatório e snapshot do servidor.
 - `notebooks/` - Notebook interativo.
