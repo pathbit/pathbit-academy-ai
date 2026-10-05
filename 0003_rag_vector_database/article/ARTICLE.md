@@ -433,7 +433,7 @@ Completeness: 0.85 (inclui prazo e condições)
 
 [**Abrir Readme.md**](https://github.com/pathbit/pathbit-academy-ai/blob/master/0003_rag_vector_database/README.md)
 
-**Opção 2:** Você pode executar todos os exemplos deste artigo direto no seu navegador utilizando o [http://colab.research.google.com/](http://colab.research.google.com/).
+**Opção 2:** Você pode executar todos os exemplos deste artigo direto no seu navegador utilizando o [Google Colab](https://colab.research.google.com/).
 
 > Clique no link abaixo:
 

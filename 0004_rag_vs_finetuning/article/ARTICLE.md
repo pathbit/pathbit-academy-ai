@@ -478,7 +478,7 @@ Você precisa de: dados que mudam (✅ RAG), citar fontes (✅ RAG), orçamento 
 
 [**Abrir Readme.md**](https://github.com/pathbit/pathbit-academy-ai/blob/master/0004_rag_vs_finetuning/README.md)
 
-**Opção 2:** Você pode executar todos os exemplos deste artigo direto no seu navegador utilizando o [http://colab.research.google.com/](http://colab.research.google.com/).
+**Opção 2:** Você pode executar todos os exemplos deste artigo direto no seu navegador utilizando o [Google Colab](https://colab.research.google.com/).
 
 > Clique no link abaixo:
 
@@ -861,6 +861,6 @@ A **Pathbit** é especialista em arquiteturas de IA para produção e já ajudou
 - [OpenAI - Fine-tuning Guide](https://platform.openai.com/docs/guides/fine-tuning)
 - [Hugging Face - Fine-tuning Models](https://huggingface.co/docs/transformers/training)
 - [LangChain - RAG Tutorial](https://python.langchain.com/docs/use_cases/question_answering/)
-- [Pinecone - RAG vs Fine-tuning](https://www.pinecone.io/learn/rag-vs-fine-tuning/)
+- [Pinecone - Retrieval-Augmented Generation (RAG)](https://www.pinecone.io/learn/retrieval-augmented-generation/)
 - [Google - LoRA for Fine-tuning](https://arxiv.org/abs/2106.09685)
 - [Anthropic - Constitutional AI](https://www.anthropic.com/index/constitutional-ai-harmlessness-from-ai-feedback) _Melhor conteúdo sobre fine-tuning com valores!_

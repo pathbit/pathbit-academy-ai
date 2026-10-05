@@ -2,11 +2,11 @@
 
 **Vamos dar um contexto no tema:**
 
-Com a chegada do modelo GPT-5, que Segundo Altman, oferece uma experiência comparável a uma conversa com um especialista de nível doutorado, resolvemos falar deste assunto.
+Com a chegada do modelo GPT-5, que, segundo Altman, oferece uma experiência comparável a uma conversa com um especialista de nível doutorado, resolvemos falar deste assunto.
 
-> Dá uma olhada neste artigo aqui sobre a matéria do lançamento do GPT-5 [GPT-5 o que muda com o novo modelo!](https://fastcompanybrasil.com/ia/gpt-5-o-que-muda-com-o-novo-modelo-da-openai-para-o-chatgpt/).
+> Dá uma olhada neste artigo aqui sobre a matéria do lançamento do GPT-5: [GPT-5 o que muda com o novo modelo!](https://fastcompanybrasil.com/ia/gpt-5-o-que-muda-com-o-novo-modelo-da-openai-para-o-chatgpt/).
 
-LLM e LRM não são a mesma coisa jovem gafanhoto. Não é só uma sigla nova para impressionar investidor ou enganar cliente. Se você está tratando ambos como "a IA" e pronto, está construindo sua solução no chute e isso, mais cedo ou mais tarde, vai custar caro.
+LLM e LRM não são a mesma coisa, jovem gafanhoto. Não é só uma sigla nova para impressionar investidor ou enganar cliente. Se você está tratando ambos como "a IA" e pronto, está construindo sua solução no chute e isso, mais cedo ou mais tarde, vai custar caro.
 
 ## O erro começa na sigla
 
@@ -48,14 +48,14 @@ Um LLM é perfeito para criar um resumo de 10 páginas de um relatório de merca
 
 Um LRM é perfeito para analisar cenários de risco de crédito, considerando múltiplas variáveis históricas e de mercado, e recomendar a melhor estratégia com justificativa clara. Mas se você pedir que ele escreva um post leve para o LinkedIn, é canhão para matar mosquito.
 
-## Como esta diferença entre LLM e LRM afetam o meu projeto?
+## Como esta diferença entre LLM e LRM afeta o meu projeto?
 
 Imagine que você está construindo um sistema de suporte para um banco:
 
 - **Com LLM:** o cliente pergunta "Qual é a taxa atual do CDI?" => o modelo responde rápido, com contexto atualizado.
 - **Com LRM:** o cliente pergunta "Vale a pena migrar minha carteira de investimentos para um produto atrelado ao CDI considerando meu perfil conservador, inflação projetada e vencimentos futuros?" => aqui o LRM vai brilhar, estruturar a análise, ponderar riscos e explicar todo o raciocínio na sua conclusão.
 
-## Qual eu devo escolher, ambas foram sensacionais ou bizarras (`piada interna`)
+## Qual eu devo escolher? Ambas foram sensacionais ou bizarras? (`piada interna`)
 
 ### 1. Defina o problema antes da tecnologia
 
@@ -89,7 +89,7 @@ Imagine que você está construindo um sistema de suporte para um banco:
 
 [Abrir Readme.md](https://github.com/pathbit/pathbit-academy-ai/blob/master/0001_llm_x_lrm/README.md)
 
-**Opção 2:** Você pode executar todos os exemplos deste artigo direto no seu navegador utilizando o [http://colab.research.google.com/](http://colab.research.google.com/).
+**Opção 2:** Você pode executar todos os exemplos deste artigo direto no seu navegador utilizando o [Google Colab](https://colab.research.google.com/).
 
 > Clique no link abaixo:
 
