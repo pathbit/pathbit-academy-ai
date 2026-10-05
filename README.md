@@ -76,6 +76,16 @@ Apresenta um agente local com guardrail, regra de negócio, planner JSON, roteam
 
 ---
 
+### [0008 - LLMs Locais com Ollama](./0008_llms_locais_ollama/)
+
+**Ano:** 2026 | **Categoria:** Inteligência Artificial / LLMs Locais
+
+Prova que um stack de IA roda 100% local: Ollama em Docker com volume persistente, benchmark medido na própria máquina (TTFT, latência e vazão), saída JSON forçada e retrieval semântico — sem chave de API, sem conta e sem custo por token.
+
+[📖 Ler Artigo](./0008_llms_locais_ollama/) | [🔧 Executar Localmente](./0008_llms_locais_ollama/README.md)
+
+---
+
 ## 📖 Documentação
 
 ### 🔧 Soluções para Problemas Comuns
@@ -135,11 +145,21 @@ pathbit-academy-ai/
 │   ├── assets/
 │   ├── notebooks/
 │   └── src/
-└── 0007_agentes_tool_calling/         # Artigo 0007
+├── 0007_agentes_tool_calling/         # Artigo 0007
+│   ├── README.md
+│   ├── requirements.txt
+│   ├── article/
+│   ├── assets/
+│   ├── notebooks/
+│   └── src/
+└── 0008_llms_locais_ollama/           # Artigo 0008
     ├── README.md
     ├── requirements.txt
+    ├── docker-compose.yml
     ├── article/
     ├── assets/
+    ├── data/
+    ├── highlight/
     ├── notebooks/
     └── src/
 ```
@@ -171,6 +191,9 @@ Para executar os artigos e notebooks da **Pathbit Academy AI**, recomendamos a s
      - Defina no terminal com `export GROQ_API_KEY="gsk_..."` (ou `$env:GROQ_API_KEY="gsk_..."` no PowerShell).
    - **Hugging Face (Artigos 0002 a 0007):**
      - Acesso a modelos públicos e abertos baixados automaticamente pela biblioteca `transformers` ou `sentence-transformers`, sem necessidade de chave de API ou cobranças.
+   - **Sem conta e sem chave (Artigo 0008 em diante):**
+     - O Ollama em Docker baixa modelos abertos direto do registry público, sem cadastro.
+     - Basta Docker e Python: nenhuma chave de API é necessária para os artigos que rodam 100% local.
 
 ---
 

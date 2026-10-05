@@ -1,0 +1,33 @@
+# Sobe o Ollama local para o artigo 0008 (LLMs Locais com Ollama).
+# Sem chave de API, sem conta externa, sem custo por token.
+#
+# Comandos:
+#   docker compose up -d
+#   docker exec pathbit-ollama ollama pull qwen2.5:0.5b
+#   docker exec pathbit-ollama ollama pull qwen2.5:1.5b
+#   docker exec pathbit-ollama ollama pull llama3.2:1b
+#   docker exec pathbit-ollama ollama pull nomic-embed-text
+#
+# Para parar e manter os modelos baixados: docker compose down
+# Para parar e apagar os modelos: docker compose down -v
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: pathbit-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+    # Opcional (Linux com NVIDIA): descomente para usar a GPU.
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+
+volumes:
+  ollama-data:

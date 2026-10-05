@@ -1,0 +1,21 @@
+{
+  "version": "0.35.1",
+  "models": [
+    {
+      "name": "llama3.2:1b",
+      "size_bytes": 1321098329
+    },
+    {
+      "name": "qwen2.5:1.5b",
+      "size_bytes": 986061892
+    },
+    {
+      "name": "nomic-embed-text:latest",
+      "size_bytes": 274302450
+    },
+    {
+      "name": "qwen2.5:0.5b",
+      "size_bytes": 397821319
+    }
+  ]
+}

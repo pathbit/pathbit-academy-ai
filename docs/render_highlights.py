@@ -30,6 +30,7 @@ DEFAULT_INPUTS = [
     ROOT / "0005_prompt_engineering_avancado" / "highlight" / "highlight.md",
     ROOT / "0006_llm_evals_regressao" / "highlight" / "highlight.md",
     ROOT / "0007_agentes_tool_calling" / "highlight" / "highlight.md",
+    ROOT / "0008_llms_locais_ollama" / "highlight" / "highlight.md",
 ]
 
 
@@ -67,6 +68,14 @@ THEMES = {
         badge_border="rgba(139, 92, 246, 0.45)",
         badge_text="#a78bfa",
         callout_border="#8b5cf6",
+    ),
+    "0008_llms_locais_ollama": Theme(
+        accent="#f59e0b",
+        accent_glow="rgba(245, 158, 11, 0.25)",
+        badge_bg="rgba(245, 158, 11, 0.18)",
+        badge_border="rgba(245, 158, 11, 0.45)",
+        badge_text="#fbbf24",
+        callout_border="#f59e0b",
     ),
 }
 

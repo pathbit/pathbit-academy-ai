@@ -1,0 +1,5 @@
+consulta_id,consulta,documento_top1,score_top1,esperado,acertou
+q_devolucao,posso devolver um produto sem uso?,politica_devolucao,0.746,politica_devolucao,True
+q_fatura,como pego a segunda via do boleto?,segunda_via_fatura,0.7191,segunda_via_fatura,True
+q_incidente,o sistema esta fora do ar com erro 500,suporte_aplicacao,0.7501,suporte_aplicacao,True
+q_senha,posso passar minha senha no chat?,seguranca_conta,0.6252,seguranca_conta,True

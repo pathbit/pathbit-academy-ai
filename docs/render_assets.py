@@ -1274,6 +1274,233 @@ TEMPLATES["0006_llm_evals_regressao/assets/05.png"] = f"""{BASE_HEAD}
 </html>"""
 
 # ==========================================
+# ARTIGO 0008: LLMS LOCAIS COM OLLAMA
+# ==========================================
+
+TEMPLATES["0008_llms_locais_ollama/assets/01.png"] = f"""{BASE_HEAD}
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="brand-pill"><span class="dot"></span> Artigo 0008 • LLMs Locais com Ollama</div>
+            <div class="title">Chamada na Nuvem vs. Chamada Local</div>
+            <div class="subtitle">O caminho que cada token percorre — e o que ele custa e expõe no trajeto</div>
+        </div>
+        <div class="figure-badge">Figura 1</div>
+    </div>
+
+    <div class="main-content">
+        <div class="card" style="flex: 1; border-color: rgba(59, 130, 246, 0.3); background: rgba(59, 130, 246, 0.02); padding: 32px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div class="card-title" style="color: #60a5fa; margin-bottom: 0;">
+                    <span class="badge badge-blue">Nuvem</span> Chamada via API
+                </div>
+                <span style="font-size: 13px; color: #94a3b8;">Custo por token</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px; flex: 1; justify-content: center;">
+                <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px 22px; font-weight: 700; font-size: 15px;">
+                    1. Cliente na sua máquina
+                </div>
+                <div style="color: #60a5fa; font-size: 18px; padding-left: 22px;">↓</div>
+                <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px 22px; font-weight: 700; font-size: 15px;">
+                    2. Internet — latência variável
+                </div>
+                <div style="color: #60a5fa; font-size: 18px; padding-left: 22px;">↓</div>
+                <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px 22px; font-weight: 700; font-size: 15px;">
+                    3. API Gateway + chave de API
+                </div>
+                <div style="color: #60a5fa; font-size: 18px; padding-left: 22px;">↓</div>
+                <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px 22px; font-weight: 700; font-size: 15px;">
+                    4. Billing + GPU compartilhada
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; padding: 12px 16px; background: rgba(59, 130, 246, 0.1); border-radius: 10px; font-size: 13px; color: #93c5fd; line-height: 1.5;">
+                <strong>Consequências:</strong> cada chamada consome crédito, o dado sai do ambiente, a versão do modelo muda sem aviso e o benchmark compara alvos móveis.
+            </div>
+        </div>
+
+        <div class="card" style="flex: 1; border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.02); padding: 32px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <div class="card-title" style="color: #34d399; margin-bottom: 0;">
+                    <span class="badge badge-emerald">Local</span> Chamada via Ollama
+                </div>
+                <span style="font-size: 13px; color: #34d399; font-weight: 600;">Custo zero por token</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 12px; flex: 1; justify-content: center;">
+                <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 14px 22px; font-weight: 700; font-size: 15px; color: #a7f3d0;">
+                    1. Cliente na sua máquina
+                </div>
+                <div style="color: #34d399; font-size: 18px; padding-left: 22px;">↓</div>
+                <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 14px 22px; font-weight: 700; font-size: 15px; color: #a7f3d0;">
+                    2. Loopback http://localhost:11434
+                </div>
+                <div style="color: #34d399; font-size: 18px; padding-left: 22px;">↓</div>
+                <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 14px 22px; font-weight: 700; font-size: 15px; color: #a7f3d0;">
+                    3. Container Docker com Ollama
+                </div>
+                <div style="color: #34d399; font-size: 18px; padding-left: 22px;">↓</div>
+                <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 14px 22px; font-weight: 700; font-size: 15px; color: #a7f3d0;">
+                    4. Volume local com modelos abertos
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; padding: 12px 16px; background: rgba(16, 185, 129, 0.1); border-radius: 10px; font-size: 13px; color: #a7f3d0; line-height: 1.5;">
+                <strong>Consequências:</strong> o limite passa a ser a memória da máquina, o dado nunca sai do ambiente e a versão do modelo fica congelada no container.
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div><strong>Pathbit Academy AI</strong> • Engenharia de IA para Produção</div>
+        <div>Figura 1: Rodar local troca custo por token, latência de rede e exposição de dado por hardware próprio</div>
+    </div>
+</body>
+</html>"""
+
+TEMPLATES["0008_llms_locais_ollama/assets/02.png"] = f"""{BASE_HEAD}
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="brand-pill"><span class="dot"></span> Artigo 0008 • LLMs Locais com Ollama</div>
+            <div class="title">O Stack Local em Três Blocos</div>
+            <div class="subtitle">Cliente Python • Container Ollama • Volume de modelos — sem conta e sem chave</div>
+        </div>
+        <div class="figure-badge">Figura 2</div>
+    </div>
+
+    <div class="main-content" style="align-items: center;">
+        <div class="card" style="flex: 1; padding: 30px;">
+            <div class="card-title" style="color: #60a5fa;">
+                <span class="badge badge-blue">Cliente</span> Python padrão
+            </div>
+            <div class="card-desc">HTTP puro com <code>urllib</code>, sem SDK e sem dependência de fornecedor.</div>
+            <div style="background: #040711; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.7; color: #e2e8f0;">
+                <span style="color: #64748b;"># chat com métricas</span><br>
+                POST /api/chat<br>
+                {{"model": "qwen2.5:0.5b",<br>
+                &nbsp;&nbsp;"stream": true}}<br>
+                <span style="color: #64748b;"># embeddings</span><br>
+                POST /api/embed
+            </div>
+            <div style="margin-top: 18px; padding: 12px 16px; background: rgba(59, 130, 246, 0.1); border-radius: 10px; font-size: 13px; color: #93c5fd; line-height: 1.6;">
+                Os artefatos medidos ficam em CSV: TTFT, latência total, tokens e vazão por chamada.
+            </div>
+        </div>
+
+        <div style="font-size: 26px; color: #64748b;">➔</div>
+
+        <div class="card" style="flex: 1.35; padding: 30px; border-color: rgba(16, 185, 129, 0.35); background: rgba(16, 185, 129, 0.03);">
+            <div class="card-title" style="color: #34d399;">
+                <span class="badge badge-emerald">Docker</span> Container pathbit-ollama
+            </div>
+            <div class="card-desc">Imagem pública <code>ollama/ollama:latest</code> servindo a API em <code>11434:11434</code>.</div>
+
+            <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 16px; padding: 18px;">
+                <div style="font-size: 11px; font-weight: 800; color: #34d399; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;">
+                    Volume persistente ollama-data
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13.5px;">
+                    <div style="display: flex; justify-content: space-between; background: rgba(255,255,255,0.04); border-radius: 8px; padding: 9px 14px;">
+                        <span style="font-weight: 700;">qwen2.5:0.5b</span><span style="color: #94a3b8;">397 MB</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; background: rgba(255,255,255,0.04); border-radius: 8px; padding: 9px 14px;">
+                        <span style="font-weight: 700;">qwen2.5:1.5b</span><span style="color: #94a3b8;">986 MB</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; background: rgba(255,255,255,0.04); border-radius: 8px; padding: 9px 14px;">
+                        <span style="font-weight: 700;">llama3.2:1b</span><span style="color: #94a3b8;">1.3 GB</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; background: rgba(255,255,255,0.04); border-radius: 8px; padding: 9px 14px;">
+                        <span style="font-weight: 700;">nomic-embed-text</span><span style="color: #94a3b8;">274 MB</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 18px; padding: 12px 16px; background: rgba(16, 185, 129, 0.1); border-radius: 10px; font-size: 13px; color: #a7f3d0; line-height: 1.6;">
+                O <code>pull</code> acontece uma vez. O container pode morrer e voltar sem baixar gigabytes de novo.
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div><strong>Pathbit Academy AI</strong> • Engenharia de IA para Produção</div>
+        <div>Figura 2: Três blocos sem conta externa sustentam chat, saída estruturada e embeddings no mesmo servidor</div>
+    </div>
+</body>
+</html>"""
+
+TEMPLATES["0008_llms_locais_ollama/assets/03.png"] = f"""{BASE_HEAD}
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="brand-pill"><span class="dot"></span> Artigo 0008 • LLMs Locais com Ollama</div>
+            <div class="title">Anatomia de uma Chamada Medida</div>
+            <div class="subtitle">Streaming token a token decompõe a latência que a nuvem costuma entregar embalada</div>
+        </div>
+        <div class="figure-badge">Figura 3</div>
+    </div>
+
+    <div class="main-content" style="flex-direction: column; justify-content: center; gap: 22px;">
+        <div style="display: flex; align-items: center; gap: 14px; width: 100%;">
+            <div style="width: 200px; background: rgba(15, 23, 42, 0.65); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px 18px;">
+                <div style="font-size: 11px; color: #94a3b8; text-transform: uppercase; font-weight: 700;">Request</div>
+                <div style="font-weight: 800; font-size: 15px; margin-top: 4px;">POST /api/chat</div>
+                <div style="font-size: 12px; color: #64748b; margin-top: 2px;">stream: true</div>
+            </div>
+            <div style="flex: 1; position: relative; height: 64px;">
+                <div style="position: absolute; top: 30px; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, rgba(59,130,246,0.6), rgba(245,158,11,0.8), rgba(16,185,129,0.6)); border-radius: 2px;"></div>
+                <div style="position: absolute; top: 8px; left: 6%; font-size: 12px; color: #93c5fd; text-align: center;">
+                    <div style="width: 12px; height: 12px; border-radius: 50%; background: #3b82f6; margin: 0 auto 6px;"></div>
+                    prompt avaliado
+                </div>
+                <div style="position: absolute; top: 0; left: 34%; font-size: 12px; color: #fbbf24; text-align: center;">
+                    <div style="width: 14px; height: 14px; border-radius: 50%; background: #f59e0b; margin: 0 auto 6px; box-shadow: 0 0 12px rgba(245,158,11,0.8);"></div>
+                    <strong>TTFT</strong> — primeiro token
+                </div>
+                <div style="position: absolute; top: 8px; right: 4%; font-size: 12px; color: #a7f3d0; text-align: center;">
+                    <div style="width: 12px; height: 12px; border-radius: 50%; background: #10b981; margin: 0 auto 6px;"></div>
+                    done
+                </div>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 20px; width: 100%;">
+            <div class="card" style="flex: 1; padding: 22px; text-align: center;">
+                <div style="font-size: 12px; color: #94a3b8; text-transform: uppercase; font-weight: 700;">ttft_ms</div>
+                <div style="font-size: 30px; font-weight: 800; color: #fbbf24; margin-top: 6px;">1º token</div>
+                <div style="font-size: 13px; color: #94a3b8; margin-top: 8px; line-height: 1.5;">A métrica que define a sensação de velocidade de quem usa</div>
+            </div>
+            <div class="card" style="flex: 1; padding: 22px; text-align: center;">
+                <div style="font-size: 12px; color: #94a3b8; text-transform: uppercase; font-weight: 700;">eval_count</div>
+                <div style="font-size: 30px; font-weight: 800; color: #60a5fa; margin-top: 6px;">tokens gerados</div>
+                <div style="font-size: 13px; color: #94a3b8; margin-top: 8px; line-height: 1.5;">Contados no último chunk, sem estimativa</div>
+            </div>
+            <div class="card" style="flex: 1; padding: 22px; text-align: center;">
+                <div style="font-size: 12px; color: #94a3b8; text-transform: uppercase; font-weight: 700;">eval_duration</div>
+                <div style="font-size: 30px; font-weight: 800; color: #34d399; margin-top: 6px;">tokens/s</div>
+                <div style="font-size: 13px; color: #94a3b8; margin-top: 8px; line-height: 1.5;">Vazão real do seu hardware, chamada a chamada</div>
+            </div>
+            <div class="card" style="flex: 1; padding: 22px; text-align: center;">
+                <div style="font-size: 12px; color: #94a3b8; text-transform: uppercase; font-weight: 700;">total_ms</div>
+                <div style="font-size: 30px; font-weight: 800; color: #c084fc; margin-top: 6px;">latência total</div>
+                <div style="font-size: 13px; color: #94a3b8; margin-top: 8px; line-height: 1.5;">Do request à última linha do stream</div>
+            </div>
+        </div>
+
+        <div style="width: 100%; padding: 14px 20px; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; font-size: 13.5px; color: #fcd34d; line-height: 1.6;">
+            <strong>Por que decompor:</strong> quando alguém pergunta "por que a resposta demorou", o CSV responde com carga de modelo, TTFT e geração separados — em vez de uma latência única e opaca.
+        </div>
+    </div>
+
+    <div class="footer">
+        <div><strong>Pathbit Academy AI</strong> • Engenharia de IA para Produção</div>
+        <div>Figura 3: Cada chamada registra TTFT, tokens de prompt e de saída, vazão e latência total no CSV</div>
+    </div>
+</body>
+</html>"""
+
+# ==========================================
 # ARTIGO 0007: AGENTES E TOOL CALLING
 # ==========================================
 
@@ -1712,6 +1939,139 @@ TEMPLATES["0007_agentes_tool_calling/assets/05.png"] = f"""{BASE_HEAD}
     <div class="footer">
         <div><strong>Pathbit Academy AI</strong> • Engenharia de IA para Produção</div>
         <div>Figura 5: A decisão consciente de arquitetura protege a esteira contra complexidade acidental</div>
+    </div>
+</body>
+</html>"""
+
+TEMPLATES["0008_llms_locais_ollama/assets/05.png"] = f"""{BASE_HEAD}
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="brand-pill"><span class="dot"></span> Artigo 0008 • LLMs Locais com Ollama</div>
+            <div class="title">Quando Rodar Local — e Quando Não Rodar</div>
+            <div class="subtitle">A decisão combina sensibilidade do dado com capacidade exigida do modelo</div>
+        </div>
+        <div class="figure-badge">Figura 5</div>
+    </div>
+
+    <div class="main-content" style="align-items: center; justify-content: center; gap: 20px;">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <span style="font-size: 12px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; writing-mode: vertical-rl; transform: rotate(180deg);">Sensibilidade do dado →</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 16px; width: 100%; max-width: 1150px;">
+            <div class="card" style="padding: 24px; border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.05); justify-content: center;">
+                <span class="badge badge-emerald" style="width: fit-content;">Local — Ollama</span>
+                <div style="font-size: 17px; font-weight: 800; margin-top: 10px;">Dado sensível, tarefa de roteamento, extração ou RAG</div>
+                <div style="font-size: 13.5px; color: #94a3b8; margin-top: 8px; line-height: 1.6;">Planner de agente, classificação de intenção, retrieval semântico e resumo curto. O dado nunca sai do ambiente e o custo por token é zero.</div>
+            </div>
+
+            <div class="card" style="padding: 24px; border-color: rgba(245, 158, 11, 0.4); background: rgba(245, 158, 11, 0.05); justify-content: center;">
+                <span class="badge badge-amber" style="width: fit-content;">Híbrido</span>
+                <div style="font-size: 17px; font-weight: 800; margin-top: 10px;">Dado sensível, raciocínio de longo alcance</div>
+                <div style="font-size: 13.5px; color: #94a3b8; margin-top: 8px; line-height: 1.6;">Máscara e roteamento local primeiro; só o necessário segue para modelo de fronteira, em região controlada e com contrato de dados.</div>
+            </div>
+
+            <div class="card" style="padding: 24px; border-color: rgba(59, 130, 246, 0.4); background: rgba(59, 130, 246, 0.05); justify-content: center;">
+                <span class="badge badge-blue" style="width: fit-content;">Local ou nuvem</span>
+                <div style="font-size: 17px; font-weight: 800; margin-top: 10px;">Dado público, tarefa simples ou prototipagem</div>
+                <div style="font-size: 13.5px; color: #94a3b8; margin-top: 8px; line-height: 1.6;">Prova de conceito, demo em sala e desenvolvimento não precisam de nuvem: rodar local elimina chave e custo do caminho crítico do aprendizado.</div>
+            </div>
+
+            <div class="card" style="padding: 24px; border-color: rgba(139, 92, 246, 0.4); background: rgba(139, 92, 246, 0.05); justify-content: center;">
+                <span class="badge badge-purple" style="width: fit-content;">Nuvem de fronteira</span>
+                <div style="font-size: 17px; font-weight: 800; margin-top: 10px;">Dado público, capacidade de fronteira exigida</div>
+                <div style="font-size: 13.5px; color: #94a3b8; margin-top: 8px; line-height: 1.6;">Quando a qualidade do raciocínio é o produto e o volume justifica: modelos de 0.5B a 1.5B não competem aqui, e fingir que competem é desonestidade técnica.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div><strong>Pathbit Academy AI</strong> • Engenharia de IA para Produção</div>
+        <div>Figura 5: O artigo não vende local como bala de prata — a matriz deixa os critérios explícitos</div>
+    </div>
+</body>
+</html>"""
+
+TEMPLATES["0008_llms_locais_ollama/assets/04.png"] = f"""{BASE_HEAD}
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="brand-pill"><span class="dot"></span> Artigo 0008 • LLMs Locais com Ollama</div>
+            <div class="title">Benchmark Medido na Própria Máquina</div>
+            <div class="subtitle">Três modelos pequenos, mesmos prompts, mesma máquina — CPU, Ollama em Docker</div>
+        </div>
+        <div class="figure-badge">Figura 4</div>
+    </div>
+
+    <div class="main-content" style="flex-direction: column; justify-content: center; gap: 18px;">
+        <div style="display: flex; gap: 20px; width: 100%;">
+            <div class="card" style="flex: 1; padding: 22px; border-color: rgba(16, 185, 129, 0.4);">
+                <div style="font-weight: 800; font-size: 17px;">qwen2.5:0.5b</div>
+                <div style="font-size: 12px; color: #34d399; font-weight: 700; margin-bottom: 14px;">397 MB • o melhor planner do teste</div>
+
+                <div style="font-size: 12px; color: #94a3b8; display: flex; justify-content: space-between;"><span>Vazão</span><span style="color: #e2e8f0; font-weight: 700;">79,8 tokens/s</span></div>
+                <div style="height: 10px; background: rgba(255,255,255,0.06); border-radius: 5px; margin: 4px 0 12px;"><div style="width: 100%; height: 100%; background: #10b981; border-radius: 5px;"></div></div>
+
+                <div style="font-size: 12px; color: #94a3b8; display: flex; justify-content: space-between;"><span>TTFT médio</span><span style="color: #e2e8f0; font-weight: 700;">559 ms</span></div>
+                <div style="height: 10px; background: rgba(255,255,255,0.06); border-radius: 5px; margin: 4px 0 12px;"><div style="width: 55%; height: 100%; background: #f59e0b; border-radius: 5px;"></div></div>
+
+                <div style="font-size: 12px; color: #94a3b8; display: flex; justify-content: space-between;"><span>Latência total média</span><span style="color: #e2e8f0; font-weight: 700;">5,49 s</span></div>
+                <div style="height: 10px; background: rgba(255,255,255,0.06); border-radius: 5px; margin: 4px 0 14px;"><div style="width: 87%; height: 100%; background: #8b5cf6; border-radius: 5px;"></div></div>
+
+                <div style="display: flex; gap: 8px;">
+                    <span class="badge badge-emerald">JSON 100%</span>
+                    <span class="badge badge-emerald">tool 100%</span>
+                </div>
+            </div>
+
+            <div class="card" style="flex: 1; padding: 22px;">
+                <div style="font-weight: 800; font-size: 17px;">llama3.2:1b</div>
+                <div style="font-size: 12px; color: #94a3b8; font-weight: 700; margin-bottom: 14px;">1,3 GB • menor TTFT, JSON quebrado</div>
+
+                <div style="font-size: 12px; color: #94a3b8; display: flex; justify-content: space-between;"><span>Vazão</span><span style="color: #e2e8f0; font-weight: 700;">25,3 tokens/s</span></div>
+                <div style="height: 10px; background: rgba(255,255,255,0.06); border-radius: 5px; margin: 4px 0 12px;"><div style="width: 32%; height: 100%; background: #10b981; border-radius: 5px;"></div></div>
+
+                <div style="font-size: 12px; color: #94a3b8; display: flex; justify-content: space-between;"><span>TTFT médio</span><span style="color: #e2e8f0; font-weight: 700;">256 ms</span></div>
+                <div style="height: 10px; background: rgba(255,255,255,0.06); border-radius: 5px; margin: 4px 0 12px;"><div style="width: 25%; height: 100%; background: #f59e0b; border-radius: 5px;"></div></div>
+
+                <div style="font-size: 12px; color: #94a3b8; display: flex; justify-content: space-between;"><span>Latência total média</span><span style="color: #e2e8f0; font-weight: 700;">4,33 s</span></div>
+                <div style="height: 10px; background: rgba(255,255,255,0.06); border-radius: 5px; margin: 4px 0 14px;"><div style="width: 68%; height: 100%; background: #8b5cf6; border-radius: 5px;"></div></div>
+
+                <div style="display: flex; gap: 8px;">
+                    <span class="badge badge-rose">JSON 0%</span>
+                    <span class="badge badge-rose">tool 0%</span>
+                </div>
+            </div>
+
+            <div class="card" style="flex: 1; padding: 22px;">
+                <div style="font-weight: 800; font-size: 17px;">qwen2.5:1.5b</div>
+                <div style="font-size: 12px; color: #94a3b8; font-weight: 700; margin-bottom: 14px;">986 MB • mais capaz, mais lento</div>
+
+                <div style="font-size: 12px; color: #94a3b8; display: flex; justify-content: space-between;"><span>Vazão</span><span style="color: #e2e8f0; font-weight: 700;">19,4 tokens/s</span></div>
+                <div style="height: 10px; background: rgba(255,255,255,0.06); border-radius: 5px; margin: 4px 0 12px;"><div style="width: 24%; height: 100%; background: #10b981; border-radius: 5px;"></div></div>
+
+                <div style="font-size: 12px; color: #94a3b8; display: flex; justify-content: space-between;"><span>TTFT médio</span><span style="color: #e2e8f0; font-weight: 700;">1.022 ms</span></div>
+                <div style="height: 10px; background: rgba(255,255,255,0.06); border-radius: 5px; margin: 4px 0 12px;"><div style="width: 100%; height: 100%; background: #f59e0b; border-radius: 5px;"></div></div>
+
+                <div style="font-size: 12px; color: #94a3b8; display: flex; justify-content: space-between;"><span>Latência total média</span><span style="color: #e2e8f0; font-weight: 700;">6,33 s</span></div>
+                <div style="height: 10px; background: rgba(255,255,255,0.06); border-radius: 5px; margin: 4px 0 14px;"><div style="width: 100%; height: 100%; background: #8b5cf6; border-radius: 5px;"></div></div>
+
+                <div style="display: flex; gap: 8px;">
+                    <span class="badge badge-emerald">JSON 100%</span>
+                    <span class="badge badge-emerald">tool 100%</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="width: 100%; padding: 14px 20px; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; font-size: 13.5px; color: #fcd34d; line-height: 1.6;">
+            <strong>Leitura honesta:</strong> médias incluem o resíduo de carga da primeira chamada de cada bloco. O llama3.2:1b com <code>format: "json"</code> devolveu objeto vazio nas 5 tentativas — decodificação constrangida garante sintaxe, não conteúdo. Artefatos completos em <code>data/benchmark_resumo.csv</code>.
+        </div>
+    </div>
+
+    <div class="footer">
+        <div><strong>Pathbit Academy AI</strong> • Engenharia de IA para Produção</div>
+        <div>Figura 4: Números medidos nesta execução — sua máquina vai produzir valores diferentes, e o runner existe para isso</div>
     </div>
 </body>
 </html>"""

@@ -1,0 +1,4 @@
+modelo,tentativas,json_valido,json_valido_pct,tool_correta,tool_correta_pct
+qwen2.5:0.5b,5,5,100.0,5,100.0
+qwen2.5:1.5b,5,5,100.0,5,100.0
+llama3.2:1b,5,0,0.0,0,0.0
