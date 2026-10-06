@@ -1,99 +1,95 @@
-# LLMs Locais com Ollama — Como Montar, Medir e Operar uma Stack de IA 100% Offline sem Custo por Token
+# LLMs locais com Ollama para rodar uma stack de IA 100% offline sem custo por token
 
-Grande parte do material sobre Inteligência Artificial em produção assume uma premissa silenciosa logo na terceira linha de código:
+Grande parte do material sobre Inteligência Artificial em produção assume uma premissa silenciosa logo na terceira linha de código.
+
 ```python
 client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 ```
 
-O exemplo funciona, o dashboard fica elegante, a demonstração encanta a diretoria e cada chamada consome centavos de dólar no cartão corporativo. Para protótipos de fim de semana, isso é conveniente. Mas para sistemas corporativos de missão crítica, ambientes regulados, laboratórios acadêmicos ou operações de alta volumetria, essa dependência externa cobra um pedágio invisível e perigoso.
+O exemplo funciona, o dashboard fica elegante, a demonstração agrada a diretoria e cada chamada consome centavos no cartão corporativo. Para protótipos de fim de semana, isso é conveniente. Mas para sistemas corporativos de missão crítica, ambientes regulados, laboratórios acadêmicos ou operações de alta volumetria, essa dependência externa cobra um pedágio invisível e perigoso.
 
-Não se trata apenas de economizar na fatura da nuvem. Trata-se de responder a três perguntas fundamentais de engenharia de software que uma API de terceiros impede que você responda:
-1. **Soberania e Privacidade:** Seus dados confidenciais, prontuários de clientes ou segredos industriais podem cruzar a internet pública e repousar em servidores de terceiros sob jurisdições estrangeiras?
-2. **Determinismo e Estabilidade:** O que acontece quando o provedor de nuvem atualiza o modelo silenciosamente na virada do mês, alterando o comportamento de um agente em produção?
-3. **Previsibilidade de Latência e Custo Marginal Zero:** Como viabilizar um loop de agente que executa 50 chamadas de reflexão e autoavaliação por minuto se cada chamada adiciona 800 ms de latência de rede mundial e gera custo variável contínuo?
+Não se trata apenas de economizar na fatura da nuvem, mas de responder a três perguntas fundamentais de engenharia que uma API de terceiros impede que você controle. 
 
-Este artigo parte exatamente de onde o [Artigo 0007 (Agentes e Tool Calling)](https://github.com/pathbit/pathbit-academy-ai/blob/master/0007_agentes_tool_calling/article/ARTICLE.md) parou. No 0007, construímos um agente autônomo com guardrails, planner e retrieval semântico rodando em memória de processo com Hugging Face. Aqui, damos o salto de engenharia: **desacoplamos o motor de inferência em um servidor dedicado via Ollama em container Docker**, consumido via HTTP puro em loopback, com medição cirúrgica de latência, vazão, memória e saída estruturada — sem chave de API, sem autenticação externa e sem pagar um centavo por token gerado.
+A primeira é a soberania dos dados. Informações confidenciais, prontuários de clientes ou segredos industriais podem cruzar a internet pública e repousar em servidores de terceiros sob jurisdições estrangeiras? A segunda é a estabilidade de versão. O que acontece quando o provedor atualiza o modelo silenciosamente na virada do mês, alterando o comportamento de um agente em produção? E a terceira é a previsibilidade econômica e técnica. Como viabilizar um agente que executa dezenas de chamadas de reflexão por minuto se cada chamada adiciona centenas de milissegundos de latência de rede e gera cobrança contínua?
+
+Este artigo parte exatamente de onde o [Artigo 0007 (Agentes e Tool Calling)](https://github.com/pathbit/pathbit-academy-ai/blob/master/0007_agentes_tool_calling/article/ARTICLE.md) parou. No 0007, construímos um agente autônomo com guardrails, planner e retrieval semântico rodando em memória de processo com Hugging Face. Aqui, damos o passo seguinte de arquitetura, desacoplando o motor de inferência em um servidor dedicado via Ollama em container Docker. O consumo acontece por HTTP puro em loopback, com medição cirúrgica de latência, vazão, memória e saída estruturada, tudo sem chave de API, sem autenticação externa e sem pagar por token gerado.
 
 ---
 
-## 1. O que Muda Quando o Modelo Mora na Sua Máquina
+## O que muda quando o modelo mora na sua máquina
 
-A transição da inferência gerenciada na nuvem para a inferência local altera radicalmente a física e a economia do seu software:
+A transição da inferência gerenciada na nuvem para a inferência local altera radicalmente a física e a economia do software.
 
 ![Nuvem versus local](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0008_llms_locais_ollama/assets/01.png)
 
-> **Figura 1:** Na nuvem, cada chamada cruza internet, chaves e faturamento dinâmico. No local, o ciclo inteiro opera dentro dos limites físicos do seu hardware.
+> Figura 1. Na nuvem, cada chamada cruza internet, chaves e faturamento dinâmico. No local, o ciclo inteiro opera dentro dos limites físicos do seu hardware.
 
-### As Quatro Transformações Concretas:
+São quatro mudanças práticas que transformam a operação do sistema.
 
-1. **A Latência de Rede Vira Latência de Loopback (`localhost`):**
-   Em chamadas de nuvem, a latência observada pelo cliente é a soma de:
-   $$\text{Latência}_{\text{total}} = \text{DNS} + \text{Handshake TLS} + \text{Trânsito WAN} + \text{Fila do Provedor} + \text{Inferência}$$
-   Em conexões corporativas transatlânticas, o overhead de rede raramente fica abaixo de 150 ms a 400 ms antes que o modelo gere o primeiro byte. No local, o transporte é um socket de loopback em memória interprocessos (`127.0.0.1`), onde o overhead de transporte é inferior a **1 ms**. A métrica que domina passa a ser unicamente a velocidade do hardware.
+Primeiro, a latência de rede vira latência de loopback. Em chamadas para a nuvem, o tempo total percebido pelo cliente acumula resolução DNS, handshake TLS, trânsito pelas operadoras e filas no provedor antes mesmo que o primeiro token comece a ser gerado. No ambiente local, o transporte acontece por um socket em memória na interface de loopback (127.0.0.1), onde o custo de rede é inferior a um milissegundo. A única métrica que passa a dominar é a velocidade física de processamento do hardware.
 
-2. **O Custo Marginal por Token Torna-se Zero:**
-   Na nuvem, cada token de entrada e saída é tarifado. Isso induz equipes de engenharia a adotar atalhos perigosos: encurtar prompts de sistema, omitir exemplos *few-shot*, limitar o histórico de conversa e evitar loops agênticos de reflexão. No ambiente local, o investimento é de capital fixo (o hardware já adquirido). Você pode gerar um milhão de tokens por dia sem que isso altere a conta bancária da sua empresa.
+Segundo, o custo marginal por token desaparece. Quando cada palavra gerada custa frações de centavo, a equipe de engenharia é induzida a cortar caminhos perigosos, a exemplo de encurtar prompts de sistema, omitir exemplos práticos, limitar o histórico de conversa e podar loops de autoavaliação do agente. No hardware local, o custo passa a ser fixo. É possível gerar centenas de milhares de tokens por dia para testes e auditorias sem alterar em nada o orçamento da empresa.
 
-3. **Isolamento Absoluto de Dados (Compliance LGPD / GDPR / HIPAA):**
-   Ao desligar o cabo de rede da máquina, o sistema continua funcionando com 100% de capacidade. Para instituições financeiras, hospitais, escritórios jurídicos e órgãos governamentais, essa garantia elimina auditorias exaustivas de conformidade sobre vazamento de PII (*Personally Identifiable Information*).
+Terceiro, o isolamento dos dados passa a ser absoluto. Ao desconectar a máquina da internet, o sistema continua funcionando com plena capacidade. Para setores como financeiro, saúde e jurídico, essa característica elimina semanas de burocracia e auditorias de conformidade com LGPD ou normas de sigilo bancário.
 
-4. **Congelamento Estrito de Versão:**
-   Provedores de nuvem frequentemente deprecam versões de modelos (*snapshots*) com aviso prévio curto ou aplicam alinhamentos invisíveis via *system prompts* que alteram a distribuição de probabilidade das saídas. No Docker local, o modelo é um arquivo de pesos imutável (`.gguf`) armazenado em volume. O mesmo teste executado hoje produzirá a mesma distribuição matemática daqui a três anos.
+Quarto, a versão do modelo fica congelada. APIs comerciais sofrem atualizações frequentes de pesos e prompts de alinhamento internos que mudam sutilmente o comportamento das respostas ao longo do tempo. No container Docker, os pesos do modelo ficam salvos em um arquivo imutável dentro de um volume dedicado. O teste executado hoje produzirá exatamente o mesmo resultado no próximo ano.
 
-> **A advertência honesta da Pathbit:** Rodar local não é uma bala de prata. Modelos compactos (de 0.5B a 1.5B parâmetros) não possuem o raciocínio enciclopédico de um modelo de fronteira de 400B rodando em clusters de H100 na nuvem. A pergunta que este artigo responde com dados reais não é *"qual é o modelo mais inteligente do planeta"*, mas sim: **o que um modelo compacto de 1 bilhão de parâmetros é capaz de sustentar com precisão determinística dentro da sua infraestrutura?**
+Vale fazer um alerta honesto. Rodar modelos localmente não significa substituir modelos gigantes de fronteira com centenas de bilhões de parâmetros em tarefas de raciocínio enciclopédico. A proposta deste laboratório não é encontrar o modelo mais inteligente do mundo, mas provar o que um modelo compacto de 1 bilhão de parâmetros consegue sustentar com estabilidade e precisão na sua infraestrutura.
 
 ---
 
-## 2. Sob o Capô: Como a Inferência Local Realmente Funciona
+## Como a inferência local funciona por baixo dos panos
 
 Para operar modelos locais em produção sem surpresas, o desenvolvedor precisa entender o que acontece na memória do sistema operacional entre o envio do prompt e o retorno da resposta.
 
-### 2.1. Do `llama.cpp` ao Ollama
-O Ollama não é um modelo de IA; ele é um servidor de gerenciamento e empacotamento construído em Go que encapsula o projeto **`llama.cpp`** (desenvolvido por Georgi Gerganov). O `llama.cpp` é uma implementação em C/C++ puro da arquitetura Transformer, otimizada cirurgicamente para executar tensores sem dependências externas (como PyTorch ou CUDA runtime pesada).
+### Do llama.cpp ao Ollama
 
-O Ollama atua como uma camada de orquestração moderna:
-- Gerencia o download e armazenamento de modelos em blobs imutáveis;
-- Expõe uma API REST compatível com HTTP/1.1 e streaming JSON;
-- Aloca dinamicamente camadas neurais entre CPU e GPU (*offloading* via flag `ngl` ou `--num-gpu`);
-- Otimiza as instruções da CPU utilizando registradores vetoriais modernos: **AVX2 / AVX-512** em arquiteturas x86 e **ARM NEON / Apple Silicon Metal** em arquiteturas ARM (M1/M2/M3/M4).
+O Ollama não é um modelo em si, mas um servidor de gerenciamento escrito em Go que empacota o projeto llama.cpp, criado por Georgi Gerganov. O llama.cpp implementa a arquitetura Transformer em C e C++ puro, desenhada especificamente para executar tensores com máxima eficiência sem exigir frameworks pesados como PyTorch ou runtimes proprietárias de GPU.
 
-### 2.2. A Matemática da Quantização e o Formato GGUF
-Um modelo como o Llama 3.2 em ponto flutuante de precisão total (FP16 ou BF16) armazena cada parâmetro em 16 bits (2 bytes). Para um modelo de 1 bilhão de parâmetros, seriam necessários no mínimo 2 GB apenas para os pesos na memória, sem contar o estado de contexto.
+O papel do Ollama é fornecer essa camada operacional amigável. O servidor gerencia o download e o armazenamento dos pesos em blobs reutilizáveis, expõe uma API REST padrão com suporte a streaming de texto, distribui as camadas neurais entre CPU e GPU de acordo com os recursos disponíveis e aproveita instruções vetoriais avançadas do processador, a exemplo de AVX2 e AVX-512 em chips x86 ou ARM NEON e Metal nos processadores Apple Silicon.
 
-O formato **GGUF** (*GPT-Generated Unified Format*) viabiliza a execução local através de **Quantização Pós-Treinamento (PTQ)**:
+### A matemática da quantização e o formato GGUF
 
-| Tipo de Quantização | Bits por Peso | Tamanho Llama 3.2 1B | Queda de Perplexidade (PPL) | Recomendação de Uso |
+Um modelo de linguagem em precisão original (FP16) armazena cada parâmetro em 16 bits, o que equivale a dois bytes por peso. Um modelo de 1 bilhão de parâmetros precisaria de pelo menos 2 GB de memória apenas para carregar sua estrutura básica, fora o espaço para contexto.
+
+O formato GGUF viabiliza a execução em computadores comuns por meio de quantização pós-treinamento. Esse processo comprime a representação numérica dos pesos para 8 bits, 4 bits ou até menos.
+
+| Tipo de Quantização | Bits por Peso | Tamanho Llama 3.2 1B | Perda de Perplexidade | Recomendação Prática |
 | :--- | :---: | :---: | :---: | :--- |
-| **FP16** | 16 bits | ~2.5 GB | Baseline (0.00) | Treinamento e geração de alta fidelidade |
-| **Q8_0** | 8 bits | ~1.3 GB | Quase nula (< 0.01) | Servidores com GPU e memória abundante |
-| **Q4_K_M** *(Padrão Ollama)* | 4.5 bits | ~800 MB | Mínima (~0.05) | **Padrão Ouro:** Melhor equilíbrio CPU / RAM |
-| **Q2_K** | 2.5 bits | ~500 MB | Severa (> 0.50) | Dispositivos embarcados e IoT extremos |
+| FP16 | 16 bits | ~2.5 GB | Nenhuma (referência) | Treinamento e estações com muita memória |
+| Q8_0 | 8 bits | ~1.3 GB | Quase imperceptível | Servidores com GPU dedicada |
+| Q4_K_M (Padrão) | 4.5 bits | ~800 MB | Mínima | Melhor equilíbrio para CPU e notebooks comuns |
+| Q2_K | 2.5 bits | ~500 MB | Significativa | Dispositivos embarcados ou memória muito restrita |
 
-Na quantização `Q4_K_M`, os tensores são divididos em blocos (geralmente de 32 ou 256 parâmetros), onde os pesos são mapeados para inteiros de 4 bits acompanhados de fatores de escala de ponto flutuante. O consumo de memória RAM cai em até 70%, permitindo que o modelo caiba com folga no cache e na memória principal de laptops convencionais.
+No padrão Q4_K_M adotado pelo Ollama, os pesos são agrupados em blocos e mapeados para inteiros de 4 bits com fatores de escala específicos. O consumo de memória RAM cai mais de 60%, permitindo que o modelo caiba com folga na memória principal de laptops convencionais.
 
-### 2.3. O Gargalo Real: Largura de Banda de Memória (*Memory Bandwidth*)
-Em inferência de LLMs autoregressivos, o cálculo de cada novo token exige que **todos os pesos do modelo sejam lidos da memória uma vez**. Isso significa que a vazão máxima teórica em tokens por segundo é limitada pela largura de banda da memória RAM:
+### O gargalo real na largura de banda da memória
+
+Em modelos autoregressivos, o cálculo de cada novo token exige ler todos os pesos do modelo na memória principal uma vez. Isso significa que a taxa máxima de tokens por segundo em CPU é limitada pela largura de banda da memória RAM.
 
 $$\text{Vazão Máxima (tokens/s)} \approx \frac{\text{Largura de Banda de Memória (GB/s)}}{\text{Tamanho dos Pesos do Modelo (GB)}}$$
 
-Se o seu computador possui memória DDR5 operando a 64 GB/s e o modelo ocupa 1.3 GB de RAM, a velocidade teórica máxima de geração sequencial em CPU será de aproximadamente $\frac{64}{1.3} \approx 49 \text{ tokens/s}$. Esse é o motivo pelo qual placas de vídeo com memórias ultrarrápidas (GDDR6 a 500+ GB/s) ou processadores Apple Silicon com memória unificada (200 a 800 GB/s) geram texto em velocidades vertiginosas.
+Se o computador possui memória DDR5 operando a 64 GB/s e o modelo ocupa 1.3 GB de RAM, a velocidade teórica máxima de geração sequencial em CPU será de aproximadamente 49 tokens por segundo. É por isso que placas de vídeo com memórias dedicadas ultrarrápidas ou processadores com arquitetura de memória unificada geram texto com tanta velocidade.
 
-### 2.4. A Gestão do KV Cache (*Key-Value Cache*)
-A cada token gerado, a camada de atenção recalcula matrizes de chave ($K$) e valor ($V$). Para não recomputar o passado a cada novo token gerado, o Ollama armazena o histórico em um **KV Cache**. A memória consumida pelo KV Cache cresce linearmente com a janela de contexto:
+### A gestão do KV Cache
+
+Durante a geração, a camada de atenção precisa consultar as chaves e valores calculados para todos os tokens anteriores. Para não recalcular todo o passado a cada novo passo, o motor armazena esse histórico em uma estrutura chamada KV Cache.
+
+O consumo de memória do KV Cache cresce linearmente conforme o histórico da conversa se expande.
 
 $$\text{Memória}_{\text{KV}} = 2 \times n_{\text{camadas}} \times n_{\text{heads}} \times d_{\text{head}} \times n_{\text{tokens\_contexto}} \times \text{bytes\_por\_elemento}$$
 
-Por isso, definir o parâmetro de contexto (`num_ctx`) no Ollama é essencial para evitar estouros de memória (*Out of Memory - OOM*) em máquinas com 8 GB ou 16 GB de RAM.
+Por essa razão, definir o limite de contexto no Ollama pelo parâmetro `num_ctx` é fundamental para evitar que requisições longas consumam toda a RAM da máquina.
 
 ---
 
-## 3. O Stack Mínimo e Gratuito em Docker
+## O stack mínimo e gratuito em Docker
 
-Para garantir reprodutibilidade corporativa, empacotamos o servidor em um único arquivo `docker-compose.yml`:
+Para garantir repetibilidade em qualquer ambiente de desenvolvimento, o servidor pode ser configurado em um arquivo docker-compose simples.
 
 ![Stack Ollama no Docker](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0008_llms_locais_ollama/assets/02.png)
 
-> **Figura 2:** Container, volume persistente nomeado e porta HTTP local compõem toda a infraestrutura necessária.
+> Figura 2. Container, volume persistente nomeado e porta HTTP local compõem toda a infraestrutura necessária.
 
 ```yaml
 services:
@@ -117,12 +113,9 @@ volumes:
   ollama-data:
 ```
 
-### Por que essa configuração importa:
-- **Volume Persistente `ollama-data`:** Baixar gigabytes de modelos a cada reinício de container destruiria a produtividade. O volume nomeado preserva as camadas de pesos no host permanentemente.
-- **`OLLAMA_KEEP_ALIVE=24h`:** Por padrão, o Ollama descarrega o modelo da memória após 5 minutos de inatividade para economizar RAM. Em servidores de produção, descarregar pesos gera um "cold start" de 2 a 4 segundos na requisição seguinte. O `keep_alive` mantém os tensores aquecidos na memória.
-- **Porta `11434`:** A porta canônica do Ollama, acessível localmente via `http://localhost:11434`.
+Dois detalhes dessa configuração merecem atenção especial. O volume nomeado `ollama-data` garante que os modelos baixados permaneçam salvos no disco do host, evitando downloads repetidos de vários gigabytes a cada reinício. A variável `OLLAMA_KEEP_ALIVE=24h` impede que o Ollama descarregue o modelo da memória RAM após cinco minutos de inatividade, eliminando a espera de carregamento nas requisições seguintes.
 
-Com o container ativo, baixamos os modelos abertos selecionados para a nossa bancada de testes:
+Com o container em execução, os modelos do experimento são baixados com comandos diretos no terminal.
 
 ```bash
 docker compose up -d
@@ -134,19 +127,15 @@ docker exec pathbit-ollama ollama pull nomic-embed-text
 
 ---
 
-## 4. A Anatomia Cirúrgica de uma Chamada Local
+## A anatomia de uma chamada local
 
-Quando o seu código faz uma requisição HTTP para a API do Ollama, o endpoint `/api/chat` ou `/api/generate` suporta dois modos:
-1. **Modo Monolítico (`stream: False`):** O servidor aguarda a geração completa de todos os tokens e devolve um único objeto JSON final.
-2. **Modo Streaming (`stream: True`):** O servidor devolve um fluxo contínuo de objetos JSON separados por quebras de linha (`\n`), onde cada linha representa um token emitido.
+A API do Ollama oferece duas formas de entrega da resposta. O modo simples aguarda o texto completo ser gerado para devolver um único JSON. O modo em streaming devolve uma linha JSON para cada novo token gerado.
 
 ![Anatomia da requisição](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0008_llms_locais_ollama/assets/03.png)
 
-> **Figura 3:** TTFT, tempo de avaliação de prompt e vazão de geração decompõem o que a nuvem costuma esconder em uma única métrica opaca.
+> Figura 3. TTFT, tempo de avaliação de prompt e vazão de geração decompõem o tempo que a nuvem costuma esconder em uma única métrica opaca.
 
-### O Cliente de Medição sem Dependências Externas:
-
-Para medir com rigor absoluto sem a sobrecarga ou variáveis de SDKs pesados de terceiros, construímos um cliente HTTP utilizando apenas a biblioteca padrão do Python (`urllib.request` e `json`):
+O modo em streaming é o mais interessante para telemetria porque expõe o tempo até o primeiro token (TTFT).
 
 ```python
 import json
@@ -180,7 +169,6 @@ def chat_com_metricas(base_url: str, model: str, prompt: str, timeout: float = 3
             chunk = json.loads(line.decode("utf-8"))
             texto_token = chunk.get("message", {}).get("content", "")
             
-            # Registra exatamente o momento em que o primeiro caractere útil chegou
             if texto_token and ttft_ms is None:
                 ttft_ms = (time.perf_counter() - start_time) * 1000.0
                 
@@ -192,11 +180,9 @@ def chat_com_metricas(base_url: str, model: str, prompt: str, timeout: float = 3
     latencia_total_ms = (time.perf_counter() - start_time) * 1000.0
     resposta_completa = "".join(chunks_recebidos)
 
-    # Extrai métricas de telemetria emitidas diretamente pelo motor C++ do Ollama
     eval_count = final_payload.get("eval_count", len(chunks_recebidos))
     eval_duration_ns = final_payload.get("eval_duration", 1)
     prompt_eval_count = final_payload.get("prompt_eval_count", 0)
-    prompt_eval_duration_ns = final_payload.get("prompt_eval_duration", 1)
 
     vazao_tokens_seg = (eval_count / (eval_duration_ns / 1e9)) if eval_duration_ns > 0 else 0.0
 
@@ -211,66 +197,45 @@ def chat_com_metricas(base_url: str, model: str, prompt: str, timeout: float = 3
     }
 ```
 
-### O que cada métrica revela sobre a experiência do usuário:
-- **`TTFT` (Time to First Token):** O tempo que o usuário aguarda olhando para a tela antes de ver as primeiras palavras sendo digitadas. Em assistentes conversacionais interativos, um TTFT abaixo de 300 ms transmite sensação de resposta instantânea.
-- **`prompt_eval_duration`:** O tempo gasto pelo modelo processando o prompt de entrada (*prefill phase*). Como o prompt é processado em paralelo na matriz de tensores, essa fase é altamente paralelizável.
-- **`eval_duration` e `vazao_tok_s`:** A geração token a token (*decode phase*). Como é sequencial e depende de leitura de memória a cada passo, essa é a fase que determina se o texto flui suavemente ou engasga na tela.
+Essa decomposição isola três momentos distintos da execução. O TTFT mede o tempo de espera até o usuário ver o início da resposta. O tempo de avaliação de prompt mede o processamento inicial da entrada, que é paralelizado na matriz de tensores. E a vazão em tokens por segundo mede a velocidade da fase de decodificação sequencial, que reflete a taxa em que as palavras aparecem na tela.
 
 ---
 
-## 5. O Benchmark Empírico Medido na Prática
+## O benchmark medido na prática
 
-Submetemos os três modelos locais a uma bateria idêntica de testes de engenharia em CPU local:
-1. **Geração Livre:** Redação técnica e respostas a perguntas de suporte.
-2. **Roteamento e Classificação Zero-Shot:** Classificar chamados em tópicos (`segunda_via`, `devolucao`, `cancelamento`).
-3. **Extração de Entidades:** Extrair produto e prazo numérico a partir de texto desestruturado.
-4. **Planejamento de Agente sob JSON Forçado (`format: "json"`):** Emitir a ferramenta correta para executar uma ação de negócio.
+Submetemos três modelos locais a uma série de testes cobrindo geração livre, classificação zero-shot de chamados, extração de entidades e planejamento de ferramentas com saída estruturada.
 
 ![Benchmark comparativo](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0008_llms_locais_ollama/assets/04.png)
 
-> **Figura 4:** Três modelos compactos, mesmos prompts, mesma máquina: a comparação deixa de ser opinião e vira decisão de engenharia.
+> Figura 4. Três modelos compactos, mesmos prompts e mesma máquina, transformando a comparação em uma decisão objetiva de engenharia.
 
-### Resultados Consolidados Medidos em Laboratório (CPU Intel / Apple Silicon Local):
+Os resultados foram coletados na mesma máquina em processamento puramente em CPU.
 
 | Modelo | Parâmetros | Tamanho em RAM | TTFT Médio | Latência Total Média | Vazão de Geração | Validade do JSON | Acurácia de Tool Calling |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **`qwen2.5:0.5b`** | 494M | ~398 MB | 559 ms | 5.49 s | **79.8 tokens/s** | **100%** | **100%** |
-| **`llama3.2:1b`** | 1.2B | ~1.3 GB | **256 ms** | **4.33 s** | 25.3 tokens/s | 0% *(vazio)* | 0% |
-| **`qwen2.5:1.5b`** | 1.5B | ~986 MB | 1.022 ms | 6.33 s | 19.4 tokens/s | **100%** | **100%** |
+| `qwen2.5:0.5b` | 494M | ~398 MB | 559 ms | 5.49 s | 79.8 tokens/s | 100% | 100% |
+| `llama3.2:1b` | 1.2B | ~1.3 GB | 256 ms | 4.33 s | 25.3 tokens/s | 0% (vazio) | 0% |
+| `qwen2.5:1.5b` | 1.5B | ~986 MB | 1.022 ms | 6.33 s | 19.4 tokens/s | 100% | 100% |
 
-### Três Revelações Críticas Que Derrubam o Senso Comum:
+Os dados revelam três padrões que contrariam intuições comuns.
 
-1. **Maior Nem Sempre Significa Melhor em Tarefas Específicas:**
-   O `qwen2.5:0.5b`, com menos de 500 milhões de parâmetros e consumindo menos de 400 MB de RAM, gerou quase **80 tokens por segundo** em CPU, superando em mais de 3x a velocidade do modelo 1.5B. Quando o formato foi forçado via decodificação sintática, o 0.5B acertou 100% dos planejamentos de ferramenta.
+O primeiro ponto é que tamanho não dita velocidade nem utilidade prática. O Qwen 2.5 0.5B, consumindo menos de 400 MB de RAM, atingiu quase 80 tokens por segundo em CPU e foi quatro vezes mais rápido que o modelo 1.5B. Quando o formato foi amarrado na saída, ele acertou todas as ferramentas solicitadas pelo planner.
 
-2. **A Armadilha do TTFT Rápido com JSON Vazio:**
-   O `llama3.2:1b` foi o campeão indiscutível de responsividade de primeiro token (TTFT de apenas **256 ms**). No entanto, quando submetido a tarefas de extração sob a flag `format: "json"` genérica, o modelo devolveu `{}` vazio nas 5 tentativas. Ele gerou um JSON sintaticamente perfeito em tempo recorde — que não servia para rigorosamente nada.
-   > **Lição:** Decodificação constrangida sintática garante formato, não conteúdo de negócio. Para garantir propriedades obrigatórias, é necessário avançar para JSON Schema formal (tema aprofundado no Artigo 0009).
+O segundo ponto é que rapidez no primeiro token pode esconder respostas inúteis. O Llama 3.2 1B entregou o menor tempo até o primeiro caractere (256 ms). No entanto, sob a opção genérica `format: "json"`, ele devolveu um objeto vazio nas cinco tentativas de extração. O modelo produziu um JSON sintaticamente perfeito que não continha dado algum. Decodificação sintática garante a abertura e fechamento das chaves, mas não garante a presença das propriedades exigidas pelo negócio.
 
-3. **Prompt Zero-Shot sem Restrição Quebra Modelos Pequenos:**
-   Sem restrição estruturada de saída, o modelo 0.5B falhou em todas as classificações zero-shot: em vez de devolver unicamente o rótulo da classe solicitado nas instruções, ele insistiu em inventar justificativas e saudações corteses. Modelos compactos não possuem capacidade de manter fidelidade estrita a prompts complexos em texto livre; eles **exigem restrições formais na camada de inferência**.
+O terceiro ponto é que modelos pequenos sofrem em tarefas abertas sem restrições. Sem forçar o formato da resposta, o modelo 0.5B falhou em todas as tentativas de classificação direta, incluindo justificativas desnecessárias e ignorando a regra de emitir apenas o rótulo da classe. Modelos compactos exigem que o contrato seja imposto pela camada de inferência, e não apenas pedido no texto do prompt.
 
 ---
 
-## 6. Embeddings e Retrieval Vetorial na Mesma Instância
+## Embeddings e busca vetorial na mesma instância
 
-Um sistema de IA corporativo raramente vive apenas de geração de texto. Ele precisa de busca semântica, recuperação de documentos (RAG) e classificação vetorial.
-
-Tradicionalmente, arquiteturas na nuvem criam silos: um serviço para embeddings (ex: OpenAI `text-embedding-3-small`), outro para banco vetorial (Pinecone) e outro para o modelo de chat. No Ollama, a mesma instância que serve o chat local expõe o endpoint `/api/embed`, permitindo rodar o modelo aberto **`nomic-embed-text`**:
+Aplicações corporativas frequentemente dependem de busca semântica para encontrar políticas ou artigos de suporte antes de responder ao cliente. No Ollama, o mesmo servidor que processa o chat também disponibiliza o endpoint `/api/embed`, permitindo rodar o modelo nomic-embed-text lado a lado.
 
 ![Matriz de decisão](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0008_llms_locais_ollama/assets/05.png)
 
-> **Figura 5:** A matriz de decisão objetiva para saber exatamente quando migrar do modelo de nuvem para o modelo local.
+> Figura 5. Matriz de decisão objetiva para saber o momento exato de migrar do modelo de nuvem para o modelo local.
 
-### 6.1. Características do `nomic-embed-text`:
-- **Parâmetros:** 137M parâmetros;
-- **Dimensionalidade:** Vetores densos de 768 dimensões;
-- **Janela de Contexto:** Suporta até 8.192 tokens por documento;
-- **Consumo de Memória:** ~274 MB em RAM;
-- **Latência de Codificação Local:** ~14 ms por sentença curta em CPU.
-
-### 6.2. Implementação do Retrieval Semântico Top-1:
-No laboratório (`src/ollama_lab.py`), indexamos oito documentos internos de suporte da empresa e submetemos quatro consultas desafiadoras de usuários:
+O nomic-embed-text possui 137 milhões de parâmetros, gera vetores de 768 dimensões, suporta janelas de até 8.192 tokens e consome cerca de 274 MB de memória RAM.
 
 ```python
 def gerar_embedding(base_url: str, text: str, model: str = "nomic-embed-text") -> list[float]:
@@ -291,94 +256,81 @@ def similaridade_cosseno(v1: list[float], v2: list[float]) -> float:
     return dot / (norm_a * norm_b) if norm_a and norm_b else 0.0
 ```
 
-**Resultado Medido:** O retrieval local atingiu **4 de 4 acertos (100% de precisão top-1)**, com scores de similaridade superiores a 0.78 nas rotas corretas. Isso prova que um único container Docker de ~3 GB é capaz de substituir com louvor toda a esteira dos Artigos 0002, 0003 e 0007 da Pathbit Academy, com zero conexões com o mundo exterior.
+No laboratório, indexamos oito documentos internos de suporte e testamos quatro perguntas reais de clientes. O sistema local alcançou 100% de acerto na seleção do documento correto, com pontuação de similaridade acima de 0.78 nas rotas corretas. Isso comprova que um único container de cerca de 3 GB de RAM atende busca vetorial e chat conversacional sem depender de serviços externos.
 
 ---
 
-## 7. O que Quebra na Prática (Failure Modes em Produção)
+## O que quebra na prática
 
-Operar modelos locais em escala corporativa envolve lidar com restrições físicas de hardware. Em nossos testes de estresse, mapeamos as quatro falhas mais frequentes:
+Colocar modelos locais em produção exige atenção a limitações práticas do sistema operacional.
 
-### 1. O Efeito Bola de Neve do OOM e Swap Thrashing
-Se duas requisições concorrentes solicitarem contextos longos (ex: 8.000 tokens cada), o KV Cache consumirá toda a memória RAM livre. Quando o sistema operacional começa a transferir páginas de memória para o disco SSD (*Swap*), a velocidade do modelo desaba de 80 tokens/s para menos de **0.2 tokens/s**.
-- **Defesa:** No Docker Compose, defina limites rígidos de memória (`limits: memory: 8G`) e restrinja a janela no prompt (`options: {"num_ctx": 2048}`).
+O primeiro risco é o esgotamento de memória e o uso de swap em disco. Se duas requisições simultâneas exigirem contextos longos, o KV Cache pode ocupar toda a RAM disponível. Quando o sistema operacional começa a mover páginas de memória para o disco SSD, a taxa de geração cai bruscamente de 80 tokens por segundo para menos de meio token por segundo. A prevenção envolve definir limites de memória no Docker Compose e limitar o tamanho da janela de contexto no parâmetro `num_ctx`.
 
-### 2. O Loop Infinito de Alucinação (*Babbling*)
-Modelos pequenos sem restrição de parada podem entrar em loops repetitivos de preenchimento até atingir o limite máximo de tokens padrão (4.096).
-- **Defesa:** Sempre envie `num_predict: 128` (ou o teto estrito do seu caso de uso) e configure *stop tokens* explícitos (ex: `["\n\n", "Usuário:"]`).
+O segundo risco é a repetição infinita de texto quando o modelo perde o critério de parada. Modelos compactos podem continuar gerando sentenças repetitivas até atingir o teto de 4.096 tokens. Para evitar isso, a requisição deve sempre incluir um limite seguro no parâmetro `num_predict` e palavras de parada como quebras de linha duplas.
 
-### 3. Aquecimento e Throttling Térmico em CPU
-Ao executar benchmarks prolongados em servidores ou laptops sem refrigeração ativa adequada, a CPU atinge 95°C e o governador do sistema operacional reduz os clocks de 4.5 GHz para 1.8 GHz. A vazão cai pela metade ao longo de 10 minutos de teste.
-- **Defesa:** Sempre monitore a telemetria térmica da máquina antes de tomar decisões de capacidade de hardware.
+O terceiro aspecto é o aquecimento do processador durante testes contínuos de carga. Sem refrigeração adequada, a CPU atinge temperaturas elevadas e o sistema operacional reduz a frequência de clock para proteger os componentes. Isso faz com que a velocidade de resposta caia pela metade ao longo de uma bateria de testes prolongada.
 
 ---
 
-## 8. Show-Me-The-Code: Executando o Laboratório
+## Execução prática do laboratório passo a passo
 
-Todo o código, scripts de medição, docker-compose e notebook executável estão prontos no repositório oficial da Pathbit Academy:
+Os arquivos de configuração, scripts de automação e o notebook com dados reais estão disponíveis no repositório.
 
-### Opção 1: Execução Automatizada pelo Terminal
-Suba o ambiente e dispare a esteira de benchmark completa:
+### Execução pelo terminal
 
 ```bash
-# 1. Navegue até o módulo
 cd pathbit-academy-ai/0008_llms_locais_ollama
 
-# 2. Suba o servidor e puxe os modelos
 docker compose up -d
 docker exec pathbit-ollama ollama pull qwen2.5:0.5b
 docker exec pathbit-ollama ollama pull qwen2.5:1.5b
 docker exec pathbit-ollama ollama pull llama3.2:1b
 docker exec pathbit-ollama ollama pull nomic-embed-text
 
-# 3. Configure o ambiente Python
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-# 4. Execute a suíte de benchmarks completa
 python src/ollama_lab.py
 ```
 
-### Artefatos Gerados Automaticamente na Pasta `data/`:
-- `benchmark_resultados.csv`: Auditoria detalhada chamada a chamada com TTFT, latência, tokens e vazão.
-- `benchmark_resumo.csv`: Consolidação por modelo ordenada por vazão.
-- `structured_output.csv`: Taxas de sucesso de JSON válido e acerto de tool calling.
-- `embedding_routes.csv`: Classificação semântica top-1 das consultas com score vetorial.
-- `benchmark_relatorio.md`: Relatório executivo completo em Markdown.
-- `benchmark_comparativo.png`: Gráfico visual de latência e vazão.
+Ao final do benchmark, a pasta `data` armazena todos os registros gerados durante os testes. O arquivo `benchmark_resultados.csv` contém as métricas individuais de cada chamada, enquanto `benchmark_resumo.csv` reúne a média consolidada de vazão e latência de cada modelo. A validação de contratos e chamadas de ferramentas fica salva em `structured_output.csv`, as rotas de busca semântica em `embedding_routes.csv`, e o relatório formatado pode ser lido em `benchmark_relatorio.md`, acompanhado do gráfico comparativo em `benchmark_comparativo.png`.
 
-### Opção 2: Notebook Interativo
-Execute o launcher para abrir o Jupyter Notebook passo a passo:
+### Execução pelo notebook
+
+O laboratório também pode ser acompanhado passo a passo pelo Jupyter Notebook.
 
 ```bash
 python src/main.py
 ```
 
-### Evidência de Execução Real:
-Abaixo, a captura de tela comprovando a execução real do notebook interativo com métricas de telemetria coletadas em tempo de execução:
+A captura abaixo documenta a execução real do notebook com todas as métricas apuradas no terminal.
 
 ![Evidência de Execução do Notebook 0008](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0008_llms_locais_ollama/assets/evidence_notebook.png)
 
 ---
 
-## 9. Próximos Passos na Trilogia de IA Local
+## Próximos passos na trilogia de IA local
 
-Com o motor de inferência local estabelecido, estável e auditado, os próximos dois artigos fecham as lacunas para viabilizar sistemas de produção reais:
+Com o servidor de inferência local estabelecido e auditado, os módulos seguintes resolvem os desafios de confiabilidade e integração com sistemas corporativos.
 
-1. **[Artigo 0009 — Saída Estruturada e Modelos System 1](https://github.com/pathbit/pathbit-academy-ai/blob/master/0009_saida_estruturada/article/ARTICLE.md):**
-   Como sair da fragilidade do JSON forçado genérico e implementar **Grammar-Guided Sampling com JSON Schema estrito** via Autômatos de Estados Finitos (FSM), e como a fronteira de **Modelos System 1 (Jev vs Laya)** permite decisões tipadas em ~13 ms em passada única ($O(1)$).
-2. **[Artigo 0010 — MCP Local via Stdio](https://github.com/pathbit/pathbit-academy-ai/blob/master/0010_mcp_local/article/ARTICLE.md):**
-   Como plugar ferramentas corporativas reais ao seu modelo local através do **Model Context Protocol (MCP)** da Anthropic, utilizando pipes do sistema operacional com isolamento de processos e menos de 1 ms de overhead de protocolo.
+No [Artigo 0009 (Saída Estruturada e Modelos System 1)](https://github.com/pathbit/pathbit-academy-ai/blob/master/0009_saida_estruturada/article/ARTICLE.md), exploramos como sair do JSON genérico para impor contratos formais com JSON Schema e Grammar-Guided Sampling, além de apresentar modelos System 1 como Laya e Jev que executam decisões tipadas em cerca de 13 milissegundos.
+
+No [Artigo 0010 (MCP Local via Stdio)](https://github.com/pathbit/pathbit-academy-ai/blob/master/0010_mcp_local/article/ARTICLE.md), mostramos como conectar o modelo a ferramentas corporativas reais utilizando o Model Context Protocol da Anthropic por canais seguros do sistema operacional com menos de 1 milissegundo de sobrecarga de comunicação.
 
 ---
 
-## Referências Técnicas
+## Referências
 
-- [Ollama: Get up and running with large language models locally](https://ollama.com)
-- [Gerganov, Georgi: llama.cpp — Port of Facebook's LLaMA model in C/C++](https://github.com/ggerganov/llama.cpp)
-- [GGUF Specification: The unified model file format for quantized LLM inference](https://github.com/ggerganov/ggml/blob/master/docs/gguf.md)
-- [Qwen 2.5: A Comprehensive Foundation Model Family by Alibaba Cloud](https://qwenlm.github.io/)
-- [Llama 3.2: Open Source Multimodal and Lightweight Language Models by Meta](https://www.llama.com/)
-- [Nomic Embed: High-Performance Open-Weights Text Embeddings](https://www.nomic.ai/blog/posts/nomic-embed-text-v1)
-- [Frantar, Elias et al.: GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers (arXiv:2210.17323)](https://arxiv.org/abs/2210.17323)
+- [Documentação oficial e downloads do Ollama](https://ollama.com)
+- [Implementação em C e C++ da arquitetura Transformer no llama.cpp](https://github.com/ggerganov/llama.cpp)
+- [Especificação técnica do formato GGUF para modelos quantizados](https://github.com/ggerganov/ggml/blob/master/docs/gguf.md)
+- [Documentação da família de modelos abertos Qwen 2.5](https://qwenlm.github.io/)
+- [Documentação dos modelos abertos Llama 3.2 da Meta](https://www.llama.com/)
+- [Artigo técnico sobre embeddings abertos Nomic Embed Text](https://www.nomic.ai/blog/posts/nomic-embed-text-v1)
+
+---
+
+Repositório oficial no GitHub no endereço https://github.com/pathbit/pathbit-academy-ai no módulo 0008_llms_locais_ollama.
+
+#InteligenciaArtificial #LLM #Ollama #Docker #OpenSource #Python #PathbitAcademy #LocalAI #SoftwareEngineering

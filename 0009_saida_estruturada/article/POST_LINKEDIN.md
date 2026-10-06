@@ -1,39 +1,16 @@
-Pedir JSON para um LLM em texto livre é assumir débito técnico no primeiro deploy.
+Pedir JSON para um modelo de linguagem em texto livre é assumir débito técnico no primeiro deploy.
 
-"Responda apenas em formato JSON, sem markdown e sem explicações."
-Quem nunca escreveu esse prompt?
+Todo desenvolvedor que já trabalhou com LLMs em produção já escreveu algo como "responda apenas em formato JSON, sem explicações". No começo parece funcionar. Na semana seguinte, o modelo insere uma saudação antes da chave, altera o nome de um campo ou devolve uma resposta incompleta. O backend tenta fazer o parse, lança uma exceção e o pipeline para.
 
-Na primeira semana funciona. Na segunda semana, o modelo decide adicionar uma saudação amigável antes da chave, troca "tool" por "ferramenta" ou devolve um bloco markdown com ```json. O backend roda `json.loads()`, estoura exceção e o pipeline corporativo para.
+No módulo 0009 da Pathbit Academy, mostramos por que prompt não é contrato e como implementar saída estruturada com garantias matemáticas de conformidade.
 
-No módulo 0009 do Pathbit Academy AI, demonstramos como sair do "prompt otimista" e implementar saída estruturada com garantias matemáticas:
+Analisamos o Grammar-Guided Sampling por baixo dos panos. Em vez de torcer para o modelo gerar a sintaxe certa, o JSON Schema é compilado em uma máquina de estados finitos que mascara os logits a cada token gerado. Qualquer caractere que viole a gramática recebe probabilidade zero antes mesmo da amostragem. O resultado é 100% de conformidade sintática e tipada.
 
-🛡️ A evolução dos 3 níveis de contrato:
+Também exploramos uma reflexão importante que está mudando a arquitetura de sistemas com IA: por que gastar dezenas de passos sequenciais gerando chaves e colchetes quando o sistema precisa apenas de um enum ou de uma decisão discreta? Apresentamos a fronteira dos modelos System 1, como Laya e Jev, capazes de resolver roteamentos e classificações em uma única passada de tensores em cerca de 13 milissegundos, mais de trinta vezes mais rápido que um LLM tradicional.
 
-1. Modo Livre (Prompt Only):
-O modelo cospe texto aberto. Nos nossos testes com modelos compactos, quase 30% das respostas sequer passaram no parse direto.
+O laboratório prático com validação Pydantic, scripts de benchmark e dados reais medidos na máquina já está disponível no repositório.
 
-2. Modo JSON (`format: "json"`):
-O motor garante abertura e fechamento de chaves válidas. 100% de parse_ok, mas o schema interno permanece um faroeste: faltam chaves essenciais ou o modelo devolve `{}` vazio.
+Repositório no GitHub: https://github.com/pathbit/pathbit-academy-ai
+Módulo: 0009_saida_estruturada
 
-3. Contrato Rígido (`format: <json_schema>`):
-O JSON Schema é compilado em um Autômato de Estados Finitos (FSM) dentro do motor de inferência. A cada token gerado, qualquer caractere que viole a gramática recebe logit = -∞ (probabilidade zero).
-
-4. A Nova Fronteira: Modelos System 1 (Jev & Laya):
-Por que gerar 40 tokens sequenciais para uma decisão simples? Apresentamos como modelos de passada única (Single Forward Pass) resolvem roteamento e enums em ~13 ms (> 30x mais rápido que o LLM com schema).
-
-📊 O que os números medidos na própria máquina revelaram:
-• O modo Livre atingiu míseros 44.4% de acerto semântico.
-• O modo Schema atingiu 100% de conformidade com os tipos/enums.
-• O decisor System 1 executou com 100% de precisão em apenas 13.6 ms (vs 400 ms no LLM).
-• O mito do retry: reenviar erros de prompt dobra a latência. Impor schema ou System 1 resolve na 1ª tentativa.
-
-
-
-Quando o modelo não precisa gastar neurônios decidindo "como formatar", ele foca 100% no "qual dado extrair".
-
-Artigo completo, diagramas em 1920x1080, laboratório em Python e deck em PDF disponíveis:
-
-🔗 Repositório oficial: https://github.com/pathbit/pathbit-academy-ai
-📖 Módulo: 0009_saida_estruturada
-
-#EngenhariaDeSoftware #InteligenciaArtificial #LLM #Ollama #JSONSchema #Python #PathbitAcademy
+#EngenhariaDeSoftware #InteligenciaArtificial #LLM #Ollama #JSONSchema #Python #PathbitAcademy #SystemOne
