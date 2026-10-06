@@ -1,27 +1,27 @@
-# LLMs locais com Ollama: stack de IA sem nuvem, sem chave e sem custo por token
+# LLMs Locais com Ollama: Como Provar uma Stack de IA 100% Offline sem Custos por Token
 
-Grande parte do material sobre IA em produção assume uma chave de API no meio do caminho. Para aprender, demonstrar ou rodar um piloto sensível, essa dependência atrapalha: você não controla latência, versão nem o dado.
+A maioria dos tutoriais de IA em produção começa com uma premissa perigosa: `client = OpenAI(api_key=...)`. Para protótipos de fim de semana, isso funciona. Mas em sistemas corporativos de missão crítica, operações de alta frequência ou ambientes com dados estritamente sensíveis (LGPD / HIPAA / Open Finance), essa dependência externa cobra um pedágio invisível:
+❌ Você não controla a latência (ela oscila com a rede pública e filas de provedores).
+❌ Você não controla a versão (o modelo de nuvem muda silenciosamente).
+❌ O dado trafega fora do perímetro da sua infraestrutura.
+❌ Cada loop de reflexão ou benchmark contínuo consome créditos de alguém.
 
-O artigo 0008 da série Pathbit Academy prova o caminho contrário:
+No **Artigo 0008 da Pathbit Academy**, provamos o caminho da engenharia: montamos uma stack completa de IA rodando 100% local em container Docker via Ollama, consumida via HTTP puro em loopback, com medição cirúrgica de telemetria.
 
-🐳 Ollama em Docker, com volume persistente de modelos
-🧠 Modelos abertos: qwen2.5:0.5b, qwen2.5:1.5b, llama3.2:1b e nomic-embed-text
-📡 API local em http://localhost:11434, consumida com Python padrão, sem SDK
-📊 Benchmark medido na própria máquina: TTFT, latência total e vazão em tokens/s
+### 🐳 O que construímos na prática:
+1. **Servidor Local em Docker com Volume Persistente:** O Ollama roda isolado, mantendo modelos congelados em disco via volume nomeado (`ollama-data`). Sem recarregar gigabytes a cada reinício de container.
+2. **Quatro Modelos Abertos Coexistindo:** `qwen2.5:0.5b`, `qwen2.5:1.5b` e `llama3.2:1b` para chat e planejamento agêntico; `nomic-embed-text` para busca vetorial semântica.
+3. **Decomposição Cirúrgica de Latência:** Medição em CPU de TTFT (Time to First Token), tempo de avaliação de prompt e vazão real (tokens/segundo). Sem a nuvem esconder os gargalos reais da máquina.
+4. **Decodificação Constrangida (JSON Forçado):** Provamos como o parâmetro `format: "json"` garante sintaxe 100% parseável mesmo em modelos compactos de 500 milhões de parâmetros.
+5. **Retrieval Vetorial na Mesma Instância:** Classificação semântica por similaridade de cosseno com embeddings gerados localmente (100% de acerto top-1 nos testes).
 
-O que os números da execução mostraram:
+### 📊 O que os números medidos na máquina revelaram:
+• **Vazão Brutal:** O Qwen 2.5 0.5B atingiu quase **80 tokens/segundo em CPU**, com 100% de precisão de tool calling sob JSON forçado.
+• **A Armadilha do TTFT:** O Llama 3.2 1B entregou o menor TTFT (**256 ms**), mas decodificação sem schema devolveu JSON vazio: provando que decodificação constrangida sintática garante formato, não semântica de negócio.
+• **Zero Custo Variável:** A latência de rede vira loopback (< 1 ms), o custo por token vira capacidade de hardware e os dados jamais saem do perímetro.
 
-→ O 0.5B tem a maior vazão (79,8 tokens/s) e acertou 100% da tool com JSON forçado
-→ O llama3.2:1b tem o menor TTFT (256 ms) — e devolveu JSON vazio nas 5 tentativas
-→ Sem constraint, o 0.5B errou 100% da classificação zero-shot: decodificação constrangida muda o jogo
-→ Retrieval top-1 com nomic-embed-text: 4/4 de acerto na mesma instância
+Todo o laboratório, docker-compose, scripts de benchmark, notebook interativo e deck de apresentação em PDF estão disponíveis no repositório open-source:
 
-Rodar local não é só economizar: a latência de rede vira loopback, o custo por token vira memória da máquina, o dado nunca sai do ambiente e a versão do modelo fica congelada no container.
+👉 Artigo completo e código: https://github.com/pathbit/pathbit-academy-ai/tree/master/0008_llms_locais_ollama
 
-O laboratório entrega evidência completa: CSV linha a linha, gráfico comparativo e relatório markdown gerados em um comando.
-
-Artigo completo, código, notebook e artefatos medidos:
-👉 https://github.com/pathbit/pathbit-academy-ai/tree/master/0008_llms_locais_ollama
-
-
-#InteligenciaArtificial #LLM #Ollama #Docker #OpenSource
+#InteligenciaArtificial #LLM #Ollama #Docker #OpenSource #Python #PathbitAcademy #LocalAI #SoftwareEngineering

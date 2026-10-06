@@ -1,33 +1,31 @@
-# Saída Estruturada com LLMs: Do Prompt Otimista ao Contrato Validado
+# Saída Estruturada com LLMs Locais: Do Prompt Otimista ao Contrato Formal e a Fronteira System 1
 
-Pedir JSON em texto livre é a maior armadilha da engenharia de IA moderna. O modelo responde ```json com preâmbulos, esquece vírgulas ou alucina nomes de propriedades. O backend executa `json.loads()`, estoura `JSONDecodeError` e a esteira inteira trava.
+"Responda apenas em formato JSON, sem markdown e sem explicações."
+Quem nunca escreveu esse prompt na esperança de integrar um LLM ao backend?
 
-O artigo 0009 da série Pathbit Academy prova como transformar inferência probabilística em chamada de função determinística e tipada:
+No primeiro dia funciona. No primeiro incidente de produção, o modelo decide prefixar a resposta com ```json, insere uma saudação educada antes das chaves ou troca a chave `tool` por `ferramenta`. O backend roda `json.loads()`, estoura `JSONDecodeError` e a esteira corporativa inteira para.
 
-🎯 Três níveis de acoplamento comparados:
-1. Livre (Prompt Only): "Responda apenas em JSON". Quase 30% de falha no parse direto.
-2. Modo JSON (`format: "json"`): sintaxe parseável, mas campos e enums desgovernados (ou objeto vazio `{}`).
-3. JSON Schema (`format: <schema>`): contrato estrito compilado em Autômato de Estados Finitos (FSM) no motor de inferência.
+No **Artigo 0009 da Pathbit Academy**, demonstramos como sair do "prompt otimista" e implementar saída estruturada com garantias matemáticas estritas e apresentamos a nova fronteira de **Modelos System 1**:
 
-🔬 Como funciona o Grammar-Guided Sampling:
-A cada passo autoregressivo, os logits dos tokens que violam a gramática recebem valor -∞ (probabilidade zero). O modelo é matematicamente incapaz de gerar caracteres fora do schema.
+### 🛡️ A Evolução dos 3 Níveis de Contrato:
+1. **Modo Livre (Prompt Only):** O modelo emite texto aberto. Quase **30% das chamadas** sequer passam no parse direto, com assertividade semântica de míseros 44.4%.
+2. **Modo JSON Sintático (`format: "json"`):** Garante abertura e fechamento de chaves válidas (100% de parse_ok), mas o schema interno permanece desgovernado: o modelo alucina chaves ou devolve `{}` vazio.
+3. **Contrato Estrito (`format: <json_schema>`):** O JSON Schema é compilado em um **Autômato de Estados Finitos (FSM)** no motor de inferência (`llama.cpp`/Ollama). A cada token gerado, qualquer caractere que viole a gramática recebe logit = -∞ (probabilidade zero).
 
-📊 O que os testes reais mediram no Ollama (54 execuções):
-→ Modo Livre: 72.2% de parse_ok e apenas 44.4% de acerto semântico.
-→ format: "json": 100% de parse_ok, mas 66.7% de conformidade com o schema esperado.
-→ format: schema: 100% de conformidade com o schema e 94.4% de acerto semântico.
-→ Quando o modelo não gasta probabilidade formatando, ele foca no conteúdo correto.
+### ⚡ A Nova Fronteira: Modelos System 1 (Jev vs Laya)
+Por que gastar 40 a 60 passos autoregressivos na CPU gerando aspas, chaves e colchetes se o sistema precisa apenas de uma decisão tipada?
+Apresentamos a separação cognitiva inspirada em Daniel Kahneman:
+- **System 2 (Decoder Autoregressivo):** Lento e sequencial ($O(N)$), ideal para redação de texto livre. Latência de 400 ms a 2.200 ms.
+- **System 1 (Encoder de Passada Única):** Single Forward Pass em $O(1)$ sobre encoders dedicados (ModernBERT), avaliando primitivas universais: `Choice` (enum), `Score` (escala contínua) e `Bool`/`Noul` (portão binário).
+- **No mercado:** **Jev** (TypeSafe AI, API cloud proprietária por Diogo Almeida) vs **Laya & Kev** (Convai Innovations, Apache 2.0 open-weights rodando 100% offline em hardware local).
 
-💡 O mito do retry compensatório:
-Reenviar erros de sintaxe para o modelo em loop dobra a latência. Impor schema na primeira chamada custa overhead desprezível e resolve na largada.
+### 📊 O que os números medidos na máquina revelaram:
+• **Conformidade Formal:** O modo Schema atingiu **100% de conformidade** com os schemas e **94.4% de acerto semântico** no Ollama.
+• **Velocidade Extrema com System 1:** O decisor System 1 executou com **100% de precisão em apenas 12.97 ms** (p50: 13.61 ms), superando o LLM autoregressivo em **mais de 30x**.
+• **O Mito do Retry:** Reenviar erros de sintaxe para o modelo em loop dobra a latência. Impor schema ou System 1 resolve na primeira tentativa.
 
-⚡ A Nova Fronteira: Modelos System 1 (Jev vs Laya):
-Por que gerar 40 tokens sequenciais se você precisa apenas de uma decisão tipada? Apresentamos a distinção entre System 2 (LLM autoregressivo com Grammar Mask) e System 1 (passada única em ~13 ms com Laya open-source ou Jev na nuvem) para roteamento e guardrails com mais de 30x de redução de latência.
+Artigo completo, diagramas técnicos em 1920x1080, laboratório em Python com Pydantic v2 e deck em PDF disponíveis:
 
-O laboratório entrega evidência completa: código em Python padrão, benchmark System 1, notebook interativo, CSVs medidos e relatório comparativo.
+👉 Artigo completo e código: https://github.com/pathbit/pathbit-academy-ai/tree/master/0009_saida_estruturada
 
-
-Artigo completo e código open-source:
-👉 https://github.com/pathbit/pathbit-academy-ai/tree/master/0009_saida_estruturada
-
-#InteligenciaArtificial #LLM #Ollama #SoftwareEngineering #Python #JSONSchema #OpenSource
+#EngenhariaDeSoftware #InteligenciaArtificial #LLM #Ollama #JSONSchema #Python #PathbitAcademy #SystemOne #Pydantic
