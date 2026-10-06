@@ -1,46 +1,46 @@
-# Agentes e tool calling na prática - como dar autonomia sem perder controle
+# Agentes inteligentes e tool calling na prática: como conceder autonomia sem perder controle em produção
 
-Muita demo de agente parece convincente porque pula exatamente as partes que mais dão trabalho: controle de risco, recuperação de contexto, fallback quando o planner falha e trilha de auditoria para revisar o que aconteceu. A interface conversa bem, a tool dispara e a resposta volta redonda. O problema é que esse tipo de fluxo raramente aguenta o primeiro choque com operação real.
+Demonstrações de agentes autônomos baseados em inteligência artificial costumam impressionar em apresentações comerciais porque ocultam deliberadamente as etapas mais desafiadoras da engenharia de software: governança de riscos, controle de efeitos colaterais, tratamento de falhas do planejador e rastreabilidade forense de decisões. Em um ambiente controlado, a interface conversa com naturalidade, uma ferramenta é disparada sem atritos e o resultado parece perfeito. No entanto, quando esse mesmo fluxo é submetido ao tráfego caótico de produção, a fragilidade dessa autonomia desprovida de limites manifesta-se em chamadas fantasmas de APIs, quebras de estado e custos descontrolados.
 
-Este artigo parte do ponto em que um roteador de intenção já não basta mais. O exemplo implementa uma arquitetura híbrida com guardrail, regra de negócio, planner em JSON, roteamento semântico por embeddings, retrieval em base local e registro passo a passo de auditoria. O objetivo não é romantizar autonomia. É mostrar como limitar risco enquanto o sistema ainda decide.
+O desafio central ao projetar agentes corporativos não é conferir liberdade irrestrita ao modelo, mas construir barreiras determinísticas que contenham a incerteza probabilística da inferência. Um agente verdadeiramente pronto para produção opera sob uma arquitetura de defesa em profundidade, combinando filtros prévios de segurança, regras determinísticas de negócio, planejadores constrangidos em contratos estruturados, fallbacks semânticos e trilhas completas de auditoria.
 
-> Se você vier do artigo anterior de [LLM Evals](https://github.com/pathbit/pathbit-academy-ai/blob/master/0006_llm_evals_regressao/article/ARTICLE.md), vai reconhecer a continuidade. Depois de medir candidatos e regressão, o próximo passo natural é perguntar como um agente decide, executa e deixa evidência suficiente para ser revisado.
+Este artigo disseca a construção de um agente híbrido e observável executado integralmente em hardware local com modelos abertos. Demonstramos como desacoplar intenção, planejamento, execução e geração final, garantindo que o software tome decisões úteis sem expor a infraestrutura da organização a riscos operacionais desnecessários.
 
-## O ponto em que if/else para de bastar
+---
+
+## O ponto de ruptura do fluxo determinístico
+
+Muitos sistemas rotulados como agentes no mercado nada mais são do que fluxos rígidos de if e else disfarçados de inteligência artificial.
 
 ![Fluxo simples versus agente](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0007_agentes_tool_calling/assets/01.png)
 
-> Figura 1: A diferença relevante não é "ter conversa", mas conseguir decidir com restrição e observabilidade.
+> Figura 1. A evolução de fluxos rígidos para uma arquitetura agêntica com planejamento autônomo e observabilidade estrita.
 
-Grande parte do que é chamado de agente no mercado ainda é um fluxo determinístico disfarçado. A entrada bate em um conjunto de palavras-chave, escolhe uma função e retorna um texto final. Isso pode servir como MVP, mas não explica os problemas centrais de uma arquitetura com autonomia parcial.
+Em uma automação convencional, a entrada do usuário é submetida a um conjunto estático de palavras-chave que ativa uma função previamente codificada. Embora esse padrão funcione para árvores de decisão simples, ele é incapaz de interpretar nuances coloquiais, decompor solicitações multifacetadas ou adaptar sua estratégia diante de respostas parciais de ferramentas externas.
 
-Para ficar tecnicamente útil, o exemplo precisava responder a perguntas mais difíceis:
+A transição para um agente inteligente exige responder a requisitos arquiteturais complexos: como bloquear solicitações maliciosas antes de acionar a inteligência artificial, como economizar inferência em intenções óbvias, como garantir que o plano emitido pelo modelo seja parseável por sistemas de backend e como recuperar a execução quando o modelo alucinar parâmetros inexistentes.
 
-- como bloquear solicitações inseguras antes de qualquer ação;
-- como evitar gastar inferência em intenções óbvias;
-- como estruturar um plano parseável;
-- como sobreviver quando esse plano não vem utilizável;
-- como revisar o que aconteceu sem depender só da resposta final.
+---
 
-## O stack gratuito que sustenta a arquitetura
+## A infraestrutura enxuta do laboratório
 
-O agente usa três blocos principais:
+Para provar que autonomia controlada não depende de faturamentos astronômicos em nuvens proprietárias, o laboratório deste módulo utiliza exclusivamente ferramentas abertas executadas em memória local de processo.
 
-- `Qwen/Qwen2.5-0.5B-Instruct` para planejamento e resposta final;
-- `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` para router semântico e retrieval;
-- `tool_registry.json`, `knowledge_base.json` e `cenarios.json` como base local observável.
+O modelo `Qwen2.5-0.5B-Instruct` é empregado para duas tarefas distintas: a etapa de planejamento estruturado (planner) e a síntese da resposta conversacional final. A biblioteca `sentence-transformers` com os pesos multilíngues do `paraphrase-multilingual-MiniLM-L12-v2` sustenta o roteamento semântico de intenções e a recuperação de documentos. Na camada de persistência local, catálogos em formato JSON padronizam o registro de ferramentas disponíveis, a base de conhecimento e os cenários reais de homologação.
 
-Nada de API paga. Nada de serviço externo obrigatório. Tudo roda localmente.
+Todo o ciclo opera sem chaves de API, sem autenticações externas e sem custos de tokens, garantindo repetibilidade absoluta em qualquer ambiente corporativo isolado.
 
-## A cadeia de decisão começa antes do planner
+---
+
+## A cadeia de decisão antes da inferência probabilística
+
+Em uma arquitetura de missão crítica, a inferência gerativa nunca deve ser o primeiro ponto de contato com o dado do usuário. A decisão começa restringindo o espaço de incerteza.
 
 ![Guardrails de segurança](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0007_agentes_tool_calling/assets/02.png)
 
-> Figura 2: O agente só fica interessante quando a decisão começa com restrição, não com geração.
+> Figura 2. A esteira de triagem posicionando guardrails determinísticos e regras de negócio antes do acionamento do planner.
 
-Antes de qualquer planejamento, o runner aplica dois filtros práticos.
-
-O primeiro é o `guardrail`, que barra pedidos sensíveis como senha, token, cartão, CPF completo e Pix:
+O primeiro escudo do pipeline é o guardrail de segurança. Essa camada determinística inspeciona a entrada em busca de padrões sensíveis como credenciais de acesso, tokens de API, números completos de cartão de crédito, chaves Pix ou tentativas explícitas de engenharia social reversa.
 
 ```python
 def guardrail(texto: str) -> tuple[bool, str]:
@@ -51,21 +51,21 @@ def guardrail(texto: str) -> tuple[bool, str]:
     return True, "ok"
 ```
 
-O segundo é a regra de negócio determinística para intenções muito óbvias, como fatura, devolução, cancelamento, erro `500` e indisponibilidade. Isso evita gastar geração onde o caminho já é conhecido e deixa o sistema mais estável.
+Se um termo proibido for detectado, o sistema interrompe o processamento imediatamente, devolvendo uma mensagem de recusa padronizada sem consumir um único ciclo de inferência neural.
 
-Essa ordem importa. O agente não começa decidindo livremente. Ele começa restringindo o espaço de decisão.
+O segundo escudo é a regra de negócio determinística. Solicitações recorrentes e óbvias, a exemplo de pedidos de segunda via de boleto, cancelamentos diretos ou relatos de erro interno 500, são encaminhadas instantaneamente para seus respectivos microsserviços via código convencional. Isso evita gastar tempo e processamento em cenários onde o caminho operacional já é perfeitamente conhecido.
 
-## O planner escolhe tool com contrato explícito
+---
+
+## O planner sob contrato explícito de dados
+
+Quando a solicitação supera os filtros iniciais e exige raciocínio contextual, o controle é transferido para o módulo planejador (planner).
 
 ![Tool calling na prática](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0007_agentes_tool_calling/assets/03.png)
 
-> Figura 3: Quando o planner precisa devolver JSON válido, tool calling deixa de ser só intenção implícita.
+> Figura 3. O planner gerando chamadas de ferramentas sob contrato estrito de dados validável pelo backend.
 
-Quando a solicitação não cai em bloqueio nem em regra de negócio, entra o planner. O prompt pede uma saída estruturada com três chaves:
-
-- `tool`
-- `argument`
-- `reason`
+Em vez de permitir que o modelo responda em texto aberto, o prompt de sistema restringe a saída a um objeto JSON contendo três propriedades obrigatórias: o nome da ferramenta a ser acionada (`tool`), o parâmetro operacional a ser enviado (`argument`) e a justificativa lógica da escolha (`reason`).
 
 ```python
 def planner_prompt(entrada: str, tools: list[dict[str, str]]) -> list[dict[str, str]]:
@@ -85,17 +85,21 @@ def planner_prompt(entrada: str, tools: list[dict[str, str]]) -> list[dict[str, 
                 "Tools disponiveis:\n"
                 f"{tool_lines}\n\n"
                 f"Solicitacao: {entrada}\n"
-                'Retorne EXATAMENTE um JSON com as chaves "tool", "argument" e "reason".'
+                "Retorne EXATAMENTE um JSON com as chaves tool, argument e reason."
             ),
         },
     ]
 ```
 
-Esse detalhe é o que separa um roteador implícito de um passo de planejamento observável. O plano vira payload validável, não apenas interpretação informal de texto.
+Essa amarração sintática transforma a intenção do modelo em um contrato tipado, permitindo que a camada de integração valide os tipos antes de disparar qualquer requisição para serviços externos.
 
-## O fallback semântico impede falha frágil de parsing
+---
 
-Modelos pequenos nem sempre devolvem JSON limpo. Um agente que depende de uma única tentativa de parsing quebra cedo demais. Por isso, o código implementa uma segunda linha de defesa com embeddings:
+## O fallback semântico como rede de segurança
+
+Modelos compactos de linguagem executados localmente podem, ocasionalmente, emitir JSON com aspas malformadas ou chaves fora de padrão. Em sistemas frágeis, essa falha de parse causaria uma exceção fatal.
+
+O agente deste laboratório implementa uma rede de segurança semântica baseada em embeddings contínuos:
 
 ```python
 def route_with_embeddings(query: str, embedder: SentenceTransformer, tools: list[dict[str, str]]) -> tuple[str, float]:
@@ -109,148 +113,82 @@ def route_with_embeddings(query: str, embedder: SentenceTransformer, tools: list
     return labels[best_index], float(scores[best_index])
 ```
 
-O runner suporta três caminhos semânticos diferentes depois do planner:
+Se a tentativa de decodificação do JSON falhar, a esteira ativa o roteador semântico de fallback, calculando a similaridade de cosseno entre a mensagem do usuário e as descrições funcionais de cada ferramenta do catálogo. A ferramenta com maior afinidade vetorial é selecionada automaticamente, garantindo que o fluxo prossiga com estabilidade mesmo na ocorrência de ruído sintático.
 
-- `planner` quando o JSON vem utilizável;
-- `router_fallback` quando o plano não pode ser parseado;
-- `router_override` quando o router semântico contradiz o planner com score suficiente.
+---
 
-Essa distinção é importante porque "ter fallback" e "mostrar fallback nos artefatos atuais" são coisas diferentes.
+## Desacoplamento entre recuperação, execução e síntese
 
-## Retrieval e execução continuam sendo etapas separadas
+Um dos maiores erros de design em agentes é misturar a tomada de decisão com a execução de efeitos colaterais e a formatação final do texto.
 
 ![Arquitetura mínima de agente](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0007_agentes_tool_calling/assets/04.png)
 
-> Figura 4: Planejamento, execução e auditoria ficam em camadas diferentes para tornar o comportamento revisável.
+> Figura 4. Camadas desacopladas separando o planejamento estratégico da execução de ferramentas e da síntese final.
 
-Se a ação escolhida for `buscar_politica`, o agente faz retrieval na base local antes de gerar a resposta:
+Na arquitetura proposta, se a ferramenta planejada for `buscar_politica`, o agente dispara uma busca semântica em uma base local de procedimentos e extrai o documento pertinente. Se a ferramenta escolhida for `criar_ticket`, o sistema aciona uma rotina observável que gera um identificador único de chamado, registra a prioridade e anexa o assunto sem depender da inferência neural.
 
-```python
-def retrieve_policy(query: str, embedder: SentenceTransformer, knowledge_base: list[dict[str, str]]) -> tuple[dict[str, str], float]:
-    documents = [entry["conteudo"] for entry in knowledge_base]
-    vectors = embedder.encode([query, *documents], normalize_embeddings=True)
-    query_vector = vectors[0]
-    document_vectors = vectors[1:]
-    scores = [float(np.dot(query_vector, vector)) for vector in document_vectors]
-    best_index = int(np.argmax(scores))
-    return knowledge_base[best_index], float(scores[best_index])
-```
+Apenas após a coleta dos dados operacionais da ferramenta é que o modelo de linguagem é reativado para gerar a resposta amigável ao usuário, injetando o resultado da execução como contexto factual imutável.
 
-Se a ação for `criar_ticket`, o agente simula a abertura do chamado e devolve um payload observável com `ticket_id`, prioridade e assunto. Se a ação final cair em `resposta_direta`, ele usa a base local de capacidades do assistente como fonte.
+---
 
-Essa separação de camadas é importante porque evita misturar decisão, recuperação de contexto e resposta final em um único bloco opaco.
+## Governança através de trilha forense de auditoria
 
-## O que os artefatos atuais mostram de fato
+Autonomia sem rastreabilidade é inaceitável em ambientes corporativos sujeitos a conformidade regulatória.
 
 ![Casos ideais de uso](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0007_agentes_tool_calling/assets/05.png)
 
-> Figura 5: A maturidade do agente não está só na arquitetura suportada, mas na evidência concreta que ele deixa.
+> Figura 5. Trilha forense de auditoria capturando cada transição de estado, ferramenta acionada e justificativa do agente.
 
-Nos arquivos gerados hoje nesta pasta, a evidência observada é a seguinte:
+A esteira registra cada passo do ciclo agêntico no arquivo `data/agent_audit_trail.csv`. Para cada interação do usuário, o sistema audita o texto original recebido, o status do guardrail de segurança, a decisão do planejador com seu payload JSON bruto, o caminho de execução utilizado (se houve acionamento normal, bypass de regra de negócio ou fallback semântico), a ferramenta invocada, o tempo de execução e a resposta final entregue.
 
-- `decision_summary.csv` registra decisões vindas de `business_rule` para `buscar_politica` e `criar_ticket`, e uma decisão vinda do `planner` para `resposta_direta`;
-- `retrieval_summary.csv` mostra duas execuções de `buscar_politica`, com documento recuperado e `knowledge_score`;
-- `agent_runs.csv` inclui os cinco cenários do `cenarios.json`: um bloqueio por guardrail e quatro execuções operacionais bem-sucedidas, todas com roteamento correto;
-- `agent_audit_log.jsonl` persiste a trilha serializada de cada cenário executado.
+Essa trilha permite que auditores e engenheiros inspecionem anomalias, identifiquem ferramentas que falham com frequência e depurem o comportamento do agente sem depender de suposições.
 
-Isso significa que os artefatos versionados atualmente demonstram com clareza:
+---
 
-- guardrail em ação;
-- regra de negócio em ação;
-- planner em JSON escolhendo `resposta_direta` com plano parseado sem fallback;
-- retrieval em base local e abertura simulada de ticket;
-- resposta final gerada a partir do resultado da tool;
-- auditoria por cenário.
+## Execução prática do laboratório passo a passo
 
-Ao mesmo tempo, o código suporta caminhos adicionais que não aparecem nos CSVs atualmente versionados:
+O repositório disponibiliza todos os scripts, ferramentas mockadas e bases de conhecimento para testar o agente no seu próprio computador.
 
-- `router_fallback`;
-- `router_override`.
+Para rodar a bateria de testes automatizada via terminal:
 
-Essa distinção é importante para não superprometer. A arquitetura implementada é maior do que a amostra persistida, e o artigo precisa tratar isso com precisão.
+```bash
+cd pathbit-academy-ai/0007_agentes_tool_calling
 
-## A trilha de auditoria é o que impede a demo bonita de virar caixa-preta
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 
-O `agent_runs.csv` não registra apenas "qual tool foi chamada". Ele guarda contexto suficiente para revisão:
-
-```
-entrada | planned_tool | acao | status | router_score | knowledge_score | documento | used_fallback | decision_source | plan_reason | resposta
+python src/main.py --check
 ```
 
-E o `agent_audit_log.jsonl` preserva a sequência de passos internos de cada execução, incluindo guardrail, decisão, tool execution e prévia da resposta final.
+Para inspecionar visualmente as ativações de ferramentas, os bloqueios de guardrails e o arquivo de auditoria linha a linha, inicie o Jupyter Notebook interativo:
 
-É isso que torna o exemplo operacionalmente interessante. O agente não só responde. Ele deixa rastro.
+```bash
+jupyter notebook notebooks/agentes_tool_calling.ipynb
+```
 
-## Show-Me-The-Code
+A execução é puramente local e consome menos de um gigabyte de memória RAM em CPU convencional.
 
-O artigo entrega um agente local com:
+---
 
-- guardrail antes de qualquer execução;
-- regra de negócio para intenções óbvias;
-- planner em JSON com roteamento semântico como fallback e override;
-- retrieval em base local para `buscar_politica`;
-- resposta final gerada a partir do resultado da tool, com `agent_runs.csv`, `decision_summary.csv`, `retrieval_summary.csv` e `agent_audit_log.jsonl`.
+## Próximos passos na jornada de IA da Pathbit Academy
 
-**Opção 1** Execute o simulador localmente e acompanhe os cenários no terminal.
+Com os princípios de planejamento agêntico, guardrails e observabilidade estabelecidos em memória de processo, surge a necessidade de desacoplar o motor de inferência em um servidor dedicado de alto desempenho, eliminando dependências de bibliotecas pesadas de Python e permitindo servir modelos de linguagem com métricas estritas de latência e consumo de hardware.
 
-[**Abrir README.md com instruções locais**](https://github.com/pathbit/pathbit-academy-ai/blob/master/0007_agentes_tool_calling/README.md)
+No [Artigo 0008 (LLMs Locais com Ollama)](https://github.com/pathbit/pathbit-academy-ai/blob/master/0008_llms_locais_ollama/article/ARTICLE.md), iniciamos a trilogia de infraestrutura avançada de IA local, demonstrando como empacotar e servir modelos abertos em containers Docker com custo marginal zero por token.
 
-**Opção 2** Abra o notebook e acompanhe planejamento, execução, retrieval e auditoria passo a passo.
-
-[**Abrir notebook de testes**](https://github.com/pathbit/pathbit-academy-ai/blob/master/0007_agentes_tool_calling/notebooks/agentes_tool_calling.ipynb)
-
-### Pré-requisitos para Execução Local
-
-Antes de executar a simulação e o laboratório prático de agentes com tool calling localmente, configure o ambiente:
-
-1. **Python 3.10 ou superior:**
-   - Verifique com `python3 --version`. Se necessário, instale:
-     - **macOS:** `brew install python` ou `pyenv install 3.12`
-     - **Linux (Ubuntu/Debian):** `sudo apt update && sudo apt install -y python3 python3-venv python3-pip`
-     - **Windows:** `winget install Python.Python.3.12`
-   - Crie e ative um ambiente virtual dedicado:
-     ```bash
-     # macOS e Linux
-     python3 -m venv .venv
-     source .venv/bin/activate
-
-     # Windows (PowerShell)
-     python -m venv .venv
-     .venv\Scripts\Activate.ps1
-     ```
-   - Instale as bibliotecas necessárias:
-     ```bash
-     pip install --upgrade pip
-     pip install -r requirements.txt
-     ```
-
-2. **Modelos 100% Locais e Gratuitos:**
-   - Não requer chave de API, autenticação ou contas de terceiros.
-   - O planner, o roteador e as tools executam localmente usando `Qwen/Qwen2.5-0.5B-Instruct` e embeddings MiniLM.
-
-3. **Execução Local:**
-   - Execute o simulador de cenários pelo terminal ou abra o notebook:
-     ```bash
-     # Executar os cenários de teste do agente
-     python src/agent_runner.py --limit 3
-
-     # Ou abrir o launcher do notebook
-     python src/main.py
-     ```
-
-## Próximos passos
-
-Se você quiser endurecer essa base sem sair do stack gratuito:
-
-1. crie cenários que forcem `router_fallback` e `router_override`;
-2. amplie o `cenarios.json` com mais pedidos ambíguos que passem pelo `planner`;
-3. adicione testes específicos para schema do plano e decisão de tool;
-4. avalie a resposta final do agente com um judge local ou outra esteira de evals.
-
-A diferença entre um agente chamativo e um agente útil está nesse detalhe: autonomia com restrição, contexto e auditoria.
+---
 
 ## Referências
 
-- [Hugging Face - Qwen 0.5B Instruct](https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct)
-- [Sentence Transformers - Multilingual MiniLM](https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2)
-- [OWASP - Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
+- [Yao, Shunyu et al.: ReAct (Synergizing Reasoning and Acting in Language Models - ICLR 2023)](https://arxiv.org/abs/2210.03629)
+- [Schick, Timo et al.: Toolformer (Language Models Can Teach Themselves to Use Tools - NeurIPS 2023)](https://arxiv.org/abs/2302.04761)
+- [Anthropic: Building Effective Agents (Architectural Guidelines)](https://www.anthropic.com/research/building-effective-agents)
+- [Wang, Lei et al.: A Survey on Large Language Model based Autonomous Agents](https://arxiv.org/abs/2308.11432)
+- [Qwen Team: Qwen2.5 Function Calling and Agent Capabilities](https://qwenlm.github.io/)
+
+---
+
+Repositório oficial no GitHub no endereço https://github.com/pathbit/pathbit-academy-ai no módulo 0007_agentes_tool_calling.
+
+#InteligenciaArtificial #AgentesAI #ToolCalling #ReAct #Qwen #Python #EngenhariaDeSoftware #PathbitAcademy

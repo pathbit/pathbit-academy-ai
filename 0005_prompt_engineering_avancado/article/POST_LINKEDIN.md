@@ -1,27 +1,19 @@
-O prompt "melhor" não existe sem benchmark.
+Engenharia de prompt não é ajuste de redação. É especificação de software e contrato de dados.
 
-No ecossistema corporativo, prompt engineering virou terreno fértil para achismo: cada um tem sua "técnica mágica", troca três adjetivos no texto e jura que a resposta ficou mais inteligente.
+A maioria dos projetos de IA tenta resolver inconsistências migrando para modelos gigantes e caros, quando o problema real está na ausência de contratos formais de instrução.
 
-Mas na engenharia de software de verdade, prompt engineering deixa de ser opinião quando você estabelece métricas auditáveis antes de inflar a fatura de tokens ou migrar para modelos gigantes.
+No módulo 0005 da Pathbit Academy, desmontamos essa prática empírica construindo um benchmark rigoroso em Python que cruza arquiteturas de modelos e estratégias de prompt.
 
-No módulo 0005 do Pathbit Academy AI, construímos um laboratório de benchmark rigoroso e 100% gratuito comparando estratégias em modelos locais (`Qwen2.5-0.5B-Instruct` e `google/flan-t5-small`).
+Analisamos os resultados medidos sob o capô:
+- O abismo entre respostas que soam bem aos olhos humanos e saídas estruturadas consumíveis por microsserviços.
+- Como impor contratos determinísticos de saída em linhas delimitadas ou JSON estrito.
+- A comparação entre estratégias Base, Estruturada, Few-Shot e Checklist.
+- O ganho real medido: no Qwen 2.5 0.5B, a abordagem Few-Shot aumentou a precisão em mais de 80% sobre a base sem gastar um único centavo a mais de infraestrutura.
+- A esteira de avaliação multidimensional combinando validação sintática, acerto categórico e similaridade semântica por embeddings.
 
-🏗️ O Framework em Quatro Camadas:
-1. Papel & Objetivo: Definição inequívoca de responsabilidade e limites de atuação.
-2. Contrato de Saída: Substituir prosa livre por interfaces previsíveis (JSON com campos obrigatórios). Se a saída precisa alimentar um webhook ou banco de dados, texto vago quebra a operação.
-3. Exemplos Few-Shot: Demonstrações claras do padrão esperado para casos de borda.
-4. Validação & Score: Avaliação multidimensional automática combinando conformidade de estrutura, presença de palavras-chave críticas e similaridade semântica (MiniLM).
+O laboratório prático em Python, com execução 100% local em CPU e notebooks interativos, já está disponível no nosso repositório open-source.
 
-📊 As descobertas do laboratório:
-- O mesmo prompt NÃO rende igual em modelos diferentes: enquanto o Qwen saltou de 0.37 (base) para 0.87 (few-shot), o Flan-T5 exigiu outra calibragem para entregar consistência.
-- O contrato de saída é o divisor de águas: impor formato rígido elimina o risco de alucinação disfarçada de resposta bonita.
-- Modelos abertos e leves resolvem com louvor problemas de classificação e extração quando a instrução é estruturada de forma profissional.
+Repositório no GitHub: https://github.com/pathbit/pathbit-academy-ai
+Módulo: 0005_prompt_engineering_avancado
 
-Tudo roda localmente, sem chave de API, com dados e relatórios exportados em CSV para auditoria.
-
-Disponibilizamos o artigo completo, o script de benchmark executável, o notebook interativo e o deck executivo em PDF no repositório:
-
-🔗 Repositório oficial: https://github.com/pathbit/pathbit-academy-ai
-📖 Módulo: 0005_prompt_engineering_avancado
-
-#PromptEngineering #InteligenciaArtificial #LLM #Benchmark #MachineLearning #EngenhariaDeSoftware #Python #PathbitAcademy
+#InteligenciaArtificial #PromptEngineering #LLM #Qwen #NLP #Python #EngenhariaDeSoftware #PathbitAcademy

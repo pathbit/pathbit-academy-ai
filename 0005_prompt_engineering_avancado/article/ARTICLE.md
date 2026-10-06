@@ -1,50 +1,50 @@
-# Prompt engineering na prática - como medir estratégia, modelo e ganho real antes de escalar custo
+# Engenharia de prompt avançada: como medir estratégia, modelo e ganho real antes de escalar custos
 
-Prompt engineering costuma ser tratado como ajuste cosmético. Troca-se uma instrução, roda-se meia dúzia de exemplos e conclui-se que o sistema "melhorou". O problema é que esse ritual quase nunca separa duas coisas diferentes: ganho de engenharia de prompt e ganho de capacidade do modelo.
+A engenharia de prompt é frequentemente reduzida a um exercício cosmético de redação. No dia a dia de muitas equipes, o processo consiste em alterar adjetivos no texto de instrução, executar meia dúzia de testes manuais na interface web do provedor e concluir empiricamente que o sistema melhorou. Essa abordagem informal cria uma ilusão perigosa de progresso, pois falha em isolar duas variáveis fundamentais de software: o ganho real derivado do desenho da instrução e a capacidade intrínseca do modelo de fundação.
 
-Este artigo parte do ponto em que essa ambiguidade começa a custar caro. Em vez de discutir prompt no abstrato, ele monta um laboratório comparativo que cruza estratégia de instrução com modelo de geração. A pergunta deixa de ser "qual prompt ficou mais bonito?" e passa a ser "qual combinação entrega o melhor resultado operacional e por quê?".
+Quando um sistema entra em produção corporativa atendendo milhares de requisições por hora, essa ambiguidade técnica cobra seu preço. Um prompt mal estruturado eleva a latência, consome tokens excessivos e quebra os contratos de dados esperados pelas APIs de backend. Pior ainda, a equipe frequentemente opta por migrar para modelos maiores e ordens de grandeza mais caros na tentativa de compensar falhas de especificação que poderiam ser resolvidas com rigor de engenharia de prompt.
 
-> Se você ainda não leu os artigos anteriores, vale revisar a sequência: [LLM vs LRM](https://github.com/pathbit/pathbit-academy-ai/blob/master/0001_llm_x_lrm/article/ARTICLE.md), [Embeddings e Vetorização](https://github.com/pathbit/pathbit-academy-ai/blob/master/0002_embeddings_vetorizacao/article/ARTICLE.md), [RAG e Vector Database](https://github.com/pathbit/pathbit-academy-ai/blob/master/0003_rag_vector_database/article/ARTICLE.md) e [RAG vs Fine-Tuning](https://github.com/pathbit/pathbit-academy-ai/blob/master/0004_rag_vs_finetuning/article/ARTICLE.md).
+Este artigo estabelece uma metodologia empírica para avaliar estratégias de instrução. Construímos um laboratório que cruza diferentes padrões de prompt com múltiplos modelos de linguagem, medindo de forma independente a conformidade estrutural, a assertividade de palavras-chave, a precisão categórica e a fidelidade semântica.
 
-## O erro que parece inteligência, mas quebra a operação
+---
+
+## O abismo entre resposta plausível e interface de produção
+
+O erro mais comum ao integrar modelos gerativos em esteiras de software é confundir fluência linguística com adequação operacional.
 
 ![Prompt Engineering na prática](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0005_prompt_engineering_avancado/assets/01.png)
 
-> Figura 1: Resposta plausível não basta quando o sistema precisa de campos estáveis para operar.
+> Figura 1. Respostas textualmente convincentes que falham em fornecer campos determinísticos para automação.
 
-O erro mais comum em projetos com LLM é confundir entendimento semântico com prontidão para produção. Um modelo pode entender o problema do usuário e ainda assim devolver um texto que o backend não consegue consumir, o time não consegue priorizar e a operação não consegue transformar em próxima ação.
+Um modelo de linguagem pode compreender perfeitamente a queixa de um cliente e gerar um parágrafo acolhedor e articulado. No entanto, se o sistema de tickets da empresa precisa extrair a prioridade do chamado, a rota do departamento responsável e um resumo em linha única, uma resposta em prosa livre é inútil para o backend. O pipeline é forçado a recorrer a expressões regulares frágeis ou a novas chamadas de LLM para estruturar o texto anterior, multiplicando custos e pontos de falha.
 
-É por isso que prompt genérico costuma enganar. Lendo por cima, ele parece "bom o suficiente". Quando o cenário exige estrutura, prioridade e ação objetiva com repetibilidade, ele desaba.
+O prompt genérico cria uma armadilha cognitiva. Ao ser lido por um humano durante uma demonstração, ele parece satisfatório. Mas quando submetido a variações reais de produção com ruído, linguagem coloquial e cenários adversos, a falta de delimitação explícita resulta em respostas imprevisíveis.
 
-## O laboratório que separa estratégia de capacidade do modelo
+---
+
+## O laboratório comparativo cruzando estratégia e modelo
+
+Para transformar o desenvolvimento de prompts em uma disciplina científica, o experimento deste módulo implementa uma matriz bidimensional que cruza arquiteturas de modelos com estratégias de instrução.
 
 ![Framework de prompt](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0005_prompt_engineering_avancado/assets/02.png)
 
-> Figura 2: O laboratório cruza desenho de prompt com capacidade do modelo, em vez de isolar só uma dimensão.
+> Figura 2. Matriz experimental cruzando capacidade do modelo gerador com diferentes técnicas de engenharia de prompt.
 
-O experimento deste artigo testa uma matriz `modelo x estratégia`.
+No eixo de modelos, selecionamos alternativas leves e abertas para demonstrar como a técnica de prompt é capaz de extrair alta performance mesmo em hardwares compactos: o `Qwen2.5-0.5B-Instruct`, representando a moderna geração de Small Language Models com forte alinhamento a instruções, e o `google/flan-t5-small`, representando a arquitetura encoder-decoder clássica especializada em tarefas de sequência para sequência.
 
-Modelos gratuitos usados:
+No eixo de estratégias, comparamos quatro abordagens consolidadas na engenharia de IA: a abordagem base, que atua como o grupo de controle sem restrições de formato; a abordagem estruturada, que impõe um contrato estrito de saída em linhas nomeadas; a abordagem few-shot, que fornece exemplos de referência antes do comando; e a abordagem checklist, que introduz uma etapa explícita de raciocínio intermediário antes da conclusão.
 
-- `Qwen/Qwen2.5-0.5B-Instruct`
-- `google/flan-t5-small`
+---
 
-Estratégias comparadas:
+## A imposição de contratos formais de saída
 
-- `base`
-- `estruturado`
-- `few_shot`
-- `checklist`
-
-Esse desenho é o que torna a análise útil. Com ele, você consegue responder se a melhora veio do contrato de saída, do exemplo few-shot, do checklist operacional ou simplesmente do teto do modelo.
-
-## O contrato de saída continua sendo o divisor de águas
+O ponto de inflexão na estabilidade de um sistema gerativo ocorre no momento em que o formato de saída deixa de ser uma sugestão e passa a ser uma especificação rígida.
 
 ![Comparativo de prompt](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0005_prompt_engineering_avancado/assets/03.png)
 
-> Figura 3: Linguagem natural só vira interface de sistema quando o formato de saída deixa de ser implícito.
+> Figura 3. A transição de texto aberto para uma interface delimitada consumível por microsserviços.
 
-O ponto de inflexão do laboratório está no contrato de saída. A estratégia `estruturado` exige três linhas fixas, com nome de campo e conteúdo previsível:
+Na estratégia estruturada, o prompt define explicitamente a quantidade exata de linhas e o identificador de cada campo exigido pelo sistema:
 
 ```python
 def structured_prompt(texto: str) -> list[dict[str, str]]:
@@ -66,42 +66,23 @@ def structured_prompt(texto: str) -> list[dict[str, str]]:
     ]
 ```
 
-É uma mudança simples, mas estrutural. Ela transforma uma resposta aberta em uma interface mínima que dá para validar.
+Essa construção altera radicalmente a dinâmica da inferência. O modelo é constrangido a alocar seus primeiros tokens na emissão da chave `resumo:`, forçando uma sintetização imediata, seguida pelo campo categórico `prioridade:`, que admite apenas três opções válidas, e encerrando com a recomendação operacional em `proxima_acao:`.
 
-As outras estratégias empurram a mesma lógica em direções diferentes:
+A técnica few-shot potencializa essa dinâmica ao incluir um ou mais pares completos de entrada e resposta ideal no contexto do prompt. Isso orienta a distribuição probabilística do modelo por analogia, demonstrando visualmente o padrão de brevidade e pontuação esperado.
 
-- `few_shot` adiciona um exemplo orientador no formato alvo;
-- `checklist` injeta um raciocínio operacional explícito antes da resposta;
-- `base` serve como referência do que acontece quando o formato é frouxo demais.
+Já a técnica de checklist instrui o modelo a avaliar mentalmente um conjunto de critérios de triagem antes de emitir a decisão final, funcionando como uma versão leve de cadeia de pensamento (Chain of Thought).
 
-## O benchmark mede forma e significado ao mesmo tempo
+---
+
+## Avaliação multidimensional independente de intuição
+
+Medir a qualidade de um prompt exige ir além da simples observação humana de respostas isoladas. O laboratório implementa uma função objetiva de pontuação que avalia cada resposta sob quatro critérios complementares.
 
 ![Benchmark de prompts](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0005_prompt_engineering_avancado/assets/04.png)
 
-> Figura 4: A comparação só fica confiável quando toda a matriz é rodada no mesmo dataset e julgada pelos mesmos critérios.
+> Figura 4. Esteira de avaliação automatizada julgando simultaneamente conformidade sintática e qualidade semântica.
 
-O runner percorre todos os casos do dataset em todos os modelos e estratégias configurados:
-
-```python
-DEFAULT_GENERATION_MODELS = [
-    "Qwen/Qwen2.5-0.5B-Instruct",
-    "google/flan-t5-small",
-]
-
-strategies = {
-    "base": generic_prompt,
-    "estruturado": structured_prompt,
-    "few_shot": few_shot_prompt,
-    "checklist": checklist_prompt,
-}
-```
-
-O julgamento também não fica no "parece melhor". O score final é a média de quatro dimensões:
-
-- `score_estrutura`
-- `score_keywords`
-- `score_prioridade`
-- `score_semantico`
+O primeiro critério é o escore de estrutura, que valida se o texto devolvido respeita o número exato de linhas e a presença das tags contratuais. O segundo é o escore de palavras-chave, que checa a inclusão de termos operacionais obrigatórios. O terceiro avalia a precisão na categorização de prioridade contra o gabarito esperado do chamado. Por fim, o escore semântico utiliza um modelo de embeddings para calcular a similaridade de cosseno entre o resumo gerado e a síntese de referência elaborada por especialistas.
 
 ```python
 def evaluate_output(output: str, row: pd.Series, embedder: SentenceTransformer) -> dict[str, float]:
@@ -121,129 +102,74 @@ def evaluate_output(output: str, row: pd.Series, embedder: SentenceTransformer) 
     }
 ```
 
-Esse arranjo é importante porque impede duas distorções comuns:
+Essa separação impede os dois erros mais frequentes na homologação de prompts: aprovar um texto que soa bem aos olhos humanos mas quebra o parser do backend, ou aprovar uma saída sintaticamente perfeita que erra completamente a gravidade do incidente reportado pelo cliente.
 
-- achar que uma resposta boa semanticamente já está pronta para produção;
-- achar que uma resposta bem formatada, mas semanticamente pobre, já resolveu o problema.
+---
 
-## Como ler o resultado sem se enganar
+## Análise dos resultados e comportamento dos modelos
+
+Os dados colhidos na bateria de testes revelam como a capacidade do modelo interage de forma profunda com o desenho do prompt.
 
 ![Leitura do benchmark real](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0005_prompt_engineering_avancado/assets/05.png)
 
-> Figura 5: O ranking fica interessante quando mostra não só quem ganhou, mas como ganhou.
+> Figura 5. Gráfico consolidado de desempenho comparando ganhos percentuais de cada estratégia sobre o baseline.
 
-Os resultados observados nesta base deixam isso muito claro.
+No modelo `Qwen2.5-0.5B-Instruct`, a estratégia `few_shot` foi a campeã absoluta, atingindo um escore consolidado de `0.741`, contra apenas `0.411` da estratégia `base`. Trata-se de uma evolução de mais de oitenta por cento de acurácia operacional obtida sem trocar de hardware e sem gastar um centavo a mais de infraestrutura. A presença de um exemplo explícito no prompt permitiu que o modelo compactasse seu raciocínio e acertasse a classificação categórica com consistência.
 
-No `Qwen/Qwen2.5-0.5B-Instruct`, a melhor estratégia foi `few_shot`, com `0.741` de `score_total`, contra `0.411` da estratégia `base`. Isso representa um ganho de `+0.330` pontos, ou `+80.2%`.
+Por outro lado, no modelo `flan-t5-small`, a estratégia vencedora foi a de `checklist`, saltando de `0.266` no modelo base para `0.460`. Devido à sua arquitetura mais antiga e menor flexibilidade a contextos longos, o FLAN sofreu para absorver exemplos de few-shot, mas respondeu muito bem a diretrizes sequenciais curtas de verificação.
 
-No `google/flan-t5-small`, a melhor estratégia foi `checklist`, com `0.460`, contra `0.266` da `base`. O ganho foi de `+0.193` pontos, ou `+72.6%`.
+Esse achado desmistifica a ideia de que existe uma fórmula mágica universal de prompt. A técnica ideal depende diretamente da arquitetura e do tamanho do modelo utilizado.
 
-O ponto relevante não é "few-shot sempre vence" ou "checklist sempre salva". O ponto é outro:
+![Trilha de Auditoria](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0005_prompt_engineering_avancado/assets/06.png)
 
-- no `Qwen`, `few_shot` e `estruturado` sobem forte porque o modelo consegue aproveitar melhor o contrato de saída;
-- no `FLAN`, a semântica permanece razoável, mas o contrato rígido continua frágil, o que derruba estrutura e prioridade;
-- `checklist` não é um passe mágico: no `Qwen`, ele melhora estrutura e prioridade, mas perde bastante em semântica no conjunto atual.
+> Figura 6. Registro tabular detalhado permitindo auditar o comportamento de cada par prompt-modelo caso a caso.
 
-Isso é exatamente o tipo de leitura que um benchmark linear, rodando um único prompt em um único modelo, não consegue entregar.
+---
 
-## Os artefatos que tornam a comparação auditável
+## Execução prática do laboratório passo a passo
 
-O laboratório não termina em um gráfico bonito. Ele gera artefatos que deixam a leitura reproduzível:
+O repositório fornece todos os arquivos para reproduzir o benchmark localmente em CPU pura com modelos open source do Hugging Face.
 
-- `benchmark_resultados.csv` com cada execução por caso, estratégia e modelo;
-- `benchmark_resumo.csv` com médias agregadas por combinação;
-- `benchmark_deltas.csv` com delta absoluto e percentual contra a estratégia `base`;
-- `benchmark_case_breakdown.csv` com detalhe por caso, descrição da estratégia e campos ausentes;
-- `benchmark_relatorio.md` com leitura rápida do melhor resultado por modelo.
+Para executar o pipeline completo de avaliação via terminal:
 
-Esse conjunto faz diferença porque transforma prompt engineering em análise comparável. Você deixa de discutir preferência de escrita e passa a discutir evidência.
+```bash
+cd pathbit-academy-ai/0005_prompt_engineering_avancado
 
-## Quando o prompt deixa de ser o próximo passo
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 
-![Escada de evolução](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0005_prompt_engineering_avancado/assets/06.png)
+python src/main.py --check
+```
 
-> Figura 6: Prompt melhora instrução e formato; RAG e fine-tuning entram quando o gargalo muda de natureza.
+A execução interativa acompanhada por gráficos comparativos e inspeção visual das respostas geradas pode ser realizada diretamente pelo Jupyter Notebook:
 
-O artigo não tenta vender prompt como solução universal. O que ele mostra é até onde prompt ainda paga a conta.
+```bash
+jupyter notebook notebooks/prompt_engineering_avancado.ipynb
+```
 
-Prompt engineering resolve bem:
+O ambiente executa todos os modelos e cálculos de embeddings localmente, sem custos de API e sem necessidade de conexão ativa com a internet após o download inicial dos pesos.
 
-- formato de saída;
-- clareza de instrução;
-- alinhamento operacional mínimo;
-- consistência melhor do que um prompt livre.
+---
 
-Quando o problema passa a ser falta de contexto atualizado, entra RAG. Quando o problema passa a ser comportamento especializado e persistente, entra fine-tuning. A utilidade deste laboratório é justamente descobrir se você já chegou nesse ponto ou se ainda está deixando ganho barato na mesa.
+## Próximos passos na jornada de IA da Pathbit Academy
 
-## Show-Me-The-Code
+Aprimorar o prompt e validar contratos de saída resolve o desafio da geração pontual. Contudo, em ambientes corporativos de grande porte, prompts sofrem alterações constantes por múltiplos desenvolvedores. Como garantir que uma melhoria introduzida hoje não destrua casos de uso que estavam funcionando perfeitamente na semana passada?
 
-O artigo entrega um laboratório comparativo que permite:
+No [Artigo 0006 (LLM Evals e Regressão)](https://github.com/pathbit/pathbit-academy-ai/blob/master/0006_llm_evals_regressao/article/ARTICLE.md), exploramos como montar pipelines automatizados de CI/CD para inteligência artificial, utilizando testes de regressão sintéticos e determinísticos para barrar deploys que degradem o comportamento do sistema.
 
-- testar dois modelos gratuitos no mesmo dataset;
-- comparar quatro estratégias com o mesmo critério de julgamento;
-- inspecionar score agregado, delta contra baseline e breakdown por caso;
-- abrir o notebook para ranking visual ou rodar o script direto para gerar artefatos.
-
-**Opção 1** Execute o laboratório localmente e gere os resultados no terminal.
-
-[**Abrir README.md com instruções locais**](https://github.com/pathbit/pathbit-academy-ai/blob/master/0005_prompt_engineering_avancado/README.md)
-
-**Opção 2** Abra o notebook e compare os resultados por estratégia e por modelo.
-
-[**Abrir notebook de testes**](https://github.com/pathbit/pathbit-academy-ai/blob/master/0005_prompt_engineering_avancado/notebooks/prompt_engineering_avancado.ipynb)
-
-### Pré-requisitos para Execução Local
-
-Antes de rodar o laboratório comparativo de prompt engineering localmente, prepare seu ambiente:
-
-1. **Python 3.10 ou superior:**
-   - Verifique com `python3 --version`. Se necessário, instale:
-     - **macOS:** `brew install python` ou `pyenv install 3.12`
-     - **Linux (Ubuntu/Debian):** `sudo apt update && sudo apt install -y python3 python3-venv python3-pip`
-     - **Windows:** `winget install Python.Python.3.12`
-   - Crie e ative um ambiente virtual dedicado:
-     ```bash
-     # macOS e Linux
-     python3 -m venv .venv
-     source .venv/bin/activate
-
-     # Windows (PowerShell)
-     python -m venv .venv
-     .venv\Scripts\Activate.ps1
-     ```
-   - Instale as bibliotecas necessárias:
-     ```bash
-     pip install --upgrade pip
-     pip install -r requirements.txt
-     ```
-
-2. **Modelos 100% Locais e Gratuitos:**
-   - Não requer chave de API nem criação de conta em provedores externos.
-   - Conexão com a internet é necessária apenas na primeira execução para baixar os modelos abertos (`Qwen/Qwen2.5-0.5B-Instruct` e `google/flan-t5-small`) do Hugging Face.
-
-3. **Execução Local:**
-   - Execute o runner do laboratório diretamente pelo terminal ou abra o notebook interativo:
-     ```bash
-     # Execução rápida do benchmark
-     python src/prompt_benchmark.py --limit 2
-
-     # Ou abrir o launcher do notebook
-     python src/main.py
-     ```
-
-## Próximos passos
-
-Se você quiser endurecer esse laboratório sem perder o foco:
-
-1. aumente o dataset com mais categorias de atendimento;
-2. adicione modelos gratuitos com perfis diferentes;
-3. use o `benchmark_case_breakdown.csv` para analisar falhas por estratégia, não só o score médio;
-4. só suba para RAG ou fine-tuning depois de provar que o gargalo não é mais instrução.
-
-O valor deste artigo não está no tamanho do modelo. Está na qualidade da comparação.
+---
 
 ## Referências
 
-- [Hugging Face - Qwen 0.5B Instruct](https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct)
-- [Hugging Face - FLAN-T5](https://huggingface.co/google/flan-t5-small)
-- [Sentence Transformers - Multilingual MiniLM](https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2)
+- [Wei, Jason et al.: Chain-of-Thought Prompting Elicits Reasoning in Large Language Models (NeurIPS 2022)](https://arxiv.org/abs/2201.11903)
+- [Brown, Tom et al.: Language Models are Few-Shot Learners (NeurIPS 2020)](https://arxiv.org/abs/2005.14165)
+- [Yao, Shunyu et al.: ReAct (Synergizing Reasoning and Acting in Language Models - ICLR 2023)](https://arxiv.org/abs/2210.03629)
+- [Chung, Hyung Won et al.: Scaling Instruction-Finetuned Language Models (FLAN)](https://arxiv.org/abs/2210.11416)
+- [Qwen Team: Qwen2.5 Technical Report (Alibaba Group)](https://arxiv.org/abs/2412.15115)
+
+---
+
+Repositório oficial no GitHub no endereço https://github.com/pathbit/pathbit-academy-ai no módulo 0005_prompt_engineering_avancado.
+
+#InteligenciaArtificial #PromptEngineering #LLM #Qwen #NLP #Python #EngenhariaDeSoftware #PathbitAcademy

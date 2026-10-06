@@ -1,33 +1,20 @@
-Agente bom não é o mais livre. É o mais governável.
+Agente inteligente sem controle de risco não é automação. É incidente em produção esperando para acontecer.
 
-A indústria de IA adora vender a fantasia do "agente totalmente autônomo": você solta o modelo com acesso a ferramentas e ele resolve a empresa inteira sozinho.
+A maioria das demonstrações de agentes autônomos falha no primeiro choque com a realidade operacional: ferramentas disparadas sem validação de tipos, chamadas fantasmas de APIs e zero rastreabilidade do que o modelo decidiu.
 
-Na prática de engenharia corporativa, dar liberdade irrestrita a um LLM conectado a ferramentas (bancos de dados, APIs de pagamento, emissão de tickets) é um convite explícito a incidentes de segurança, loops infinitos de chamadas e despesas descontroladas de inferência.
+No módulo 0007 da Pathbit Academy, construímos um agente híbrido e observável em Python com foco em contenção de risco e governança corporativa.
 
-No módulo 0007 do Pathbit Academy AI, demonstramos como projetar agentes com autonomia delimitada por arquitetura:
+Analisamos a arquitetura de defesa em profundidade sob o capô:
+- Guardrails determinísticos para interceptar dados sensíveis e credenciais antes de qualquer inferência.
+- Regras de negócio estáticas que resolvem intenções óbvias sem gastar tokens desnecessários.
+- Um planner constrangido em JSON estruturado com contrato estrito de tool, argumento e justificativa.
+- Roteamento semântico por embeddings como rede de segurança para salvar a execução caso o modelo emita sintaxe malformada.
+- Desacoplamento cirúrgico entre decisão, execução de efeitos colaterais e síntese da resposta ao usuário.
+- Trilha forense de auditoria gravando cada transição de estado e latência em CSV.
 
-🛡️ Os 5 estágios de uma arquitetura agêntica segura e governável:
+O laboratório prático em Python, executando 100% local em CPU com o Qwen 2.5 0.5B e Sentence-BERT, já está disponível no nosso repositório open-source.
 
-1. Guardrails e Regras de Negócio na Entrada:
-Antes de gastar um único token no modelo planejador, filtros determinísticos interceptam payloads com credenciais, injeções de prompt ou intenções óbvias que podem ser resolvidas por regras de código clássico.
+Repositório no GitHub: https://github.com/pathbit/pathbit-academy-ai
+Módulo: 0007_agentes_tool_calling
 
-2. Planner Observável com Contrato em JSON:
-O modelo não devolve texto livre; ele precisa retornar um schema estrito contendo a ferramenta pretendida (`tool`), argumentos tipados (`args`) e a justificativa lógica (`reason`). Se o JSON for inválido, o agente não executa.
-
-3. Roteamento Híbrido com Fallback Semântico:
-Se o planner hesitar ou quebrar o schema, uma camada de roteamento por embeddings compara semanticamente a intenção do usuário contra as descrições do registry de tools, atuando como rede de segurança (fallback).
-
-4. Separação Estrita de Camadas:
-Planejamento, execução de ferramenta, retrieval documental e sintetização da resposta final são passos isolados. Isso impede que a ferramenta modifique o estado do agente de forma imprevisível.
-
-5. Trilha Completa de Auditoria (Audit Trail):
-Cada execução registra em log estruturado (`agent_audit_log.jsonl`) e em tabela (`agent_runs.csv`) cada passo intermediário: qual guardrail avaliou, qual regra foi acionada, os scores de similaridade e a resposta gerada.
-
-Tudo roda localmente, sem chaves pagas, com `Qwen2.5-0.5B-Instruct` e Sentence-Transformers.
-
-O artigo completo, o simulador do agente em Python (`agent_runner.py`), os cenários em JSON e o deck em PDF estão disponíveis:
-
-🔗 Repositório oficial: https://github.com/pathbit/pathbit-academy-ai
-📖 Módulo: 0007_agentes_tool_calling
-
-#AgentesDeIA #ToolCalling #InteligenciaArtificial #MachineLearning #ArquiteturaDeSoftware #Python #PathbitAcademy
+#InteligenciaArtificial #AgentesAI #ToolCalling #ReAct #Qwen #Python #EngenhariaDeSoftware #PathbitAcademy

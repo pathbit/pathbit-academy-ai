@@ -1,30 +1,32 @@
-# LLM Evals na prática e como escolher candidatos e detectar regressão antes do deploy
+# LLM Evals e testes de regressão: como escolher candidatos e barrar falhas antes do deploy
 
-Muita conversa sobre Evals ainda para cedo demais. Compara duas respostas, declara um vencedor e trata isso como decisão técnica. Esse primeiro passo é útil, mas continua curto quando o problema real do time é outro: escolher entre candidatos completos de inferência e decidir se algum deles merece ir para produção.
+A avaliação de sistemas baseados em modelos de linguagem é um dos elos mais vulneráveis da engenharia moderna de software. Em equipes sem práticas maduras de observabilidade, a homologação de uma alteração no prompt ou a troca de um modelo de fundação costuma se apoiar em testes anedóticos. Um desenvolvedor submete três ou quatro perguntas no terminal, inspeciona visualmente as respostas, acha o resultado convincente e promove a versão para produção.
 
-Este artigo trata avaliação nesse nível. O runner compara combinações reais de modelo + prompt, pondera a criticidade dos casos, mede regressão por cenário e transforma o resultado em um gate de release. A pergunta muda de "a resposta ficou melhor?" para "qual candidato melhorou o sistema sem abrir risco onde mais importa?".
+Esse método informal, conhecido na comunidade técnica como vibe check, cria uma falsa sensação de segurança. Em sistemas determinísticos tradicionais, suítes completas de testes unitários e de integração impedem que alterações em um microsserviço quebrem regras já consolidadas. No universo probabilístico dos modelos gerativos, porém, uma modificação no texto do prompt de sistema pode melhorar visivelmente casos gerais de conversação, mas degradar silenciosamente cenários contratuais críticos de alta gravidade.
 
-Tudo isso continua 100% gratuito, usando `Qwen/Qwen2.5-0.5B-Instruct`, `google/flan-t5-small` e embeddings com `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`.
+Este artigo apresenta uma esteira automatizada e rigorosa de avaliação contínua (LLM Evals) com detecção determinística de regressões. O laboratório compara candidatos completos de inferência combinando modelos abertos e estratégias de prompt, pondera a criticidade dos cenários pelo risco de negócio e transforma o resultado em um gate formal de liberação de versão.
 
-> Se você vier do artigo de [Prompt Engineering Avançado](https://github.com/pathbit/pathbit-academy-ai/blob/master/0005_prompt_engineering_avancado/article/ARTICLE.md), vai reconhecer a continuidade natural. Lá o foco era medir estratégia de prompt. Aqui o foco é comparar candidatos completos e decidir quem passa no crivo operacional.
+---
 
-## O problema que a comparação rasa não enxerga
+## O risco da média ingênua e as regressões silenciosas
+
+O perigo mais insidioso em esteiras de inteligência artificial não é o modelo responder mal em todos os cenários, mas introduzir regressões pontuais em casos de alta sensibilidade.
 
 ![Risco de regressão](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0006_llm_evals_regressao/assets/01.png)
 
-> Figura 1: Melhorar um caso chamativo não significa melhorar o sistema inteiro.
+> Figura 1. O perigo de aprovar alterações guiando-se por médias agregadas que ocultam falhas em cenários de alta criticidade.
 
-Quando você altera um sistema com LLM, o risco não é apenas responder pior em média. O risco real é melhorar um caso vistoso e piorar silenciosamente um cenário crítico de contrato, financeiro ou política. Se a avaliação não enxerga isso, ela não serve como mecanismo de release.
+Se uma equipe avalia seus prompts calculando apenas a média geral de acertos sobre cem casos de teste, um ganho vistoso em oitenta perguntas rotineiras de atendimento ao cliente pode elevar a pontuação agregada do sistema. No entanto, se essa mesma alteração fizer o modelo falhar nas duas únicas perguntas que envolviam prazos legais de rescisão contratual ou regras de estorno financeiro, o sistema tornou-se mais perigoso para o negócio, apesar de a média aritmética sugerir evolução.
 
-É exatamente por isso que a esteira deste artigo sai do formato "v1 contra v2" e passa para comparação entre candidatos.
+Para que uma esteira de avaliação atue como ferramenta real de governança, ela precisa desacoplar a análise agregada da inspeção de limites críticos, rejeitando qualquer release que degrade regras fundamentais de operação.
 
-## Os candidatos que entram na disputa
+---
 
-O runner compara três candidatos explícitos:
+## O registro de candidatos como unidade de implantação
 
-- `qwen_generico` como baseline;
-- `qwen_estruturado` como evolução de prompt no mesmo modelo;
-- `flan_estruturado` como candidato alternativo de modelo.
+Em engenharia de software com IA, um deploy nunca envolve apenas o peso do modelo ou o arquivo de texto do prompt isoladamente. A unidade atômica que entra em produção é a combinação do modelo de fundação com seu prompt constrangido e seus hiperparâmetros de inferência.
+
+O laboratório deste módulo estrutura essa comparação definindo três candidatos formais em um registro unificado:
 
 ```python
 def build_candidate_registry():
@@ -44,35 +46,35 @@ def build_candidate_registry():
     }
 ```
 
-Isso deixa a esteira útil para trabalho real. Você consegue promover uma mudança de prompt, trocar de modelo ou comparar as duas coisas ao mesmo tempo sem mudar a estrutura de avaliação.
+O primeiro candidato, `qwen_generico`, atua como a baseline do sistema, representando o modelo aberto da família Qwen executado com instruções padrão em texto livre. O segundo candidato, `qwen_estruturado`, avalia o ganho obtido ao impor um contrato estrito de saída sem alterar o hardware subjacente. Por fim, o terceiro candidato, `flan_estruturado`, introduz uma mudança na arquitetura do modelo, testando o encoder-decoder da família FLAN sob a mesma especificação de campos.
 
-## O dataset carrega contexto, gabarito e criticidade
+Esse desenho modular permite comparar promoção de prompts, migração de modelos ou refatorações simultâneas de arquitetura mantendo exatamente o mesmo crivo de homologação.
+
+---
+
+## Anatomia de um dataset de teste profissional
+
+Diferente de datasets ingênuos que se limitam a pares de pergunta e resposta, o arquivo de avaliação deste laboratório (`eval_dataset.csv`) incorpora metadados operacionais essenciais para governança.
 
 ![Dataset de evals](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0006_llm_evals_regressao/assets/02.png)
 
-> Figura 2: Cada caso traz contexto, resposta ideal, palavras críticas, categoria e peso de risco.
+> Figura 2. Estrutura do dataset incorporando contexto factual, gabarito de referência, termos mandatórios e classificação de risco.
 
-O `eval_dataset.csv` não tem só pergunta e resposta esperada. Ele carrega as colunas que normalmente faltam em demos superficiais:
+Cada registro da base carrega cinco colunas técnicas: o contexto documental recebido pelo modelo, o gabarito ideal esperado (gold), a lista de palavras-chave mandatórias para aquela resposta, a categoria operacional do chamado (como financeiro, suporte técnico ou comercial) e a classificação de criticidade do cenário, dividida em alta, média e baixa.
 
-- `contexto`
-- `gold`
-- `palavras_criticas`
-- `categoria`
-- `criticidade`
+Essa catalogação prévia estabelece a base para ponderar a severidade das falhas. Uma resposta imprecisa sobre horários de atendimento gera ruído passageiro, enquanto uma falha em uma cláusula financeira de criticidade alta gera prejuízo patrimonial direto.
 
-Essa diferença importa porque nem todo erro tem o mesmo peso. Um deslize em baixa criticidade é inconveniente. Uma regressão em contrato ou financeiro é risco de operação.
+---
 
-## O score técnico mede aderência antes de ponderar risco
+## Decomposição técnica da pontuação e pesos de criticidade
+
+A avaliação de cada candidato evita depender exclusivamente de julgamentos subjetivos, combinando três métricas algorítmicas complementares.
 
 ![Métricas de avaliação](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0006_llm_evals_regressao/assets/03.png)
 
-> Figura 3: O runner separa qualidade técnica do peso operacional de cada caso.
+> Figura 3. Cálculo da pontuação multidimensional combinando similaridade semântica, retenção de palavras críticas e fidelidade ao contexto.
 
-O score de cada resposta combina três dimensões:
-
-- similaridade semântica com o `gold`;
-- `keyword_recall` sobre palavras críticas;
-- `faithfulness` ao contexto recebido.
+O primeiro componente é a similaridade semântica, calculada pelo cosseno entre os vetores de embedding da resposta gerada e do gabarito humano através do modelo `paraphrase-multilingual-MiniLM-L12-v2`. O segundo componente é a cobertura de palavras críticas (keyword recall), que valida determinísticamente se termos indispensáveis foram emitidos pelo modelo. O terceiro elemento é a fidelidade factual (faithfulness), que afere se o texto produzido está estritamente contido no contexto factual fornecido.
 
 ```python
 score_semantic = semantic_similarity(embedder, row["gold"], pred)
@@ -81,25 +83,28 @@ score_faithfulness = faithfulness(row["contexto"], pred)
 score_final = float(np.mean([score_semantic, score_keywords, score_faithfulness]))
 ```
 
-Depois disso, a esteira aplica o peso de criticidade:
+Após o cálculo do escore bruto, o runner aplica multiplicadores ponderados conforme a criticidade do cenário:
 
 ```python
 CRITICALITY_WEIGHTS = {"alta": 1.5, "media": 1.0, "baixa": 0.8}
-
 
 def weighted_score(score: float, criticidade: str) -> float:
     return score * CRITICALITY_WEIGHTS.get(criticidade, 1.0)
 ```
 
-Esse segundo passo é o que tira a avaliação da média ingênua. Um candidato pode parecer aceitável olhando só o `score_final` e ainda assim ser insuficiente quando os casos mais sensíveis passam a valer mais.
+Essa multiplicação recalibra a influência dos casos no ranking global. Um candidato mediano em perguntas simples que gabarita todos os cenários de risco elevado supera um candidato superficialmente eloquente que tropeça nas perguntas cruciais.
 
-## A regressão deixa de ser um detalhe invisível
+---
+
+## Detecção de regressões e o gate automatizado de release
+
+O diferencial entre um leaderboard decorativo e um sistema de engenharia reside na capacidade de impedir deploys que violem políticas de qualidade.
 
 ![Gate de release](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0006_llm_evals_regressao/assets/04.png)
 
-> Figura 4: A decisão final combina ranking agregado com inspeção de regressões caso a caso.
+> Figura 4. O mecanismo de gate automatizado avaliando deltas de regressão cenário a cenário antes de autorizar o deploy.
 
-O runner não escolhe vencedor apenas por média. Ele também calcula delta por cenário contra a baseline:
+O runner calcula o delta individual de cada caso comparando o desempenho do novo candidato com a pontuação histórica da baseline:
 
 ```python
 comparison["delta_vs_baseline"] = comparison["score_ponderado"] - comparison["baseline_score"]
@@ -109,115 +114,68 @@ regressions = comparison[
 ]
 ```
 
-Com os artefatos observados nesta pasta, o ranking ficou assim:
+Qualquer queda de desempenho superior a cinco pontos percentuais em relação à baseline é catalogada como uma regressão. Se essa queda ocorrer em um cenário classificado como de alta criticidade, o sistema aciona um alarme vermelho.
 
-- `flan_estruturado`: `score_ponderado` de `1.357`;
-- `qwen_generico`: `0.932`;
-- `qwen_estruturado`: `0.930`.
-
-O detalhe importante é que o melhor score agregado não liberou deploy automaticamente. O relatório atual mostra:
-
-- baseline ponderada em `0.932`;
-- melhor candidato em `1.357`;
-- ganho ponderado de `0.425`;
-- `2` regressões críticas detectadas;
-- gate final `reprovado`.
-
-Isso acontece porque o gate implementado hoje é conservador:
+A regra de liberação de versão implementada na esteira é intencionalmente conservadora:
 
 ```python
 gate = "aprovado" if gain >= 0.05 and critical_regressions.empty else "reprovado"
 ```
 
-Ou seja: a esteira não olha só para o campeão do ranking. Ela também considera se o conjunto comparado produziu regressões críticas. Nos dados atuais, o `flan_estruturado` lidera o ranking, mas o `qwen_estruturado` piora dois casos críticos. O resultado é um release reprovado.
+Para que uma nova versão seja aprovada, ela precisa apresentar um ganho global ponderado de pelo menos cinco pontos percentuais sobre a baseline e, simultaneamente, apresentar zero regressões críticas. Mesmo que um candidato eleve a média geral em quarenta por cento, se ele piorar a assertividade de um único caso financeiro ou contratual, o gate de release reprova a entrega automaticamente.
 
-Esse comportamento é uma decisão explícita da implementação atual. Ele transforma a avaliação em um harness de decisão mais duro do que um leaderboard simples.
-
-## Os artefatos que saem da esteira
+Nos dados apurados neste módulo, embora o candidato `flan_estruturado` tenha atingido o maior escore ponderado médio (1.357 contra 0.932 da baseline), o conjunto do experimento registrou duas regressões severas em cenários de alta criticidade no modelo estruturado, resultando na reprovação imediata da esteira e demonstrando o rigor prático do método.
 
 ![Pipeline de avaliação contínua](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0006_llm_evals_regressao/assets/05.png)
 
-> Figura 5: A esteira produz material suficiente para análise agregada, por categoria e por caso crítico.
+> Figura 5. O fluxo contínuo de auditoria gerando artefatos estruturados para conferência detalhada da equipe de engenharia.
 
-Depois da execução, a pasta `data/` concentra seis saídas principais:
+---
 
-- `geracoes_evals.csv` com cada resposta gerada e seus scores;
-- `candidate_summary.csv` com ranking agregado por candidato;
-- `candidate_summary_by_category.csv` e `critical_cases.csv` para leitura por categoria e foco nos casos de criticidade alta;
-- `regressoes_detectadas.csv` com deltas negativos relevantes contra a baseline;
-- `relatorio_evals.md` com resumo textual de ranking, ganho e gate.
+## Execução prática do laboratório passo a passo
 
-É esse conjunto que faz o artigo sair do território do post conceitual. Você passa a ter evidência suficiente para discutir promoção, reprovação e risco residual.
+O repositório fornece a suíte completa de avaliação pronta para ser executada localmente em CPU pura via linha de comando ou pelo Jupyter Notebook.
 
-## Show-Me-The-Code
+Para rodar a bateria de testes e gerar os relatórios de regressão pelo terminal:
 
-O artigo entrega uma esteira de avaliação que permite:
+```bash
+cd pathbit-academy-ai/0006_llm_evals_regressao
 
-- comparar candidatos completos de inferência, não só respostas soltas;
-- medir score técnico e score ponderado pelo risco do caso;
-- detectar regressões contra baseline no nível de cada pergunta;
-- produzir ranking, recorte por categoria, recorte crítico e relatório de release.
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 
-**Opção 1** Execute a esteira localmente e gere os relatórios no terminal.
+python src/main.py --check
+```
 
-[**Abrir README.md com instruções locais**](https://github.com/pathbit/pathbit-academy-ai/blob/master/0006_llm_evals_regressao/README.md)
+Para inspecionar as distribuições de notas, a matriz de confusão e as saídas detalhadas de cada candidato passo a passo, utilize o ambiente interativo:
 
-**Opção 2** Abra o notebook e acompanhe o ranking entre candidatos.
+```bash
+jupyter notebook notebooks/llm_evals_regressao.ipynb
+```
 
-[**Abrir notebook de testes**](https://github.com/pathbit/pathbit-academy-ai/blob/master/0006_llm_evals_regressao/notebooks/llm_evals_regressao.ipynb)
+Ao término do processo, a pasta `data/` armazena todos os registros da esteira: `geracoes_evals.csv` com cada texto gerado e suas respectivas notas, `candidate_summary.csv` consolidando as médias por modelo, `regressoes_detectadas.csv` listando todos os deltas negativos apurados e `relatorio_evals.md` sintetizando a decisão final do gate.
 
-### Pré-requisitos para Execução Local
+---
 
-Antes de rodar a esteira de avaliação e detecção de regressões localmente, configure o ambiente:
+## Próximos passos na jornada de IA da Pathbit Academy
 
-1. **Python 3.10 ou superior:**
-   - Verifique com `python3 --version`. Se necessário, instale:
-     - **macOS:** `brew install python` ou `pyenv install 3.12`
-     - **Linux (Ubuntu/Debian):** `sudo apt update && sudo apt install -y python3 python3-venv python3-pip`
-     - **Windows:** `winget install Python.Python.3.12`
-   - Crie e ative um ambiente virtual dedicado:
-     ```bash
-     # macOS e Linux
-     python3 -m venv .venv
-     source .venv/bin/activate
+Dominar a avaliação e os gates de regressão garante a previsibilidade de modelos pontuais de resposta. O passo seguinte na maturidade de inteligência artificial envolve conceder autonomia ao modelo para decidir quais ações tomar no mundo real, orquestrando ferramentas corporativas e navegando em árvores dinâmicas de decisão.
 
-     # Windows (PowerShell)
-     python -m venv .venv
-     .venv\Scripts\Activate.ps1
-     ```
-   - Instale as bibliotecas necessárias:
-     ```bash
-     pip install --upgrade pip
-     pip install -r requirements.txt
-     ```
+No [Artigo 0007 (Agentes e Tool Calling)](https://github.com/pathbit/pathbit-academy-ai/blob/master/0007_agentes_tool_calling/article/ARTICLE.md), exploramos como desenhar agentes inteligentes com planners constrangidos, guardrails de segurança determinísticos e recuperação contextual, mantendo o controle total sobre efeitos colaterais e custos de execução.
 
-2. **Modelos Abertos sem Necessidade de API Key:**
-   - Todo o pipeline roda localmente com modelos abertos (`Qwen/Qwen2.5-0.5B-Instruct`, `google/flan-t5-small` e embeddings MiniLM).
-   - Não é necessário cadastrar cartão ou criar chaves em provedores externos.
-
-3. **Execução Local:**
-   - Execute o runner de avaliação no terminal ou lance o notebook:
-     ```bash
-     # Executar a esteira completa
-     python src/evals_runner.py --limit 3
-
-     # Ou abrir o launcher interativo
-     python src/main.py
-     ```
-
-## Próximos passos
-
-Se você quiser endurecer ainda mais essa esteira:
-
-1. aumente o número de categorias e criticidades no CSV;
-2. adicione candidatos novos na registry;
-3. decida se o gate deve olhar o conjunto inteiro ou apenas o candidato vencedor;
-4. reaplique a mesma estrutura para comparar prompt, modelo e RAG no mesmo pipeline.
-
-É nesse ponto que Evals deixa de ser discurso sobre qualidade e vira critério de decisão técnica.
+---
 
 ## Referências
 
-- [Hugging Face - Qwen 0.5B Instruct](https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct)
-- [Hugging Face - FLAN-T5](https://huggingface.co/google/flan-t5-small)
-- [Sentence Transformers - Multilingual MiniLM](https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2)
+- [Zheng, Lianmin et al.: Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena (NeurIPS 2023)](https://arxiv.org/abs/2306.05685)
+- [Es, Shahul et al.: Ragas (Automated Evaluation of Retrieval Augmented Generation)](https://arxiv.org/abs/2309.15217)
+- [Ribeiro, Marco Tulio et al.: Beyond Accuracy (Behavioral Testing of NLP Models with CheckList - ACL 2020)](https://arxiv.org/abs/2005.04118)
+- [Lin, Chin-Yew: ROUGE (A Package for Automatic Evaluation of Summaries)](https://aclanthology.org/W04-1013/)
+- [Documentação oficial da biblioteca Hugging Face Evaluate](https://huggingface.co/docs/evaluate)
+
+---
+
+Repositório oficial no GitHub no endereço https://github.com/pathbit/pathbit-academy-ai no módulo 0006_llm_evals_regressao.
+
+#InteligenciaArtificial #LLMEvals #TestesDeRegressao #QA #DevOps #Python #EngenhariaDeSoftware #PathbitAcademy

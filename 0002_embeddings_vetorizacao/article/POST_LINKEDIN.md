@@ -1,29 +1,20 @@
-Se você quer construir aplicações com IA que realmente entendam o seu negócio, pare de focar apenas no prompt: a verdadeira inteligência começa nos Embeddings.
+Modelos de linguagem não entendem texto. Eles processam matrizes, tensores e geometria vetorial.
 
-Modelos de linguagem não leem palavras como humanos; eles processam vetores. Embeddings são a ponte que traduz conceitos humanos em representações numéricas densas em um espaço multidimensional.
+A chave que transforma palavras humanas em números computáveis é o embedding vetorial. Longe de ser apenas um recurso de busca melhorada, ele é a espinha dorsal de qualquer sistema moderno de busca semântica, desduplicação e recuperação para RAG.
 
-Quando duas frases possuem significado semelhante, seus vetores apontam para direções próximas — mesmo que não compartilhem uma única palavra em comum.
+No módulo 0002 da Pathbit Academy, desmontamos a matemática da vetorização de texto e mostramos como projetar sentenças em espaços multidimensionais.
 
-🧠 Na prática, por que isso transforma a sua arquitetura?
+Analisamos o funcionamento sob o capô:
+- A decomposição da sequência em subtokens e a atenção contextual do Transformer.
+- A consolidação do vetor da sentença via pooling e a normalização L2.
+- A geometria da similaridade de cosseno, que avalia o ângulo entre vetores e não o tamanho do texto.
+- O perigo invisível de modelos de embeddings: usar modelos exclusivamente treinados em inglês para avaliar textos em português inverte completamente a classificação de similaridade.
 
-1. Busca Semântica vs. Busca por Palavra-Chave:
-Uma busca tradicional por "problema na fatura" ignora uma mensagem que diz "meu boleto veio errado". Com embeddings e cálculo de similaridade de cosseno, o sistema conecta ambas instantaneamente porque o significado está preservado no vetor.
+Também comparamos as principais opções abertas e proprietárias em uma matriz objetiva de latência, dimensões e custos de infraestrutura, além de demonstrar casos reais de triagem de suporte e classificação com classificadores lineares sobre vetores.
 
-2. A Base Inegociável do RAG (Retrieval-Augmented Generation):
-Antes de alimentar o LLM com contexto relevante, você precisa encontrar esse contexto em milissegundos. Se a camada de vetorização falhar, o melhor LLM do mundo vai responder sobre o documento errado.
+O laboratório completo em Python, com cálculos práticos, notebook interativo e visualizações em alta resolução, está disponível no nosso repositório open-source.
 
-3. Classificação e Clusterização com Custo Quase Zero:
-Em vez de gastar inferência de modelos gigantes para rotular tickets ou agrupar reclamações, você pode gerar embeddings de modelos abertos leves e rodar algoritmos clássicos como K-Means ou regressão logística em milissegundos.
+Repositório no GitHub: https://github.com/pathbit/pathbit-academy-ai
+Módulo: 0002_embeddings_vetorizacao
 
-📊 O que você encontra no módulo 0002 do Pathbit Academy AI:
-- A matemática intuitiva por trás da similaridade por cosseno e produto escalar.
-- Como escolher dimensões e entender o compromisso entre latência e precisão.
-- Notebook interativo rodando 100% local ou no Google Colab com Sentence-Transformers (`paraphrase-multilingual-MiniLM-L12-v2`).
-- Visualização gráfica de clusters e projeções de embeddings em 2D/3D.
-
-Código aberto, sem necessidade de chaves pagas para rodar os exemplos locais.
-
-🔗 Repositório oficial: https://github.com/pathbit/pathbit-academy-ai
-📖 Módulo: 0002_embeddings_vetorizacao
-
-#InteligenciaArtificial #Embeddings #MachineLearning #Vetorizacao #DataScience #Python #PathbitAcademy
+#InteligenciaArtificial #Embeddings #BuscaSemantica #Vetorizacao #Python #SentenceBERT #EngenhariaDeSoftware #PathbitAcademy
