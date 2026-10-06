@@ -80,3 +80,19 @@ Por que gerar 40 tokens sequenciais se o sistema precisa apenas de uma decisão 
 
 > A separação moderna: decisões em System 1 (< 40ms) e redação rica em System 2.
 
+**Slide 8**
+[layout: cta]
+[eyebrow: O que este módulo entrega]
+[gallery: ../assets/02.png, ../assets/03.png, ../assets/06.png]
+
+Saída Estruturada + Modelos System 1
+
+Do prompt otimista à garantia formal via Grammar-Guided Sampling, com benchmarks empíricos em modelos locais.
+
+- 100% de conformidade de schema sem quebra de parse
+- Desacoplamento com Pydantic e JSON Schema estrito
+- Avaliação empírica de decisores System 1 vs autoregressão
+
+> github.com/pathbit/pathbit-academy-ai
+
+

@@ -99,7 +99,38 @@ python src/main.py
 
 ---
 
+### Artefatos gerados
+
+Ao executar o laboratório, você terá:
+
+- `data/structured_resultados.csv` - linha a linha de cada chamada medida (parse, validação de schema, assertividade semântica, latência e tokens)
+- `data/structured_resumo.csv` - consolidação por nível de contrato (Livre, JSON, Schema)
+- `data/structured_resumo_modelo.csv` - consolidação individual por modelo e modo
+- `data/system_one_comparativo.json` - métricas e latências do decisor System 1 (Single Forward Pass)
+- `data/structured_relatorio.md` - relatório técnico pronto para leitura
+- `data/structured_comparativo.png` - gráfico comparativo de conformidade e latência
+- `assets/evidence_notebook.png` - comprovação visual de execução do notebook interativo
+
+---
+
+### Versão para LinkedIn
+
+- `article/ARTICLE_LINKEDIN.md` - artigo para LinkedIn Pulse com análise aprofundada.
+- `article/POST_LINKEDIN.md` - post conciso pronto para publicar no feed do LinkedIn.
+
+---
+
+### Links úteis
+
+- Artigo completo: [ARTICLE.md](./article/ARTICLE.md)
+- Repositório: [pathbit-academy-ai](https://github.com/pathbit/pathbit-academy-ai)
+- Artigo anterior: [0008 - LLMs Locais com Ollama](https://github.com/pathbit/pathbit-academy-ai/blob/master/0008_llms_locais_ollama/article/ARTICLE.md)
+- Próximo artigo: [0010 - MCP Local](https://github.com/pathbit/pathbit-academy-ai/blob/master/0010_mcp_local/article/ARTICLE.md)
+
+---
+
 ### Licença e Créditos
 
 Desenvolvido com dedicação pela equipe de engenharia da **[Pathbit](https://pathbit.com)**.
 Código e artigos distribuídos sob a licença MIT.
+

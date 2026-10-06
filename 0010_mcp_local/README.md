@@ -96,7 +96,38 @@ python src/main.py
 
 ---
 
+### Artefatos gerados
+
+Ao executar o laboratório, você terá:
+
+- `data/catalogo_tools.json` - catálogo de ferramentas descobertas dinamicamente em runtime via `session.list_tools()`
+- `data/mcp_latencia_protocolo.json` - medição isolada de 50 chamadas de transporte stdio (p50 de 0.99 ms)
+- `data/mcp_resultados.csv` - trilha de auditoria forense linha a linha de cada decisão agêntica
+- `data/mcp_resumo.csv` - consolidação de conformidade, acerto de ferramenta e latência por modelo
+- `data/mcp_relatorio.md` - relatório técnico executivo consolidado
+- `data/mcp_comparativo.png` - gráfico comparativo de latência do planner vs overhead do protocolo MCP
+- `assets/evidence_notebook.png` - comprovação visual de execução do notebook interativo
+
+---
+
+### Versão para LinkedIn
+
+- `article/ARTICLE_LINKEDIN.md` - artigo para LinkedIn Pulse com análise aprofundada.
+- `article/POST_LINKEDIN.md` - post conciso pronto para publicar no feed do LinkedIn.
+
+---
+
+### Links úteis
+
+- Artigo completo: [ARTICLE.md](./article/ARTICLE.md)
+- Repositório: [pathbit-academy-ai](https://github.com/pathbit/pathbit-academy-ai)
+- Artigo anterior 1: [0008 - LLMs Locais com Ollama](https://github.com/pathbit/pathbit-academy-ai/blob/master/0008_llms_locais_ollama/article/ARTICLE.md)
+- Artigo anterior 2: [0009 - Saída Estruturada](https://github.com/pathbit/pathbit-academy-ai/blob/master/0009_saida_estruturada/article/ARTICLE.md)
+
+---
+
 ### Licença e Créditos
 
 Desenvolvido com dedicação pela equipe de engenharia da **[Pathbit](https://pathbit.com)**.
 Código e artigos distribuídos sob a licença MIT.
+

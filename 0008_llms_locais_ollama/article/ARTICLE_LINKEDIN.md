@@ -21,6 +21,7 @@ Rodar local não é só economizar: a latência de rede vira loopback, o custo p
 O laboratório entrega evidência completa: CSV linha a linha, gráfico comparativo e relatório markdown gerados em um comando.
 
 Artigo completo, código, notebook e artefatos medidos:
-👉 github.com/pathbit/pathbit-academy-ai
+👉 https://github.com/pathbit/pathbit-academy-ai/tree/master/0008_llms_locais_ollama
+
 
 #InteligenciaArtificial #LLM #Ollama #Docker #OpenSource

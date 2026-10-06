@@ -48,11 +48,11 @@ A pergunta do usuário é processada pelo Ollama com schema rígido (artigo 0009
 [layout: split]
 [eyebrow: Desempenho medido]
 [image: ../assets/04.png]
-[caption: 50 chamadas de protocolo: p50 de 1.15 ms vs 1.000 ms do modelo.]
+[caption: 50 chamadas de protocolo: p50 de 0.99 ms vs 1.700 ms do modelo.]
 
-Overhead do protocolo é inferior a 0.2%
+Overhead do protocolo é inferior a 0.25%
 
-Medimos 50 chamadas de protocolo isoladas: mediana de 1.15 ms. Comparado ao tempo de geração do modelo, o custo de adotar MCP é imperceptível.
+Medimos 50 chamadas de protocolo isoladas: mediana de 0.99 ms. Comparado ao tempo de geração do modelo, o custo de adotar MCP é imperceptível.
 
 > Padronização com MCP não compromete a performance da sua arquitetura agêntica.
 
@@ -67,3 +67,19 @@ Auditoria forense e menor privilégio
 Cada decisão agêntica, argumentos validados e tempos de execução são gravados em log estruturado. Em ambientes corporativos, auditoria é pré-requisito de deploy.
 
 > Governança transforma autonomia probabilística em sistema confiável para produção.
+
+**Slide 7**
+[layout: cta]
+[eyebrow: O que este módulo entrega]
+[gallery: ../assets/02.png, ../assets/03.png, ../assets/05.png]
+
+Trilogia Completa de IA Local Fechada
+
+Servidor MCP em Python padrão, transporte stdio sem portas de rede, integração com Ollama e auditoria linha a linha.
+
+- Protocolo MCP com overhead inferior a 1 ms
+- Catálogo dinâmico com list_tools() e schemas Pydantic
+- Evidência completa em CSV, JSON e relatório markdown
+
+> github.com/pathbit/pathbit-academy-ai
+

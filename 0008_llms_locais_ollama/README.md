@@ -147,3 +147,6 @@ Ao executar o laboratório, você terá:
 - Artigo completo: [ARTICLE.md](./article/ARTICLE.md)
 - Repositório: [pathbit-academy-ai](https://github.com/pathbit/pathbit-academy-ai)
 - Artigo anterior: [0007 - Agentes e Tool Calling](https://github.com/pathbit/pathbit-academy-ai/blob/master/0007_agentes_tool_calling/article/ARTICLE.md)
+- Próximo artigo: [0009 - Saída Estruturada](https://github.com/pathbit/pathbit-academy-ai/blob/master/0009_saida_estruturada/article/ARTICLE.md)
+- Conclusão da trilogia: [0010 - MCP Local](https://github.com/pathbit/pathbit-academy-ai/blob/master/0010_mcp_local/article/ARTICLE.md)
+
