@@ -1,111 +1,109 @@
 modelo,tarefa,modo,tentativa,parse_ok,schema_ok,semantico_ok,total_ms,tokens,resposta,recuperado,falha
-qwen2.5:0.5b,planner,livre,2,False,False,False,26099.6,410,"Para ajudar o cliente a obter a segunda via da fatura deste mês, considere a seguir as opções sugeridas abaixo:
+qwen2.5:0.5b,planner,livre,2,False,False,False,2682.0,128,"Para a solução da segunda via da fatura do cliente, vamos considerar a necessidade de um software que possa:
 
-1. Filtros de Faturas: Se o cliente não tiver a",False,True
-qwen2.5:0.5b,planner,json,2,True,False,False,680.2,39,"{ ""status"": ""success"", ""message"": ""Cliente pediu segunda via da fatura. Aconselho a consultar o banco de dados para saber a confiança atual."" }",False,True
-qwen2.5:0.5b,planner,schema,1,True,True,True,320.0,23,"{ ""tool"": ""buscar_politica"", ""confianca"": 0.9 }",,False
-qwen2.5:0.5b,extracao,livre,2,False,False,False,976.8,58,"O produto extraído e o prazo da frase fornecida são:
-
-Produto: Televisor
-Prazo: 10 dias
-
-Esta frase está relatando que o comprador está devolvendo um televisor ",False,True
-qwen2.5:0.5b,extracao,json,2,True,False,False,403.1,19,"{ ""produto"": ""televisor"", ""prazo"": ""10 dias"" }",False,True
-qwen2.5:0.5b,extracao,schema,1,True,True,True,620.3,20,"{ ""produto"": ""televisor"", ""prazo_dias"": 10 }",,False
-qwen2.5:0.5b,roteamento,livre,2,False,False,False,14503.5,349,A mensagem do cliente 'meu app esta com erro 500 desde ontem' sugere que há um problema de serviço ou de aplicação que está causando o erro 500. Para classifica,False,True
-qwen2.5:0.5b,roteamento,json,2,True,False,False,2087.4,69,"{ ""status"": ""500"", ""cause"": ""500 Internal Server Error"", ""cause_detail"": ""Erro ao conectar ao servidor"", ""resolution"": ""Ocorrência de erro de servidor"", ""urgenc",False,True
-qwen2.5:0.5b,roteamento,schema,1,True,True,False,564.5,25,"{ ""rota"": ""resposta_direta"", ""urgencia"": ""media"" }",,False
-qwen2.5:0.5b,planner,livre,2,False,False,False,15541.0,206,"Como um assistente de inteligência artificial, não tenho acesso à data atual e informações específicas sobre a fatura do cliente, então não posso fornecer uma c",False,True
-qwen2.5:0.5b,planner,json,2,True,False,False,870.5,19,"{ ""tool"": ""faturar"", ""confidence"": 0.98 }",False,True
-qwen2.5:0.5b,planner,schema,1,True,True,True,808.1,23,"{ ""tool"": ""buscar_politica"", ""confianca"": 0.9 }",,False
-qwen2.5:0.5b,extracao,livre,2,False,False,False,2692.9,68,"Desculpe, mas eu não posso extrair ou processar informações pessoais como produto e prazo devido à minha capacidade de manipulação de dados e manipular informaç",False,True
-qwen2.5:0.5b,extracao,json,2,True,False,False,1345.7,3,{},False,True
-qwen2.5:0.5b,extracao,schema,1,True,True,True,391.2,20,"{ ""produto"": ""televisor"", ""prazo_dias"": 10 }",,False
-qwen2.5:0.5b,roteamento,livre,2,False,False,False,11489.8,454,"A mensagem do cliente ""meu app esta com erro 500 desde ontem"" sugere que há um problema no seu aplicativo, o que pode ser causado por vários fatores, tais como:",False,True
-qwen2.5:0.5b,roteamento,json,2,True,False,False,799.4,43,"{ ""erro"": 500, ""mensagem"": ""Meu app está com um erro de 500 desde ontem."", ""urgência"": ""verificar o status do app"" }",False,True
-qwen2.5:0.5b,roteamento,schema,1,True,True,False,466.6,25,"{ ""rota"": ""resposta_direta"", ""urgencia"": ""media"" }",,False
-qwen2.5:1.5b,planner,livre,2,False,False,False,20548.2,224,"Para obter a segunda via da fatura do mês atual, você pode usar as ferramentas de gerenciamento de contas ou gerenciamento de clientes da sua empresa. 
-
-A confi",False,True
-qwen2.5:1.5b,planner,json,2,True,False,False,2095.9,15,"{
+1. Gerar e enviar a segunda via da fatura ao clien",False,True
+qwen2.5:0.5b,planner,json,2,True,False,False,403.2,18,"{ ""tool"": ""Outlook"", ""confidence"": 0.98 }",False,True
+qwen2.5:0.5b,planner,schema,1,True,True,True,182.5,23,"{ ""tool"": ""buscar_politica"", ""confianca"": 0.9 }",,False
+qwen2.5:0.5b,extracao,livre,2,False,False,False,977.0,117,"A frase ""quero devolver um televisor comprado ha 10 dias"" sugere que você está precisando de um dispositivo televisor e quer retornar ele em 10 dias. Sem mais i",False,True
+qwen2.5:0.5b,extracao,json,2,True,False,False,612.3,19,"{ ""produto"": ""televisor"", ""prazo"": ""10 dias"" }",False,True
+qwen2.5:0.5b,extracao,schema,1,True,True,True,177.2,20,"{ ""produto"": ""televisor"", ""prazo_dias"": 10 }",,False
+qwen2.5:0.5b,roteamento,livre,2,False,False,False,2013.3,128,A mensagem do cliente que você está fornecendo é uma sugestão de resolução para um problema que o seu app está enfrentando. Para classificar essa mensagem de fo,False,True
+qwen2.5:0.5b,roteamento,json,2,True,False,False,421.4,33,"{ ""erro_code"": 500, ""description"": ""Application error occurred on on 2023-04-01"" }",False,True
+qwen2.5:0.5b,roteamento,schema,1,True,True,False,210.3,25,"{ ""rota"": ""resposta_direta"", ""urgencia"": ""media"" }",,False
+qwen2.5:0.5b,planner,livre,2,False,False,False,1761.2,66,"Como assistente, estou aqui para ajudar e fornecer informações. Se você está procurando pela segunda via da fatura do seu mês, eu posso ajudar a fazer isso. Por",False,True
+qwen2.5:0.5b,planner,json,2,True,False,False,1008.1,33,"{ ""status"": ""success"", ""message"": ""O cliente quer a segunda via da fatura deste mes. O que você gostaria de fazer?"" }",False,True
+qwen2.5:0.5b,planner,schema,1,True,True,True,450.2,23,"{ ""tool"": ""buscar_politica"", ""confianca"": 0.9 }",,False
+qwen2.5:0.5b,extracao,livre,2,False,False,False,836.5,68,"A frase fornecida parece ter sido alterada para ser mais clara. A original diz: ""Quero devolver um televisor comprado há 10 dias"". Se você quiser, pode me dizer",False,True
+qwen2.5:0.5b,extracao,json,2,True,False,False,318.3,18,"{""produto"": ""televisor"", ""prazo"": ""10 dias""}",False,True
+qwen2.5:0.5b,extracao,schema,1,True,True,True,194.4,20,"{ ""produto"": ""televisor"", ""prazo_dias"": 10 }",,False
+qwen2.5:0.5b,roteamento,livre,2,False,False,False,1913.7,128,"A mensagem que o cliente está recebendo ""meu app esta com erro 500 desde ontem"" sugere que há um problema ou problema de aplicativo ou serviço que o cliente est",False,True
+qwen2.5:0.5b,roteamento,json,2,True,False,False,800.8,66,"{ ""erro_code"": 500, ""last_error_message"": ""Erro 500 desde ontem"", ""urgency_level"": 3, ""solution"": ""Aqui está a descrição da mensagem do cliente e a identificaçã",False,True
+qwen2.5:0.5b,roteamento,schema,1,True,True,False,401.7,25,"{ ""rota"": ""resposta_direta"", ""urgencia"": ""media"" }",,False
+qwen2.5:1.5b,planner,livre,2,False,False,False,8694.7,128,"Para fornecer a segunda via da fatura do mês, é necessário escolher uma solução adequada para a sua necessidade, que pode variar dependendo da plataforma ou sis",False,True
+qwen2.5:1.5b,planner,json,2,True,False,False,685.3,15,"{
   ""tool_confidence"": 0.95
 }",False,True
-qwen2.5:1.5b,planner,schema,1,True,True,False,1243.7,25,"{ ""tool"": ""resposta_direta"", ""confianca"": 0.95 }",,False
-qwen2.5:1.5b,extracao,livre,2,False,False,False,672.3,14,"Produto: televisor
+qwen2.5:1.5b,planner,schema,1,True,True,False,376.9,25,"{ ""tool"": ""resposta_direta"", ""confianca"": 0.95 }",,False
+qwen2.5:1.5b,extracao,livre,2,False,False,False,364.3,14,"Produto: Televisor
 Prazo: 10 dias",False,True
-qwen2.5:1.5b,extracao,json,2,True,False,False,4494.6,21,"{
-  ""produto"": ""televisor"",
-  ""prazo"": ""10 dias""
-}",False,True
-qwen2.5:1.5b,extracao,schema,1,True,True,True,1495.7,22,"{
-  ""produto"": ""televisor"",
-  ""prazo_dias"": 10
-}",,False
-qwen2.5:1.5b,roteamento,livre,2,False,False,False,10793.5,170,"Para classificar a mensagem do cliente ""meu app está com erro 500 desde ontem"", podemos considerar as seguintes informações:
-
-- **Rota**: A mensagem não fornece",False,True
-qwen2.5:1.5b,roteamento,json,2,True,False,False,780.9,19,"{
-  ""rota"": ""backend"",
-  ""urgencia"": ""alto""
-}",False,True
-qwen2.5:1.5b,roteamento,schema,1,True,True,False,6474.0,22,"{ ""rota"": ""resposta_direta"", ""urgencia"": ""alta"" }",,False
-qwen2.5:1.5b,planner,livre,2,False,False,False,3478.4,108,"Para resolver este pedido, seria útil saber mais detalhes sobre o tipo de fatura que você quer que seja a segunda via. Pode ser uma fatura de serviços postais, ",False,True
-qwen2.5:1.5b,planner,json,2,True,False,False,612.4,11,"{ ""tool"": ""Fatura Digital"" }",False,True
-qwen2.5:1.5b,planner,schema,1,True,True,False,595.8,25,"{ ""tool"": ""resposta_direta"", ""confianca"": 0.95 }",,False
-qwen2.5:1.5b,extracao,livre,2,False,False,False,5608.2,36,"Na frase ""quero devolver um televisor comprado ha 10 dias"", o produto é um televisor e o prazo é de 10 dias.",False,True
-qwen2.5:1.5b,extracao,json,2,True,False,False,175273.9,22,"{
+qwen2.5:1.5b,extracao,json,2,True,False,False,504.6,22,"{
   ""Produto"": ""televisor"",
   ""Prazo"": ""10 dias""
 }",False,True
-qwen2.5:1.5b,extracao,schema,1,True,True,True,8059.5,22,"{
+qwen2.5:1.5b,extracao,schema,1,True,True,True,272.7,22,"{
   ""produto"": ""televisor"",
   ""prazo_dias"": 10
 }",,False
-qwen2.5:1.5b,roteamento,livre,2,False,False,False,36157.9,300,"Para classificar a mensagem do cliente ""meu app está com erro 500 desde ontem"", podemos considerar a seguinte classificação:
+qwen2.5:1.5b,roteamento,livre,2,False,False,False,2616.2,128,"Classificação: Erro de servidor (500) 
 
-Rota: Erro de Serviço ou Sistema (",False,True
-qwen2.5:1.5b,roteamento,json,2,True,False,False,2208.9,17,"{ ""rota"": ""backend"", ""urgencia"": ""alta"" }",False,True
-qwen2.5:1.5b,roteamento,schema,1,True,True,False,713.2,22,"{ ""rota"": ""resposta_direta"", ""urgencia"": ""alta"" }",,False
-llama3.2:1b,planner,livre,2,False,False,False,118695.2,752,"Para criar uma fatura virtual e solicitar a segunda via do documento, você pode utilizar o Excel, que é uma ferramenta de software de planilhas popular e fácil ",False,True
-llama3.2:1b,planner,json,2,True,False,False,10191.5,115,"{
-""informação"": ""O cliente pediu a segunda via da fatura do mês. Eu escolhi o Xero para gerenciar a fatura, pois é uma ferramenta de contabilidade fácil de usar",False,True
-llama3.2:1b,planner,schema,1,True,True,False,12197.4,23,"{ ""tool"": ""criar_ticket"", ""confianca"": 0.5 }",,False
-llama3.2:1b,extracao,livre,2,False,False,False,3159.2,15,Quero devolver um televisor comprado há 10 dias.,False,True
-llama3.2:1b,extracao,json,2,True,False,False,2937.8,2,{},False,True
-llama3.2:1b,extracao,schema,1,True,True,True,1233.8,19,"{""produto"": ""televisor"", ""prazo_dias"": 10}",,False
-llama3.2:1b,roteamento,livre,2,False,False,False,13490.9,170,"A classificação da mensagem do cliente é:
+Rota: Erro geral na aplicação
 
-* Título: Erro 500
-* Conteúdo: Mensagem informando sobre um erro em um aplicativo, especificando o dispositivo e a da",False,True
-llama3.2:1b,roteamento,json,2,True,False,False,7855.1,35,"{
-  "" mensagem"": ""meu app esta com erro 500 desde ontem"",
-  ""tipo"": ""erro"",
-  ""urgencia"": 2
+Urgência: Muito Urgente
+
+Explicação: O cliente está informando que há um erro de servidor",False,True
+qwen2.5:1.5b,roteamento,json,2,True,False,False,1206.0,31,"{
+  ""classificação"": ""URGENTE"",
+  ""rota"": ""/gerenciamento/applications/erro/500""
 }",False,True
-llama3.2:1b,roteamento,schema,1,True,True,False,2916.3,25,"{
+qwen2.5:1.5b,roteamento,schema,1,True,True,False,413.6,22,"{ ""rota"": ""resposta_direta"", ""urgencia"": ""alta"" }",,False
+qwen2.5:1.5b,planner,livre,2,False,False,False,4530.1,128,"Para obter a segunda via da fatura de um cliente, você pode considerar a seguinte ferramenta e sua confiança:
+
+1. **Faturamento Online**: Utilizar uma ferrament",False,True
+qwen2.5:1.5b,planner,json,2,True,False,False,737.4,11,"{ ""tool"": ""Fatura Digital"" }",False,True
+qwen2.5:1.5b,planner,schema,1,True,True,False,980.6,25,"{ ""tool"": ""resposta_direta"", ""confianca"": 0.95 }",,False
+qwen2.5:1.5b,extracao,livre,2,False,False,False,959.0,35,"A frase ""quero devolver um televisor comprado ha 10 dias"" contém:
+
+Produto: televisor
+Prazo: 10 dias",False,True
+qwen2.5:1.5b,extracao,json,2,True,False,False,452.8,21,"{
+  ""produto"": ""televisor"",
+  ""prazo"": ""10 dias""
+}",False,True
+qwen2.5:1.5b,extracao,schema,1,True,True,True,305.8,22,"{
+  ""produto"": ""televisor"",
+  ""prazo_dias"": 10
+}",,False
+qwen2.5:1.5b,roteamento,livre,2,False,False,False,491.6,24,"A rota para essa mensagem é ""Erro 500"". A urgência é ""Urgente"".",False,True
+qwen2.5:1.5b,roteamento,json,2,True,False,False,547.0,18,"{ ""rota"": ""backend"", ""urgencia"": ""alarme"" }",False,True
+qwen2.5:1.5b,roteamento,schema,1,True,True,False,442.2,22,"{ ""rota"": ""resposta_direta"", ""urgencia"": ""alta"" }",,False
+llama3.2:1b,planner,livre,2,False,False,False,11225.3,128,"Para criar uma fatura digital, o cliente pode utilizar a plataforma do Serviço Nacional de Informações e Acesso à Economia (Sinaec) ou do Banco Central do Brasi",False,True
+llama3.2:1b,planner,json,2,False,False,False,1642.4,128,"{
+
+""Olá! Entendi que você deseja saber mais sobre como solicitar a segunda via da fatura deste mês. Como assistente, vou fornecer informações gerais e direciona",False,True
+llama3.2:1b,planner,schema,1,True,True,False,525.8,23,"{ ""tool"": ""criar_ticket"", ""confianca"": 0.5 }",,False
+llama3.2:1b,extracao,livre,2,False,False,False,1442.4,17,O produto é um televisor e o prazo é de 10 dias.,False,True
+llama3.2:1b,extracao,json,2,False,False,False,6027.9,128,"{""Peso"": ""1.8 kg"", ""Volume"": ""33,8 litros"", ""Material"": ""Plástico"", ""Cor"": ""Preto"", ""Ano de fabricação"": ""2020"", ""Padrão de qualidade"": ""1000"", ""Modelo de TV"": ",False,True
+llama3.2:1b,extracao,schema,1,True,True,True,433.4,19,"{""produto"": ""televisor"", ""prazo_dias"": 10}",,False
+llama3.2:1b,roteamento,livre,2,False,False,False,3909.4,60,"A mensagem do cliente pode ser classificada como:
+
+- Necessita atenção imediata: ""meu app esta com erro 500 desde ontem""
+
+- Necessita orientação e ajuda para re",False,True
+llama3.2:1b,roteamento,json,2,True,False,False,2940.9,105,"{
+  "" mensagem"": ""meu app esta com erro 500 desde ontem"",
+  ""rota"": {
+    ""id"": ""app-2023-01-01T14-30-00"",
+    ""descricao"": ""início do problema"",
+    ""tempo_de_",False,True
+llama3.2:1b,roteamento,schema,1,True,True,False,293.4,25,"{
   ""rota"": ""criar_ticket"",
   ""urgencia"": ""media""
 }",,False
-llama3.2:1b,planner,livre,2,False,False,False,38993.8,514,"Para solicitar a segunda via da fatura do último mês, recomendo utilizar o **Google Forms**. Aqui estão os motivos:
+llama3.2:1b,planner,livre,2,False,False,False,5275.6,128,"Para solicitar a segunda via da fatura do seu caso, você pode utilizar o Google Docs ou o Microsoft Excel. Esses são dois dos aplicativos mais usados para criaç",False,True
+llama3.2:1b,planner,json,2,True,False,False,113.7,2,{},False,True
+llama3.2:1b,planner,schema,1,True,True,False,441.4,23,"{ ""tool"": ""criar_ticket"", ""confianca"": 0.5 }",,False
+llama3.2:1b,extracao,livre,2,False,False,False,661.9,16,O produto é um televisor e o prazo é 10 dias.,False,True
+llama3.2:1b,extracao,json,2,True,False,False,368.5,2,{},False,True
+llama3.2:1b,extracao,schema,1,True,True,True,684.3,19,"{""produto"": ""televisor"", ""prazo_dias"": 10}",,False
+llama3.2:1b,roteamento,livre,2,False,False,False,3784.6,128,"A rota de mensagem do cliente é:
 
-**Motivo 1: Facilidade de uso**
-
-* O Google",False,True
-llama3.2:1b,planner,json,2,True,False,False,2589.5,110,"{ 
-
-    ""nome"": ""Email"",
-    ""data"": ""15/03/2023"",
-    ""valor"": 20.00,
-    ""valor_total"": 20.00,
-    ""total"": 20.00,
-    ""mensagem"": ""Não posso fornecer a segun",False,True
-llama3.2:1b,planner,schema,1,True,True,False,803.5,23,"{ ""tool"": ""criar_ticket"", ""confianca"": 0.5 }",,False
-llama3.2:1b,extracao,livre,2,False,False,False,621.4,16,O produto é um televisor e o prazo é 10 dias.,False,True
-llama3.2:1b,extracao,json,2,True,False,False,1634.7,17,"{""Produto"": ""televisor"", ""Prazo"": ""10 dias""}",False,True
-llama3.2:1b,extracao,schema,1,True,True,True,543.0,19,"{""produto"": ""televisor"", ""prazo_dias"": 10}",,False
-llama3.2:1b,roteamento,livre,2,False,False,False,10717.2,175,A mensagem do cliente é uma solicitação de atenção urgente para um problema técnico específico (erro 500) que o app está apresentando desde ontem. Para classifi,False,True
-llama3.2:1b,roteamento,json,2,True,False,False,2424.3,44,"{""classificação"": ""Urgente"", ""mensagem"": ""meu app esta com erro 500 desde ontem"", ""rota"": ""produção"", ""urgencia"": ""muito alta""}",False,True
-llama3.2:1b,roteamento,schema,1,True,True,False,830.7,25,"{
+- ""Meu app está com erro 500 desde ontem"" (indicando que o problema ocorreu recentemente)
+- ""Informe a rota"" (indicando que o ",False,True
+llama3.2:1b,roteamento,json,2,True,False,False,2058.5,35,"{
+"" mensagem"": ""meu app esta com erro 500 desde ontem"",
+"" classe"": ""ERRO"",
+""urgência"": ""MIDIA"" }",False,True
+llama3.2:1b,roteamento,schema,1,True,True,False,422.2,25,"{
   ""rota"": ""criar_ticket"",
   ""urgencia"": ""media""
 }",,False

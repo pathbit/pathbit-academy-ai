@@ -422,6 +422,117 @@ TEMPLATES["0009_saida_estruturada/assets/05.png"] = f"""{BASE_HEAD}
 </body>
 </html>"""
 
+# ---------------------------------------------------------------------------
+# FIGURA 6: A Fronteira dos Modelos "System 1" (Jev vs Laya / Kev)
+# ---------------------------------------------------------------------------
+TEMPLATES["0009_saida_estruturada/assets/06.png"] = f"""{BASE_HEAD}
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="brand-pill"><span class="dot"></span> Artigo 0009 • Saída Estruturada</div>
+            <div class="title">Modelos "System 1" vs LLMs Generativos</div>
+            <div class="subtitle">A evolução da saída estruturada: da autoregressão com Grammar Mask às decisões diretas em passada única (~30 ms)</div>
+        </div>
+        <div class="figure-badge">Figura 6</div>
+    </div>
+
+    <div class="main-content" style="gap: 24px; align-items: stretch;">
+        <!-- Coluna Esquerda: System 2 Autoregressivo -->
+        <div class="card" style="flex: 1; border-color: rgba(59, 130, 246, 0.4); background: rgba(59, 130, 246, 0.04); justify-content: space-between;">
+            <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                    <span class="badge" style="background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4);">System 2 • Autoregressivo</span>
+                    <span style="font-size: 12px; color: #94a3b8; font-weight: 600;">LLM + Grammar Masking</span>
+                </div>
+                <div style="font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 8px;">Geração Token a Token</div>
+                <div style="font-size: 13.5px; color: #94a3b8; line-height: 1.6; margin-bottom: 16px;">
+                    Modelos como <strong>Qwen 2.5</strong> e <strong>Llama 3.2</strong> no Ollama geram cada token sequencialmente sob um autômato FSM que mascara logits proibidos.
+                </div>
+
+                <div class="code-block" style="font-size: 12px; margin-bottom: 14px;">
+// Pipeline Autoregressivo (N passadas):
+Prompt ──> Decoder ──> Logits Mask FSM ──> Token t+1
+Repetido ~40 vezes para compor o JSON:
+{{"tool": "buscar_politica", "confianca": 0.94}}
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+                    <div style="background: rgba(15, 23, 42, 0.6); padding: 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08);">
+                        <div style="font-size: 11px; color: #94a3b8;">Latência Típica (CPU)</div>
+                        <div style="font-size: 18px; font-weight: 800; color: #f87171;">1.500 ~ 2.200 ms</div>
+                    </div>
+                    <div style="background: rgba(15, 23, 42, 0.6); padding: 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08);">
+                        <div style="font-size: 11px; color: #94a3b8;">Passadas na Rede</div>
+                        <div style="font-size: 18px; font-weight: 800; color: #fbbf24;">N Tokens (O(N))</div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div style="padding: 12px; background: rgba(59, 130, 246, 0.1); border-radius: 8px; font-size: 12.5px; color: #93c5fd; line-height: 1.5;">
+                <strong>Melhor uso:</strong> Payloads que exigem texto livre, síntese semântica rica ou campos de linguagem natural no interior do JSON.
+            </div>
+        </div>
+
+        <!-- Coluna Direita: System 1 Modelos de Decisão -->
+        <div class="card" style="flex: 1; border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.04); justify-content: space-between;">
+            <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                    <span class="badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);">System 1 • Não Generativo</span>
+                    <span style="font-size: 12px; color: #94a3b8; font-weight: 600;">Laya (Open-Source) / Jev</span>
+                </div>
+                <div style="font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 8px;">Decisão Direta em Passada Única</div>
+                <div style="font-size: 13.5px; color: #94a3b8; line-height: 1.6; margin-bottom: 16px;">
+                    Modelos como <strong>Laya</strong> (Convai, Apache 2.0) e <strong>Jev</strong> (TypeSafe AI) eliminam a geração de texto. Um encoder avalia cabeças tipadas em <strong>O(1)</strong>.
+                </div>
+
+                <div class="code-block" style="font-size: 12px; margin-bottom: 14px;">
+// Pipeline System 1 (1 única passada direta):
+Estado ──> Encoder (ModernBERT) ──> Cabeça de Decisão
+Retorno Direto de Primitivas Tipadas:
+- Choice: "buscar_politica" (Softmax Calibrado: 0.94)
+- Score:  Risco = 0.12 (Escala Contínua)
+- Bool:   PrecisaTool = True (Portão Binário)
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;">
+                    <div style="background: rgba(15, 23, 42, 0.6); padding: 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08);">
+                        <div style="font-size: 11px; color: #94a3b8;">Latência Típica (CPU)</div>
+                        <div style="font-size: 18px; font-weight: 800; color: #34d399;">15 ~ 40 ms</div>
+                    </div>
+                    <div style="background: rgba(15, 23, 42, 0.6); padding: 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08);">
+                        <div style="font-size: 11px; color: #94a3b8;">Redução de Latência</div>
+                        <div style="font-size: 18px; font-weight: 800; color: #a78bfa;">> 50x Mais Rápido</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; font-size: 12.5px; color: #a7f3d0; line-height: 1.5;">
+                <strong>Melhor uso:</strong> Roteamento de agentes, seleção de ferramentas (MCP), guardrails de segurança e triagem de alta frequência.
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra Inferior: Arquitetura Híbrida -->
+    <div style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 12px; padding: 16px 24px; margin-top: -8px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <span style="font-size: 14px; font-weight: 800; color: #f1f5f9;">O Padrão Híbrido Corporativo:</span>
+                <span style="font-size: 13px; color: #94a3b8; margin-left: 8px;">
+                    Use <strong>System 1 (Laya / Jev)</strong> no portão de entrada para rotear em &lt; 40 ms ➔ Invoque <strong>System 2 (Ollama + Schema)</strong> somente quando síntese de texto for indispensável.
+                </span>
+            </div>
+            <span class="badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.4); white-space: nowrap;">Arquitetura Ideal</span>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div><strong>Pathbit Academy AI</strong> • Engenharia de IA para Produção</div>
+        <div>Figura 6: Separação de responsabilidades: decisões puras em System 1 e redação criativa em System 2</div>
+    </div>
+</body>
+</html>"""
+
 
 def render_all() -> None:
     print(f"Renderizando {len(TEMPLATES)} ativos visuais para 0009_saida_estruturada...")
@@ -429,6 +540,7 @@ def render_all() -> None:
         output_png = ROOT / rel_path
         render_html_to_png(html, output_png)
     print("Ativos do artigo 0009 renderizados com sucesso!")
+
 
 
 if __name__ == "__main__":

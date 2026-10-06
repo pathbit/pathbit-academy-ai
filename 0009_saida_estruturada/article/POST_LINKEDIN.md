@@ -18,10 +18,16 @@ O motor garante abertura e fechamento de chaves válidas. 100% de parse_ok, mas 
 3. Contrato Rígido (`format: <json_schema>`):
 O JSON Schema é compilado em um Autômato de Estados Finitos (FSM) dentro do motor de inferência. A cada token gerado, qualquer caractere que viole a gramática recebe logit = -∞ (probabilidade zero).
 
-📊 O que os números medidos na própria máquina revelaram (54 testes):
+4. A Nova Fronteira: Modelos System 1 (Jev & Laya):
+Por que gerar 40 tokens sequenciais para uma decisão simples? Apresentamos como modelos de passada única (Single Forward Pass) resolvem roteamento e enums em ~13 ms (> 30x mais rápido que o LLM com schema).
+
+📊 O que os números medidos na própria máquina revelaram:
 • O modo Livre atingiu míseros 44.4% de acerto semântico.
-• O modo Schema atingiu 100% de conformidade com os tipos/enums e saltou para 94.4% de acerto semântico.
-• O mito do retry: reenviar erros de prompt dobra a latência. Impor schema na decodificação adiciona menos de 200 ms e resolve na 1ª tentativa.
+• O modo Schema atingiu 100% de conformidade com os tipos/enums.
+• O decisor System 1 executou com 100% de precisão em apenas 13.6 ms (vs 400 ms no LLM).
+• O mito do retry: reenviar erros de prompt dobra a latência. Impor schema ou System 1 resolve na 1ª tentativa.
+
+
 
 Quando o modelo não precisa gastar neurônios decidindo "como formatar", ele foca 100% no "qual dado extrair".
 

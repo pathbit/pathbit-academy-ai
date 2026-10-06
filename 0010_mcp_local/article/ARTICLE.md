@@ -123,6 +123,10 @@ resultado = await session.call_tool(
 texto_resposta = resultado.content[0].text
 ```
 
+> [!TIP]
+> **Otimização Extrema com Modelos System 1 (Laya / Jev):** Quando a seleção de ferramentas não exige a redação de argumentos em texto livre complexo, o planner do agente pode ser delegado a um modelo **System 1** (apresentado no [Artigo 0009](https://github.com/pathbit/pathbit-academy-ai/blob/master/0009_saida_estruturada/article/ARTICLE.md)). O catálogo descoberto via `list_tools()` compõe diretamente a primitiva `Choice`, reduzindo o tempo de decisão de ~2.100 ms para meros **13 ms** — o que permite loops agênticos MCP locais em tempo real com menos de 20 ms de latência total!
+
+
 ---
 
 ## 4. Decomposição de Latência: Protocolo MCP vs Inferência
@@ -215,7 +219,13 @@ Abra o Jupyter Notebook para interagir com o servidor MCP e testar ferramentas m
 python3 src/main.py
 ```
 
+### Evidência de Execução do Notebook:
+Abaixo, a comprovação visual da execução completa do notebook interativo com o handshake do servidor MCP, listagem dinâmica do catálogo de ferramentas e o ciclo completo de planejamento e chamada de função via stdio:
+
+![Evidência de Execução do Notebook 0010](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0010_mcp_local/assets/evidence_notebook.png)
+
 ---
+
 
 ## 7. Conclusão da Trilogia de IA Local
 

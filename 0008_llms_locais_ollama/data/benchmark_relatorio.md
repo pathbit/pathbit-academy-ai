@@ -8,9 +8,9 @@
 
 | modelo | ttft_medio_ms | total_medio_ms | tokens_por_segundo | tokens_gerados_medios | chamadas |
 | --- | --- | --- | --- | --- | --- |
-| qwen2.5:0.5b | 558.8 | 5490.0 | 79.8 | 59.5 | 12 |
-| llama3.2:1b | 256.0 | 4333.5 | 25.3 | 33.3 | 12 |
-| qwen2.5:1.5b | 1022.4 | 6334.1 | 19.4 | 21.2 | 12 |
+| qwen2.5:0.5b | 54.6 | 451.5 | 213.0 | 73.7 | 12 |
+| qwen2.5:1.5b | 52.8 | 303.4 | 129.8 | 21.2 | 12 |
+| llama3.2:1b | 95.9 | 582.2 | 81.6 | 33.3 | 12 |
 
 ## Saida estruturada: JSON valido e tool correta
 
@@ -24,7 +24,7 @@
 
 | modelo_embedding | dimensao | documentos | latencia_batch_docs_ms | latencia_batch_queries_ms | taxa_acerto_top1 |
 | --- | --- | --- | --- | --- | --- |
-| nomic-embed-text | 768 | 8 | 6212.0 | 59.8 | 1.0 |
+| nomic-embed-text | 768 | 8 | 254.0 | 33.3 | 1.0 |
 
 ## Interpretacao
 

@@ -88,9 +88,9 @@ Prova que um stack de IA roda 100% local: Ollama em Docker com volume persistent
 
 ### [0009 - Saída Estruturada](./0009_saida_estruturada/)
 
-**Ano:** 2026 | **Categoria:** Inteligência Artificial / Saída Estruturada e Grammar-Guided Sampling
+**Ano:** 2026 | **Categoria:** Inteligência Artificial / Saída Estruturada, Grammar-Guided Sampling e Modelos System 1
 
-Transforma a inferência probabilística em contratos de dados determinísticos e tipados. Compara o prompt livre contra `format: "json"` e `format: <json_schema>` com Grammar-Guided Sampling (máscara de logits), provando 100% de conformidade com schemas e desmontando o mito do retry por prompt.
+Transforma a inferência probabilística em contratos de dados determinísticos e tipados. Compara o prompt livre contra `format: "json"` e `format: <json_schema>` com Grammar-Guided Sampling (máscara de logits), desmonta o mito do retry e apresenta a fronteira dos **Modelos System 1** (Jev da TypeSafe AI vs Laya da Convai / Kev em open-source) para decisões diretas e tipadas em passada única de ~13 ms (> 30x mais velozes).
 
 [📖 Ler Artigo](./0009_saida_estruturada/) | [🔧 Executar Localmente](./0009_saida_estruturada/README.md)
 
@@ -100,9 +100,10 @@ Transforma a inferência probabilística em contratos de dados determinísticos 
 
 **Ano:** 2026 | **Categoria:** Inteligência Artificial / Model Context Protocol (MCP) e Agentes Locais
 
-Implementa o Model Context Protocol (MCP) da Anthropic 100% offline via transporte `stdio`. Demonstra descoberta dinâmica de ferramentas com `list_tools()`, loop agêntico completo com planner local sob schema rígido e medição forense de overhead de protocolo (~1.15 ms), unindo governança e segurança por isolamento de processo.
+Implementa o Model Context Protocol (MCP) da Anthropic 100% offline via transporte `stdio`. Demonstra descoberta dinâmica de ferramentas com `list_tools()`, loop agêntico completo com planner local sob schema rígido e medição forense de overhead de protocolo (~0.99 ms), unindo governança e segurança por isolamento de processo.
 
 [📖 Ler Artigo](./0010_mcp_local/) | [🔧 Executar Localmente](./0010_mcp_local/README.md)
+
 
 ---
 

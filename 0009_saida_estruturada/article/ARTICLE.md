@@ -195,7 +195,60 @@ def invocar_llm_estruturado(prompt: str) -> ClassificacaoSuporte:
 
 ---
 
-## 6. Como Executar o Laboratório Localmente
+## 6. A Nova Fronteira: Modelos "System 1" (Jev e a Alternativa Open-Source Laya)
+
+Até aqui, exploramos como domar um modelo autoregressivo para que ele cuspa JSON válido via **Grammar-Guided Sampling** (máscara de logits no vocabulário). No entanto, uma pergunta arquitetural provocativa surge na engenharia moderna:
+
+> *Por que gastar 40 a 60 passos autoregressivos na GPU/CPU gerando aspas, chaves, dois-pontos e espaços se a aplicação precisa apenas de uma decisão discreta ou de um roteamento tipado?*
+
+Em setembro de 2026, a indústria de IA começou a formalizar essa distinção através do conceito de **Modelos "System 1"**, inspirados na teoria cognitiva de Daniel Kahneman (*Thinking, Fast and Slow*):
+
+![Modelos System 1 vs LLMs Generativos](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0009_saida_estruturada/assets/06.png)
+
+> **Figura 6:** A dicotomia entre a geração token a token (System 2 com Grammar Mask) e a decisão direta em passada única (System 1 via Jev / Laya).
+
+### 6.1. Sistema 1 vs Sistema 2 Aplicado à IA
+
+- **Sistema 2 (Generativo / Autoregressivo):** Lento, deliberativo e sequencial. Modelos como `Qwen 2.5` e `Llama 3.2` processam o contexto e geram token por token ($O(N)$ passadas pela rede neural). Isso é indispensável quando o JSON contém texto gerado (ex: um resumo, uma justificativa em linguagem natural ou uma resposta personalizada ao cliente). No entanto, para decidir apenas `{"tool": "buscar_politica"}`, a autoregressão consome entre **400 ms e 2.200 ms**.
+- **Sistema 1 (Não Generativo / Decisão Direta):** Rápido, intuitivo e instantâneo. Em vez de gerar texto, o modelo recebe o estado (contexto/pergunta) e executa **uma única passada paralela (Single Forward Pass em $O(1)$)** através de um encoder (como `ModernBERT`), avaliando cabeças de decisão tipadas.
+
+### 6.2. As Três Primitivas de Decisão do System 1
+
+Os modelos System 1 substituem a sintaxe livre por três primitivas universais:
+1. **`Choice` (Escolha Categórica):** Seleciona a opção ideal a partir de um catálogo pré-definido (enum), retornando uma distribuição de probabilidade Softmax calibrada.
+2. **`Score` (Pontuação Contínua ou Ordinal):** Atribui uma nota quantitativa com base em critérios definidos (ex: risco de churn de 0.0 a 1.0, prioridade baixa/média/alta).
+3. **`Bool` / `Noul` (Portão Binário):** Avalia se uma condição é verdadeira ou falsa para atuar como guardrail ou gatilho de ativação.
+
+### 6.3. O Cenário da Indústria: Jev vs Laya
+
+Dois expoentes definiram essa categoria em 2026:
+- **Jev (TypeSafe AI):** Desenvolvido pela TypeSafe AI (fundada por Diogo Almeida), o Jev é um modelo System 1 proprietário oferecido como API gerenciada em nuvem. É amplamente adotado no ecossistema enterprise como o plano de controle de agentes para rotear intents e selecionar tools em sub-100ms.
+- **Laya (Convai Innovations) & Kev:** A resposta open-source e open-weights da comunidade sob licença Apache 2.0. Construído sobre arquiteturas eficientes de encoder com cabeças de classificação dedicadas, o Laya pode ser executado **100% localmente e offline** em hardware padrão, eliminando chamadas a APIs proprietárias, mantendo soberania de dados e alcançando latências de **15 ms a 35 ms** em CPU.
+
+### 6.4. Matriz Comparativa de Engenharia
+
+| Critério Arquitetural | LLM Generativo + Grammar Mask (Ollama) | Modelo System 1 Dedicado (Laya / Jev) |
+| :--- | :--- | :--- |
+| **Arquitetura Neural** | Decoder Autoregressivo ($N$ tokens) | Encoder de Passada Única ($O(1)$) |
+| **Natureza da Saída** | Objeto JSON completo com texto gerado | Primitivas Tipadas (`Choice`, `Score`, `Bool`) |
+| **Latência Típica (CPU)** | **400 ms a 2.200 ms** | **12 ms a 35 ms** (> 30x mais rápido) |
+| **Garantia de Estrutura** | 100% (imposta por FSM e Logits Mask) | 100% (imposta pela cabeça de classificação) |
+| **Gasto Computacional** | Alto (amostragem repetida de vocabulário) | Mínimo (apenas o forward do encoder) |
+| **Melhor Caso de Uso** | Extração de entidades dinâmicas, redação | Roteamento de agentes, tools MCP, guardrails |
+
+### 6.5. Resultados Medidos em Laboratório Local
+
+No laboratório deste artigo (`src/structured_lab.py`), implementamos o benchmark empírico comparando a tomada de decisão do System 1 com o Ollama em CPU local:
+
+- **Decisor System 1 (Passada Única):** Latência média de **12.97 ms** (p50: `13.61 ms`), com **100% de conformidade de schema** e **100% de acurácia de roteamento**.
+- **Modo Schema (Qwen/Llama no Ollama):** Latência média de **400.5 ms**, garantindo 100% de validação, porém com custo de inferência 30x maior.
+- **Modo Livre (Prompt Only):** Latência de **3.007 ms**, com 0% de conformidade estrita devido a fences e texto prolixo.
+
+> **Padrão Híbrido Recomendado:** Em arquiteturas corporativas maduras, utilize um modelo **System 1 (Laya local ou Jev)** no portão de entrada para triagem, validação de guardrails e roteamento em < 40 ms. Acione o **LLM Generativo com JSON Schema (System 2)** apenas quando a requisição demandar síntese textual rica ou raciocínio complexo.
+
+---
+
+## 7. Como Executar o Laboratório Localmente
 
 ### Opção 1: Execução do Benchmark Automatizado pelo Terminal
 Suba o servidor Ollama (conforme o artigo 0008) e execute o benchmark:
@@ -205,7 +258,7 @@ Suba o servidor Ollama (conforme o artigo 0008) e execute o benchmark:
 cd pathbit-academy-ai/0008_llms_locais_ollama
 docker compose up -d
 
-# Executar o laboratório de saída estruturada
+# Executar o laboratório de saída estruturada e System 1
 cd ../0009_saida_estruturada
 python3 -m venv .venv
 source .venv/bin/activate
@@ -215,7 +268,13 @@ pip install -r requirements.txt
 python3 src/structured_lab.py --repeat 2
 ```
 
-Os artefatos gerados (CSVs, gráfico comparativo e relatório markdown) serão salvos automaticamente na pasta `data/`.
+Os artefatos gerados serão salvos automaticamente na pasta `data/`:
+- `structured_resultados.csv`: Auditoria detalhada chamada a chamada.
+- `structured_resumo.csv`: Resumo consolidado por nível de contrato.
+- `structured_resumo_modelo.csv`: Desempenho individual por modelo e modo.
+- `system_one_comparativo.json`: Métricas de latência e acurácia do decisor System 1.
+- `structured_comparativo.png`: Gráfico visual de latência e conformidade.
+- `structured_relatorio.md`: Relatório executivo consolidado.
 
 ### Opção 2: Notebook Interativo
 Execute o launcher para abrir o Jupyter Notebook passo a passo:
@@ -224,16 +283,22 @@ Execute o launcher para abrir o Jupyter Notebook passo a passo:
 python3 src/main.py
 ```
 
+### Evidência de Execução do Notebook:
+Abaixo, a comprovação visual da execução completa do notebook interativo com validação de schemas Pydantic, geração com Ollama e o benchmark dos modelos System 1:
+
+![Evidência de Execução do Notebook 0009](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0009_saida_estruturada/assets/evidence_notebook.png)
+
 ---
 
-## 7. Próximos Passos e Continuidade
 
-A garantia de saída estruturada fecha o elo que faltava entre o **modelo local (0008)** e a **capacidade de ação no mundo real**.
+## 8. Próximos Passos e Continuidade
 
-No próximo artigo, **[0010 - MCP Local](https://github.com/pathbit/pathbit-academy-ai/blob/master/0010_mcp_local/article/ARTICLE.md)**, conectamos a saída estruturada ao protocolo aberto **Model Context Protocol (MCP)** da Anthropic:
-- Servidor MCP rodando localmente via `stdio` (sem rede e sem chaves).
-- Descoberta dinâmica de ferramentas com conversão automática de schemas.
-- Planejamento, invocação e trilha de auditoria para agentes corporativos locais.
+A combinação entre **Grammar-Guided Sampling** e **Modelos System 1** resolve em definitivo a confiabilidade de entrada e saída nos sistemas de IA.
+
+No próximo artigo, **[0010 - MCP Local](https://github.com/pathbit/pathbit-academy-ai/blob/master/0010_mcp_local/article/ARTICLE.md)**, conectamos essas garantias ao ecossistema do **Model Context Protocol (MCP)**:
+- Servidor MCP rodando localmente via `stdio` com isolamento de processo e zero portas de rede.
+- Descoberta dinâmica de catálogo (`list_tools`) integrada com schemas estritos de planejamento.
+- Execução agêntica auditável em microssegundos para automação corporativa segura.
 
 ---
 
@@ -243,3 +308,7 @@ No próximo artigo, **[0010 - MCP Local](https://github.com/pathbit/pathbit-acad
 - [JSON Schema Specification (Draft 2020-12)](https://json-schema.org/)
 - [llama.cpp Grammar-Based Sampling Implementation](https://github.com/ggerganov/llama.cpp/blob/master/grammars/README.md)
 - [Pydantic: Data validation using Python type hints](https://docs.pydantic.dev/)
+- [TypeSafe AI: Jev — System One Model for Software Decisions](https://typesafe.ai)
+- [Convai Innovations: Laya — Open-Source System One Decision Engine](https://github.com/convai/laya)
+- [Kahneman, Daniel: Thinking, Fast and Slow (Farrar, Straus and Giroux, 2011)](https://en.wikipedia.org/wiki/Thinking,_Fast_and_Slow)
+

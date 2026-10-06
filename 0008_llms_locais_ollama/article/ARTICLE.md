@@ -254,16 +254,19 @@ Antes de executar o laboratório de LLMs locais, configure o ambiente:
      python src/main.py
      ```
 
+### Evidência de Execução do Notebook:
+Abaixo, a comprovação visual da execução completa do notebook interativo com saídas, tabelas e métricas capturadas em tempo real:
+
+![Evidência de Execução do Notebook 0008](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0008_llms_locais_ollama/assets/evidence_notebook.png)
+
 ## Próximos passos
 
 Se você quiser endurecer essa base sem sair do stack gratuito:
 
-1. adicione ao benchmark o modelo que você pretende usar em produção local e compare com os três daqui;
-2. conecte o modelo vencedor no agente do artigo 0007 e rode os evals do artigo 0006 em cima dele;
-3. experimente `keep_alive` e quantização diferente para medir o impacto no TTFT;
-4. em máquinas com GPU, repetir o benchmark e comparar a vazão com esta execução em CPU.
+1. **Garantir contratos de saída:** Avance para o **[Artigo 0009 - Saída Estruturada](https://github.com/pathbit/pathbit-academy-ai/blob/master/0009_saida_estruturada/article/ARTICLE.md)** para transformar as respostas do Ollama em JSON tipado determinístico via Grammar-Guided Sampling (FSM/Logits Mask) e explorar a fronteira de modelos de decisão rápida System 1 (Laya / Jev).
+2. **Conectar ferramentas reais:** No **[Artigo 0010 - MCP Local](https://github.com/pathbit/pathbit-academy-ai/blob/master/0010_mcp_local/article/ARTICLE.md)**, integre o modelo local ao Model Context Protocol (MCP) da Anthropic via pipes `stdio`, permitindo que o modelo planeje e invoque ações no sistema operacional com menos de 1 ms de overhead de protocolo.
+3. **Otimizações locais:** Experimente `keep_alive` e quantizações diferentes (Q4_K_M vs Q8_0) para medir o impacto no TTFT e vazão em CPU e GPU.
 
-A diferença entre prometer "IA local" e provar "IA local" está nesse detalhe: modelo pequeno, servidor próprio e números medidos na sua máquina.
 
 ## Referências
 

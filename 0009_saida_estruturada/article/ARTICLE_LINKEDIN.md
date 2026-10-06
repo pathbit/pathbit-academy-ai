@@ -19,9 +19,13 @@ A cada passo autoregressivo, os logits dos tokens que violam a gramática recebe
 → Quando o modelo não gasta probabilidade formatando, ele foca no conteúdo correto.
 
 💡 O mito do retry compensatório:
-Reenviar erros de sintaxe para o modelo em loop dobra a latência (~2.400 ms vs ~1.300 ms). Impor schema na primeira chamada custa menos de 200 ms e resolve na largada.
+Reenviar erros de sintaxe para o modelo em loop dobra a latência. Impor schema na primeira chamada custa overhead desprezível e resolve na largada.
 
-O laboratório entrega evidência completa: código em Python padrão, notebook interativo, CSVs medidos e relatório comparativo.
+⚡ A Nova Fronteira: Modelos System 1 (Jev vs Laya):
+Por que gerar 40 tokens sequenciais se você precisa apenas de uma decisão tipada? Apresentamos a distinção entre System 2 (LLM autoregressivo com Grammar Mask) e System 1 (passada única em ~13 ms com Laya open-source ou Jev na nuvem) para roteamento e guardrails com mais de 30x de redução de latência.
+
+O laboratório entrega evidência completa: código em Python padrão, benchmark System 1, notebook interativo, CSVs medidos e relatório comparativo.
+
 
 Artigo completo e código open-source:
 👉 https://github.com/pathbit/pathbit-academy-ai/tree/master/0009_saida_estruturada

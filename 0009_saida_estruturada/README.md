@@ -16,9 +16,11 @@ Este módulo prova como transformar a inferência probabilística de LLMs locais
 - **Modo Livre (Prompt Only):** apenas pede JSON no prompt textual (fragilidade de parse e fences).
 - **Modo JSON (`format: "json"`):** garante sintaxe parseável, mas campos e enums permanecem desgovernados.
 - **Modo Schema (`format: <json_schema>`):** impõe contrato estrito via decodificação constrangida (Grammar-Guided Sampling com máscara de logits).
-- **Análise de Latência e Retry:** demonstra empiricamente por que retries via prompt duplicam o tempo de resposta, enquanto o schema estrito resolve na primeira chamada.
+- **A Fronteira System 1 (Jev vs Laya / Kev):** demonstra por que modelos de decisão direta em passada única (Single Forward Pass) superam a autoregressão em tarefas de roteamento e guardrails com latências em torno de 13 ms (> 30x mais velozes).
+- **Análise de Latência e Retry:** demonstra empiricamente por que retries via prompt duplicam o tempo de resposta, enquanto contratos formais resolvem na largada.
 
 Tudo testado e medido em CPU local via Ollama.
+
 
 ---
 

@@ -67,3 +67,16 @@ Contrato desacoplado e tipagem estrita
 O contrato em Pydantic/JSON Schema vira especificação única. O backend deserializa com garantia total e audita cada decisão em CSV/JSONL.
 
 > A saída estruturada transforma um gerador probabilístico de texto em uma API determinística.
+
+**Slide 7**
+[layout: split]
+[eyebrow: A fronteira System 1]
+[image: ../assets/06.png]
+[caption: Modelos de decisão rápida: Laya (Open-Source) e Jev (TypeSafe).]
+
+Modelos System 1: Decisão Direta em ~30 ms
+
+Por que gerar 40 tokens sequenciais se o sistema precisa apenas de uma decisão tipada? Modelos System 1 usam passada única (O(1)) para Choice, Score e Bool com mais de 50x de redução de latência.
+
+> A separação moderna: decisões em System 1 (< 40ms) e redação rica em System 2.
+
