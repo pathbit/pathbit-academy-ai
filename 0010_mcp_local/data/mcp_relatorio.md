@@ -2,15 +2,15 @@
 
 - Servidor de modelos: Ollama `0.35.1` | Servidor de tools: MCP stdio `pathbit-suporte`
 - Tools descobertas: buscar_politica, criar_ticket, resumo_atendimento
-- Custo do pulo de protocolo (call_tool): p50 0.99 ms / p95 1.53 ms em 50 chamadas
+- Custo do pulo de protocolo (call_tool): p50 0.82 ms / p95 1.06 ms em 50 chamadas
 
 ## Planner por modelo
 
 | modelo       |   plano_valido_pct |   tool_certa_pct |   argumento_ok_pct |   plan_medio_ms |   mcp_medio_ms |   tokens_medios |
 |:-------------|-------------------:|-----------------:|-------------------:|----------------:|---------------:|----------------:|
-| llama3.2:1b  |                100 |             83.3 |                100 |          2117.6 |            4.7 |            51.8 |
-| qwen2.5:1.5b |                100 |             50   |                100 |          2213.3 |            6.5 |            32.5 |
-| qwen2.5:0.5b |                100 |             33.3 |                100 |          1764.4 |            7.5 |            27.7 |
+| llama3.2:1b  |                100 |             83.3 |                100 |          1703.2 |            2.7 |            51.8 |
+| qwen2.5:1.5b |                100 |             50   |                100 |           773.6 |            2.4 |            32.5 |
+| qwen2.5:0.5b |                100 |             33.3 |                100 |           887.5 |            2.4 |            31.5 |
 
 ## Leitura
 
