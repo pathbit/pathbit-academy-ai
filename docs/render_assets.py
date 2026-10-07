@@ -2110,6 +2110,8 @@ def render_html_to_png(html_content: str, output_png: Path) -> None:
 
 
 def render_all() -> None:
+    from measured_assets import overrides
+    TEMPLATES.update({key: value for key, value in overrides().items() if key in TEMPLATES})
     print(f"Iniciando renderização de {len(TEMPLATES)} ativos visuais com Google Chrome headless...")
     for rel_path, html in TEMPLATES.items():
         output_png = ROOT / rel_path

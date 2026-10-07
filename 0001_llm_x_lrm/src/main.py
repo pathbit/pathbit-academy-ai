@@ -74,6 +74,9 @@ def verificar_api_key():
     """
     Verifica se a API Key do Groq está configurada.
     """
+    if os.getenv("LAB_PROVIDER") == "ollama":
+        print("✅ Baseline Ollama explícita; chamadas Groq não serão verificadas")
+        return True
     if not os.getenv("GROQ_API_KEY"):
         print("⚠️  GROQ_API_KEY não definida")
         print("Defina a variável de ambiente:")

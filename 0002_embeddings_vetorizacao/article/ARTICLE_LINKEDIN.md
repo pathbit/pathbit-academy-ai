@@ -1,6 +1,6 @@
 # Como embeddings e vetorização estruturam a representação matemática do texto em sistemas de IA
 
-Grande parte da intuição popular sobre inteligência artificial imagina que grandes modelos de linguagem operam diretamente sobre palavras, conceitos ou ideias abstratas. Nos bastidores da arquitetura de software, porém, processadores e aceleradores gráficos são incapazes de processar texto bruto. Computadores operam exclusivamente sobre matrizes, tensores e álgebra linear.
+Considere uma busca por “automóvel” em documentos que usam “carro”. Uma comparação literal pode deixar o documento de fora; um embedding permite comparar representações numéricas aprendidas dos dois textos. Computadores já processam texto como bytes e símbolos: embeddings acrescentam uma representação útil para medir relações semânticas.
 
 A tecnologia que torna possível a transição entre o vocabulário humano e o cálculo numérico é o embedding vetorial. Longe de ser apenas uma palavra da moda ou um detalhe secundário de bibliotecas de machine learning, a vetorização semântica constitui a espinha dorsal de qualquer arquitetura moderna de busca inteligente, classificação de documentos, desduplicação de registros e recuperação contextual em pipelines de RAG.
 
@@ -12,9 +12,9 @@ Compreender a matemática, a geometria e os limites práticos dos embeddings per
 
 Para compreender o salto geracional dos embeddings, vale revisar como a engenharia de software tradicional lidava com recuperação de informação.
 
-Durante décadas, a busca em bancos de dados dependeu de correspondência léxica direta baseada em palavras-chave, consultas booleanas com SQL ou algoritmos de relevância estatística como TF-IDF e BM25. Esses métodos avaliam a frequência exata dos termos em cada documento. Se um usuário pesquisa por automóvel e o documento corporativo utiliza a palavra carro ou veículo, o sistema léxico tradicional simplesmente falha em recuperar o registro, a menos que dicionários manuais de sinônimos tenham sido mantidos a custo de muito esforço humano.
+Busca léxica usa palavras e estatísticas de relevância, como TF-IDF e BM25. Sem expansão de consulta ou sinônimos, “automóvel” pode não recuperar um documento que só contém “carro”. Isso não torna busca léxica obsoleta: códigos, nomes próprios e identificadores exatos costumam se beneficiar dela. Busca híbrida combina esse sinal com embeddings.
 
-![Conceito de Embeddings](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/01.png)
+![Conceito de Embeddings](../assets/01.png)
 
 > Figura 1. Projeção de palavras e conceitos em um espaço matemático onde proximidade espacial reflete afinidade semântica.
 
@@ -28,7 +28,7 @@ A transformação de uma sequência textual em um vetor de números reais segue 
 
 Primeiramente, o texto de entrada é dividido em unidades menores chamadas subtokens por meio de tokenizadores estatísticos como WordPiece ou Byte-Pair Encoding. Cada subtoken é convertido em um identificador inteiro que aponta para uma tabela interna de pesos aprendidos durante o treinamento.
 
-![Processo de Vetorização](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/02.png)
+![Processo de Vetorização](../assets/02.png)
 
 > Figura 2. O pipeline de conversão de texto bruto em representação vetorial através das camadas do Transformer.
 
@@ -42,7 +42,7 @@ A estratégia de mean pooling, por exemplo, calcula a média aritmética de todo
 
 Uma vez que documentos e consultas são convertidos em vetores, a comparação entre textos deixa de ser uma comparação de strings e vira um cálculo trigonométrico em alta dimensionalidade.
 
-![Transformação Texto para Números](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/03.png)
+![Transformação Texto para Números](../assets/03.png)
 
 > Figura 3. Representação de sentenças transformadas em coordenadas vetoriais densas de dimensão fixa.
 
@@ -50,15 +50,15 @@ A métrica mais consolidada para avaliar a proximidade entre dois vetores é a s
 
 $$\text{Similaridade}(\mathbf{u}, \mathbf{v}) = \frac{\mathbf{u} \cdot \mathbf{v}}{\|\mathbf{u}\|_2 \|\mathbf{v}\|_2} = \frac{\sum_{i=1}^d u_i v_i}{\sqrt{\sum_{i=1}^d u_i^2} \sqrt{\sum_{i=1}^d v_i^2}}$$
 
-![Cálculo de Similaridade](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/04.png)
+![Cálculo de Similaridade](../assets/04.png)
 
 > Figura 4. Demonstração geométrica da similaridade de cosseno avaliando o ângulo entre vetores no plano.
 
 Quando os vetores são previamente normalizados pela norma euclidiana ($L_2 = 1$), a magnitude de cada vetor torna-se unitária. Isso gera uma vantagem prática imensa em engenharia de software: o cálculo do cosseno se reduz a um produto escalar simples, que pode ser executado em frações de milissegundo através de instruções SIMD no processador ou multiplicação de tensores em GPU.
 
-Um ponto crítico comprovado em laboratório diz respeito ao suporte linguístico do modelo. Ao calcular a similaridade entre sentenças em português com o modelo multilíngue `paraphrase-multilingual-MiniLM-L12-v2`, a frase "O cachorro está brincando no parque" alcança similaridade de 0.304 com "O animal de estimação está feliz", enquanto sua similaridade com "O carro está na garagem" cai para 0.046. 
+O suporte linguístico precisa ser validado com os textos reais. O notebook utiliza `paraphrase-multilingual-MiniLM-L12-v2` para exemplos em português e exibe os escores calculados durante a execução. Esses valores não são probabilidades de equivalência: dependem do par de frases, do modelo e do pré-processamento.
 
-No entanto, se a mesma comparação for executada com o modelo `all-MiniLM-L6-v2`, treinado exclusivamente em inglês, os escores invertem de forma desastrosa: o modelo aponta 0.517 de afinidade para a frase do carro e apenas 0.290 para o animal de estimação. Em projetos operando no Brasil, a adoção de pesos multilíngues é um requisito inegociável de arquitetura.
+O `all-MiniLM-L6-v2` é orientado a inglês e pode produzir rankings inadequados em português. Isso é motivo para testar um modelo multilíngue, não para afirmar que todo par de frases terá uma inversão específica ou que qualquer modelo multilíngue será melhor no seu domínio.
 
 ---
 
@@ -66,7 +66,7 @@ No entanto, se a mesma comparação for executada com o modelo `all-MiniLM-L6-v2
 
 A literatura de processamento de linguagem natural desenvolveu diferentes modalidades de representação para atender requisitos operacionais distintos.
 
-![Comparação entre os modelos](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/05.png)
+![Comparação entre os modelos](../assets/05.png)
 
 > Figura 5. Arquiteturas clássicas e modernas de geração de representações numéricas.
 
@@ -84,31 +84,31 @@ Por fim, os embeddings multimodais, exemplificados por arquiteturas como CLIP e 
 
 A aplicação de embeddings vai muito além da simples substituição do campo de busca de um portal.
 
-![Busca Semântica](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/06.png)
+![Busca Semântica](../assets/06.png)
 
 > Figura 6. Busca semântica mapeando termos coloquiais de usuários para documentação técnica de investimentos.
 
 Na busca semântica, o usuário pode digitar termos coloquiais como "como guardar dinheiro para render todo mês" e o sistema recupera com precisão artigos sobre "aplicação em CDB com liquidez diária e renda fixa", superando barreiras de vocabulário formal.
 
-![Sistema de Recomendação](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/07.png)
+![Sistema de Recomendação](../assets/07.png)
 
 > Figura 7. Mecanismos de recomendação de conteúdo baseados na distância entre perfis de consumo e catálogo de itens.
 
 Em motores de recomendação, o histórico de consumo de um profissional em materiais sobre data science e aprendizado de máquina posiciona seu perfil vetorial próximo a cursos práticos de bibliotecas analíticas, gerando sugestões contextuais sem necessidade de regras manuais exaustivas.
 
-![Classificação de Documentos](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/08.png)
+![Classificação de Documentos](../assets/08.png)
 
 > Figura 8. Agrupamento e roteamento de documentos por meio de proximidade espacial em clusters temáticos.
 
 Na triagem e classificação de chamados de atendimento, documentos similares formam agrupamentos densos. É importante notar um aprendizado prático de engenharia: comparar o texto diretamente contra descrições curtas de categorias pode induzir a erros de fronteira. A abordagem robusta consiste em treinar um classificador linear leve, como regressão logística, alimentado pelos embeddings de centenas de exemplos históricos já validados pela equipe humana.
 
-![Detecção de Duplicatas](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/09.png)
+![Detecção de Duplicatas](../assets/09.png)
 
 > Figura 9. Identificação de perguntas redundantes em bases de conhecimento aplicando limiares de corte angular.
 
-Na desduplicação de bases de suporte, perguntas redigidas de formas distintas, como "como redefinir minha senha" e "esqueci meu login e preciso resetar o acesso", geram pontuação de similaridade angular superior a 0.90, viabilizando a unificação automática de artigos redundantes.
+Na desduplicação, duas frases próximas podem expressar intenções diferentes: “esqueci a senha” não é necessariamente “esqueci o login”. Calibre o limiar em pares rotulados e revise falsos positivos antes de unificar registros; não existe um valor universal como 0,90 que prove equivalência.
 
-![RAG com Embeddings](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0002_embeddings_vetorizacao/assets/10.png)
+![RAG com Embeddings](../assets/10.png)
 
 > Figura 10. A recuperação vetorial alimentando o contexto do modelo gerativo em arquiteturas de RAG.
 
@@ -124,11 +124,11 @@ A tabela abaixo compila as principais opções de mercado, seus custos computaci
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
 | `paraphrase-multilingual-MiniLM-L12-v2` | 384 | 128 tokens | Multilíngue | Local (CPU) | Gratuito | Microsserviços ultrarrápidos e tarefas de baixa latência |
 | `multilingual-e5-base` | 768 | 512 tokens | Multilíngue | Local (CPU/GPU) | Gratuito | Equilíbrio perfeito entre precisão e custo em servidores próprios |
-| `nomic-embed-text-v1.5` | 768 | 8.192 tokens | Multilíngue | Local (Ollama) | Gratuito | Documentos extensos e RAG corporativo 100% offline |
+| `nomic-embed-text-v1.5` | 768 | Até 8.192 no modelo; confira o runtime | Inglês | Local (Ollama) | Gratuito | Documentos extensos e RAG corporativo 100% offline |
 | `text-embedding-3-small` | 1.536 | 8.191 tokens | Multilíngue | Cloud API | Pago | Protótipos rápidos sem gestão de servidores locais |
 | `text-embedding-3-large` | 3.072 | 8.191 tokens | Multilíngue | Cloud API | Pago | Casos de altíssima exigência em nuvem gerenciada |
 
-Para bases com até dez mil documentos, modelos compactos de 384 dimensões em CPU costumam ser mais do que suficientes, entregando tempos de resposta inferiores a dez milissegundos. Quando a base atinge centenas de milhares de trechos ou lida com terminologias técnicas complexas, modelos de 768 dimensões com índices vetoriais especializados representam a melhor arquitetura de produção.
+Escolha o modelo pelo desempenho em consultas rotuladas, idiomas, limite de entrada e orçamento de memória. Dimensionalidade não determina precisão por si só, e o número de documentos não justifica uma troca automática de 384 para 768 dimensões. Meça separadamente o tempo de gerar o vetor da consulta e o tempo de buscar no índice; nenhum limite de dez mil documentos garante resposta abaixo de dez milissegundos.
 
 ---
 

@@ -2,7 +2,7 @@
 
 Uma das encruzilhadas arquiteturais mais frequentes em projetos de inteligência artificial surge no momento de adaptar um modelo de fundação às particularidades de um negócio: devemos construir um pipeline de RAG ou realizar o fine-tuning dos pesos do modelo? A escolha inadequada entre essas duas abordagens costuma drenar meses de esforço de engenharia, queimar orçamentos elevados de GPU e entregar soluções instáveis em produção.
 
-O erro mais comum reside em tratar RAG e Fine-Tuning como técnicas concorrentes que disputam a mesma finalidade. Na realidade, tratam-se de instrumentos complementares desenhados para resolver dimensões ortogonais do aprendizado de máquina. Enquanto uma técnica foca na injeção dinâmica de fatos atualizados e auditáveis, a outra atua na internalização profunda de estilo, tom, gramática e especialização comportamental.
+RAG e fine-tuning não são alternativas mutuamente exclusivas. RAG recupera evidências no momento da consulta; fine-tuning altera parâmetros ou adaptadores para melhorar tarefas, formato e comportamento. A distinção “conhecimento versus comportamento” é uma heurística útil, não uma separação matemática: um ajuste também pode ensinar fatos, e um prompt com contexto também pode orientar estilo.
 
 Este artigo estabelece uma matriz objetiva de decisão de engenharia. Analisamos a mecânica fundamental de cada abordagem, decompomos os trade-offs de infraestrutura e custos operacionais, avaliamos os riscos de esquecimento catastrófico e exploramos a sinergia de arquiteturas híbridas onde RAG e Fine-Tuning operam em conjunto.
 
@@ -12,11 +12,11 @@ Este artigo estabelece uma matriz objetiva de decisão de engenharia. Analisamos
 
 Para tomar uma decisão técnica fundamentada, é necessário distinguir claramente a natureza do problema que se deseja solucionar.
 
-![Conceito RAG vs Fine-Tuning](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0004_rag_vs_finetuning/assets/01.png)
+![Conceito RAG vs Fine-Tuning](../assets/01.png)
 
 > Figura 1. A distinção fundamental entre recuperar informações dinâmicas em uma base externa e internalizar comportamento nos pesos do modelo.
 
-O RAG (Retrieval-Augmented Generation) atua como uma memória não paramétrica. O modelo base permanece completamente inalterado e congelado. No momento da requisição, um subsistema de busca recupera fragmentos de documentação em tempo real e os anexa ao contexto do prompt. É o caminho natural quando a prioridade é o acesso a dados voláteis, a garantia de rastreabilidade factual por meio de citações de fontes e a eliminação de alucinações sobre regras de negócio que mudam semanalmente.
+RAG mantém o gerador sem novo treinamento e recupera documentos para cada pergunta. É especialmente útil para dados que mudam e respostas que precisam apontar fontes. Isso facilita atualização e auditoria, mas não elimina alucinações: ainda é necessário avaliar recuperação, citações e fidelidade da resposta.
 
 O Fine-Tuning, por sua vez, atua sobre a memória paramétrica. O desenvolvedor submete os pesos neurais do modelo a um novo ciclo de treinamento supervisionado utilizando pares selecionados de entrada e saída. Esse processo ajusta os tensores internos para que o modelo aprenda novos padrões linguísticos, compreenda jargões ultracompactos de um setor regulado ou passe a emitir saídas em linguagens específicas sem necessitar de longas explicações no prompt.
 
@@ -28,7 +28,7 @@ Tratar Fine-Tuning como substituto de RAG para memorizar manuais corporativos é
 
 O pipeline de RAG destaca-se pela transparência operacional e pela velocidade de atualização.
 
-![Como RAG funciona](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0004_rag_vs_finetuning/assets/02.png)
+![Como RAG funciona](../assets/02.png)
 
 > Figura 2. O fluxo operacional do RAG, conectando ingestão, busca vetorial e geração condicionada.
 
@@ -40,15 +40,15 @@ Entre suas vantagens dominantes, destacam-se a rastreabilidade imediata, já que
 
 ## A mecânica do Fine-Tuning e suas variantes
 
-Quando a necessidade reside em modificar como o modelo raciocina ou responde, o ajuste fino dos pesos torna-se insubstituível.
+Quando prompts e exemplos não atingem o comportamento desejado de forma estável, fine-tuning é uma opção a avaliar, não a única solução. Compare antes com mudanças de dados, instrução e validação.
 
-![Como Fine-Tuning funciona](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0004_rag_vs_finetuning/assets/03.png)
+![Como Fine-Tuning funciona](../assets/03.png)
 
 > Figura 3. O ciclo de treinamento supervisionado e ajuste fino de tensores em modelos de linguagem.
 
 O objetivo do Fine-Tuning é a especialização estilística e sintática. O modelo é treinado para absorver uma identidade corporativa estrita, obedecer a restrições gramaticais rígidas de uma linguagem interna de programação ou executar classificações de altíssima precisão com pouquíssimos tokens de entrada.
 
-A evolução recente da área viabilizou o Fine-Tuning com Eficiência de Parâmetros (PEFT), amplamente dominado pela técnica LoRA (Low-Rank Adaptation) e sua variante quantizada QLoRA. Em vez de recalcular todos os bilhões de pesos da rede neural original, o LoRA congela o modelo base e acopla matrizes de decomposição de baixo posto nas camadas de atenção. O consumo de memória de GPU durante o treinamento cai mais de setenta por cento, tornando viável especializar modelos de ponta em estações de trabalho convencionais.
+PEFT reduz o número de parâmetros treináveis. LoRA congela pesos base e adiciona matrizes de baixo posto em módulos selecionados; QLoRA combina adaptadores com base quantizada. A economia de memória depende de modelo, otimização e precisão: não há redução universal de 70%, e o custo total de treino/inferência continua existindo.
 
 No entanto, o Fine-Tuning carrega riscos técnicos que exigem governança rigorosa. O principal deles é o esquecimento catastrófico (catastrophic forgetting), fenômeno no qual o modelo se especializa na nova tarefa, mas degrada sua capacidade de raciocínio geral, interpretação de texto e obediência a instruções amplas.
 
@@ -68,7 +68,7 @@ A tabela abaixo sintetiza os principais trade-offs operacionais entre as duas es
 | Requisitos de Hardware | Mínimos para treino, moderados na busca | Elevados, demanda GPUs para retreinamento |
 | Custo de Inferência | Maior devido ao volume de tokens de contexto | Menor por dispensar prompts longos |
 
-![Comparação RAG vs Fine-Tuning](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0004_rag_vs_finetuning/assets/04.png)
+![Comparação RAG vs Fine-Tuning](../assets/04.png)
 
 > Figura 4. Matriz comparativa entre a dinâmica de contexto externo do RAG e a especialização paramétrica do Fine-Tuning.
 
@@ -78,17 +78,17 @@ A tabela abaixo sintetiza os principais trade-offs operacionais entre as duas es
 
 A escolha entre uma abordagem ou outra deve ser norteada pela natureza dos requisitos funcionais do projeto.
 
-![Casos de uso RAG](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0004_rag_vs_finetuning/assets/05.png)
+![Casos de uso RAG](../assets/05.png)
 
 > Figura 5. Casos de uso dominantes para arquiteturas de RAG, onde atualização constante e rastreabilidade são prioritárias.
 
 O RAG é a escolha mandatória para bases de documentação técnica viva, centrais de atendimento ao consumidor com políticas comerciais sazonais, sistemas de conformidade jurídica que exigem prova documental de cada alegação e plataformas de suporte a colaboradores com histórico dinâmico de chamados.
 
-![Casos de uso Fine-Tuning](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0004_rag_vs_finetuning/assets/06.png)
+![Casos de uso Fine-Tuning](../assets/06.png)
 
 > Figura 6. Casos de uso onde o Fine-Tuning se destaca pela padronização de linguagem e especialização de formato.
 
-Por outro lado, o Fine-Tuning consolida-se como o caminho ideal para transformar um modelo generalista em um compilador de consultas SQL customizadas para dialetos proprietários, formatar relatórios médicos de acordo com normas estritas de anamnese hospitalar, replicar a persona comunicacional de uma marca com concisão absoluta ou compactar modelos gigantes em versões ultraleves de três bilhões de parâmetros capazes de rodar em dispositivos de borda.
+Por outro lado, o Fine-Tuning consolida-se como o caminho ideal para transformar um modelo generalista em um compilador de consultas SQL customizadas para dialetos proprietários, formatar relatórios médicos de acordo com normas estritas de anamnese hospitalar, replicar a persona comunicacional de uma marca com concisão absoluta ou adaptar um modelo menor a tarefas específicas. Reduzir tamanho por distilação, quantização ou pruning é outra técnica; fine-tuning sozinho não reduz a contagem de parâmetros.
 
 ---
 
@@ -96,7 +96,7 @@ Por outro lado, o Fine-Tuning consolida-se como o caminho ideal para transformar
 
 Em sistemas empresariais maduros, a dicotomia entre RAG e Fine-Tuning desaparece para dar lugar a pipelines híbridos altamente eficazes.
 
-![Combinando RAG e Fine-Tuning](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0004_rag_vs_finetuning/assets/07.png)
+![Combinando RAG e Fine-Tuning](../assets/07.png)
 
 > Figura 7. Arquitetura híbrida utilizando um modelo ajustado por fine-tuning para consumir contexto recuperado via RAG.
 
@@ -110,7 +110,7 @@ O resultado é o melhor dos dois mundos: o modelo comporta-se exatamente como o 
 
 A viabilidade financeira de uma solução de IA exige considerar o custo total de propriedade ao longo de todo o seu ciclo de vida.
 
-![Custos comparados](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0004_rag_vs_finetuning/assets/08.png)
+![Custos comparados](../assets/08.png)
 
 > Figura 8. Curvas comparativas de investimento inicial e custos operacionais contínuos de inferência.
 
@@ -124,7 +124,7 @@ O Fine-Tuning inverte essa curva econômica. O investimento inicial é substanci
 
 Projetos de IA frequentemente tropeçam em erros clássicos de dimensionamento que podem ser prevenidos com boas práticas de engenharia.
 
-![Erros comuns](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0004_rag_vs_finetuning/assets/09_.png)
+![Erros comuns](../assets/09_.png)
 
 > Figura 9. Principais armadilhas na escolha de arquitetura e mitigação de falhas em produção.
 
@@ -140,19 +140,19 @@ O terceiro equívoco reside em negligenciar a curadoria dos dados de treino no f
 
 A governança do sistema exige métricas específicas para acompanhar a evolução de cada camada da solução.
 
-![Métricas de avaliação](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0004_rag_vs_finetuning/assets/10.png)
+![Métricas de avaliação](../assets/10.png)
 
 > Figura 10. Conjunto de métricas para monitoramento contínuo de pipelines de recuperação e modelos ajustados.
 
 Em esteiras de Fine-Tuning, a perda de treinamento (training loss), a perplexidade em datasets de teste e a taxa de acerto em tarefas fechadas (accuracy) indicam a convergência dos tensores e a retenção de aprendizado.
 
-Em arquiteturas de RAG, o monitoramento apoia-se em métricas de recuperação como Recall e Precision no topo dos resultados, complementadas por avaliações automáticas de fidelidade factual para garantir que o modelo não invente informações fora do contexto delimitado.
+Em RAG, monitore Recall e Precision da recuperação, aderência a fontes e exatidão em casos rotulados. Nenhuma dessas métricas, sozinha, garante ausência de informação inventada. Na comparação com fine-tuning, use um conjunto de teste separado dos exemplos de treino.
 
 ---
 
 ## Execução prática do laboratório passo a passo
 
-O repositório inclui um laboratório prático em Python comparando o comportamento de consultas em RAG com a simulação de respostas ajustadas por especialização comportamental.
+O laboratório executa recuperação com Chroma e **fine-tuning real com LoRA** em um GPT-2 em português. O conjunto de treino é pequeno e didático; a comparação envolve modelos diferentes e não mede superioridade geral de RAG ou fine-tuning. As tabelas financeiras são simulações com hipóteses explícitas, não custos medidos de produção.
 
 A preparação do ambiente local pode ser realizada com os comandos abaixo:
 
@@ -166,10 +166,10 @@ pip install -r requirements.txt
 python src/main.py --check
 ```
 
-Para inspecionar as matrizes de decisão, simulações de custo computacional e gráficos comparativos de forma interativa, inicie o Jupyter Notebook:
+Para inspecionar a recuperação, o treinamento LoRA e a simulação de custos, abra o notebook. Sem `GROQ_API_KEY`, selecione explicitamente `LAB_PROVIDER=ollama` para usar Qwen local nas etapas base/RAG; isso não valida inferência nem preços da Groq.
 
 ```bash
-jupyter notebook notebooks/rag_vs_finetuning.ipynb
+LAB_PROVIDER=ollama jupyter notebook notebooks/rag_vs_finetuning.ipynb
 ```
 
 O notebook também pode ser executado gratuitamente em ambiente de nuvem pelo Google Colab através dos links indicados no arquivo de instruções da raiz do módulo.

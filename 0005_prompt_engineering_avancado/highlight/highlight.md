@@ -64,7 +64,7 @@ O score final combina estrutura, keywords obrigatórias, acerto de prioridade e 
 
 O ganho muda com o modelo, não só com o prompt
 
-> Qwen: `few_shot` 0.741 vs `base` 0.411, ganho de +80.2%.
+> Qwen: `few_shot` 0.741 vs `base` 0.408, ganho relativo de +81.7% no score composto.
 > FLAN: `checklist` 0.460 vs `base` 0.266, ganho de +72.6%.
 
 A leitura correta é simples: o mesmo prompt não rende igual em todo modelo.

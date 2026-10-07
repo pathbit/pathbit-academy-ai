@@ -51,7 +51,7 @@ Streaming token a token expõe o tempo até o primeiro token, a geração em si 
 
 Modelo escolhe-se por função, não por fama
 
-O 0.5B tem a maior vazão e planner 100% com JSON forçado. O llama3.2:1b tem o menor TTFT e devolveu JSON vazio nas 5 tentativas.
+O 0.5B tem a maior vazão; os Qwen acertaram 5/5 no teste de planner. O Llama teve menor TTFT e 0/5 no validador do payload. Recorte pequeno, não confiabilidade geral.
 
 > Decodificação constrangida garante sintaxe, não conteúdo.
 

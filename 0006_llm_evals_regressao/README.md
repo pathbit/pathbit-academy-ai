@@ -27,7 +27,7 @@ Tudo usando modelos gratuitos do Hugging Face.
 - **Candidatos de geração:** `Qwen/Qwen2.5-0.5B-Instruct` e `google/flan-t5-small`
 - **Embeddings para avaliação:** `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`
 - **Frameworks:** `transformers`, `sentence-transformers`
-- **Ambiente:** Python 3.14, Jupyter, Pandas, Matplotlib
+- **Ambiente:** Python 3.14+ (compatível com 3.10+) em ambiente virtual isolado (.venv), Jupyter, Pandas, Matplotlib
 
 ---
 
@@ -45,8 +45,8 @@ Tudo usando modelos gratuitos do Hugging Face.
 
 #### Pré-requisitos
 
-- Python 3.10 ou superior (testado no Python 3.10 até 3.14)
-- Sem chave de API (100% local e gratuito)
+- Python 3.14+ (compatível com 3.10+) executando em ambiente virtual isolado (.venv)
+- Sem cobrança de API por token após baixar modelos; hardware e energia têm custo
 - Conexão de internet apenas para baixar os modelos abertos do Hugging Face na primeira execução
 
 #### Preparar o ambiente

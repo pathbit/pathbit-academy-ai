@@ -1,37 +1,37 @@
 modelo,consulta_id,repeticao,tool_escolhida,tool_esperada,acertou,argumento_ok,schema_ok,plan_ms,mcp_ms,tokens,resposta_mcp
-qwen2.5:0.5b,q_fatura,0,buscar_politica,buscar_politica,True,True,True,1617.9,2.53,30,Politica 'seguro' nao encontrada.
-qwen2.5:0.5b,q_devolucao,0,buscar_politica,buscar_politica,True,True,True,411.6,2.13,23,Devolucao permitida em ate 30 dias corridos para produtos sem uso e com embalagem preservada.
-qwen2.5:0.5b,q_incidente,0,buscar_politica,criar_ticket,False,True,True,353.9,1.66,36,Politica 'erro 500 desde ontem' nao encontrada.
-qwen2.5:0.5b,q_cancelamento,0,resumo_atendimento,buscar_politica,False,True,True,827.5,2.18,30,"Cliente nome_cliente: 2 atendimentos anteriores, nenhum incidente aberto, plano ativo."
-qwen2.5:0.5b,q_capacidade,0,resumo_atendimento,responder_direto,False,True,True,566.2,1.63,31,"Cliente nome_do_cliente: 2 atendimentos anteriores, nenhum incidente aberto, plano ativo."
-qwen2.5:0.5b,q_ticket,0,resumo_atendimento,criar_ticket,False,True,True,753.4,1.69,39,"Cliente nao consigo emitir o boleto, preciso abrir um chamado urgente: 2 atendimentos anteriores, nenhum incidente aberto, plano ativo."
-qwen2.5:0.5b,q_fatura,1,buscar_politica,buscar_politica,True,True,True,2000.9,2.86,30,Politica 'seguro' nao encontrada.
-qwen2.5:0.5b,q_devolucao,1,buscar_politica,buscar_politica,True,True,True,388.8,1.75,23,Devolucao permitida em ate 30 dias corridos para produtos sem uso e com embalagem preservada.
-qwen2.5:0.5b,q_incidente,1,buscar_politica,criar_ticket,False,True,True,425.9,1.57,36,Politica 'erro 500 desde ontem' nao encontrada.
-qwen2.5:0.5b,q_cancelamento,1,resumo_atendimento,buscar_politica,False,True,True,1641.9,6.51,30,"Cliente nome_cliente: 2 atendimentos anteriores, nenhum incidente aberto, plano ativo."
-qwen2.5:0.5b,q_capacidade,1,resumo_atendimento,responder_direto,False,True,True,355.3,2.83,31,"Cliente nome_do_cliente: 2 atendimentos anteriores, nenhum incidente aberto, plano ativo."
-qwen2.5:0.5b,q_ticket,1,resumo_atendimento,criar_ticket,False,True,True,1306.8,1.66,39,"Cliente nao consigo emitir o boleto, preciso abrir um chamado urgente: 2 atendimentos anteriores, nenhum incidente aberto, plano ativo."
-qwen2.5:1.5b,q_fatura,0,buscar_politica,buscar_politica,True,True,True,513.0,5.98,31,"Nunca compartilhe senha, token ou dados de cartao com atendentes ou com o assistente."
-qwen2.5:1.5b,q_devolucao,0,buscar_politica,buscar_politica,True,True,True,525.1,2.19,31,Devolucao permitida em ate 30 dias corridos para produtos sem uso e com embalagem preservada.
-qwen2.5:1.5b,q_incidente,0,buscar_politica,criar_ticket,False,True,True,517.6,2.07,33,Politica 'erro 500' nao encontrada.
-qwen2.5:1.5b,q_cancelamento,0,resumo_atendimento,buscar_politica,False,True,True,703.6,2.79,29,"Cliente cliente: 2 atendimentos anteriores, nenhum incidente aberto, plano ativo."
-qwen2.5:1.5b,q_capacidade,0,resumo_atendimento,responder_direto,False,True,True,514.8,1.58,29,"Cliente cliente: 2 atendimentos anteriores, nenhum incidente aberto, plano ativo."
-qwen2.5:1.5b,q_ticket,0,criar_ticket,criar_ticket,True,True,True,719.3,2.08,42,ticket#2041 criado com sucesso: 'Boleto não pode ser emitido' (prioridade alta)
-qwen2.5:1.5b,q_fatura,1,buscar_politica,buscar_politica,True,True,True,614.6,1.79,31,"Nunca compartilhe senha, token ou dados de cartao com atendentes ou com o assistente."
-qwen2.5:1.5b,q_devolucao,1,buscar_politica,buscar_politica,True,True,True,585.3,1.67,31,Devolucao permitida em ate 30 dias corridos para produtos sem uso e com embalagem preservada.
-qwen2.5:1.5b,q_incidente,1,buscar_politica,criar_ticket,False,True,True,615.7,2.84,33,Politica 'erro 500' nao encontrada.
-qwen2.5:1.5b,q_cancelamento,1,resumo_atendimento,buscar_politica,False,True,True,630.8,3.15,29,"Cliente cliente: 2 atendimentos anteriores, nenhum incidente aberto, plano ativo."
-qwen2.5:1.5b,q_capacidade,1,resumo_atendimento,responder_direto,False,True,True,1675.1,1.73,29,"Cliente cliente: 2 atendimentos anteriores, nenhum incidente aberto, plano ativo."
-qwen2.5:1.5b,q_ticket,1,criar_ticket,criar_ticket,True,True,True,1668.1,1.44,42,ticket#2041 criado com sucesso: 'Boleto não pode ser emitido' (prioridade alta)
-llama3.2:1b,q_fatura,0,buscar_politica,buscar_politica,True,True,True,3264.0,9.92,52,Politica 'fatura' nao encontrada.
-llama3.2:1b,q_devolucao,0,buscar_politica,buscar_politica,True,True,True,1259.0,2.81,54,Devolucao permitida em ate 30 dias corridos para produtos sem uso e com embalagem preservada.
-llama3.2:1b,q_incidente,0,buscar_politica,criar_ticket,False,True,True,1045.3,1.63,40,Politica 'erro 500' nao encontrada.
-llama3.2:1b,q_cancelamento,0,buscar_politica,buscar_politica,True,True,True,804.8,1.52,38,Cancelamento sem multa pode ser solicitado em ate 7 dias corridos apos a contratacao.
-llama3.2:1b,q_capacidade,0,responder_direto,responder_direto,True,True,True,2307.1,0.0,78,
-llama3.2:1b,q_ticket,0,criar_ticket,criar_ticket,True,True,True,1800.5,1.68,49,ticket#2041 criado com sucesso: 'Chamado Urgente: Não consigo emitir o boleto' (prioridade alta)
-llama3.2:1b,q_fatura,1,buscar_politica,buscar_politica,True,True,True,2174.8,1.48,52,Politica 'fatura' nao encontrada.
-llama3.2:1b,q_devolucao,1,buscar_politica,buscar_politica,True,True,True,2044.5,7.57,54,Devolucao permitida em ate 30 dias corridos para produtos sem uso e com embalagem preservada.
-llama3.2:1b,q_incidente,1,buscar_politica,criar_ticket,False,True,True,1057.0,2.13,40,Politica 'erro 500' nao encontrada.
-llama3.2:1b,q_cancelamento,1,buscar_politica,buscar_politica,True,True,True,817.4,1.86,38,Cancelamento sem multa pode ser solicitado em ate 7 dias corridos apos a contratacao.
-llama3.2:1b,q_capacidade,1,responder_direto,responder_direto,True,True,True,2217.6,0.0,78,
-llama3.2:1b,q_ticket,1,criar_ticket,criar_ticket,True,True,True,1646.9,1.69,49,ticket#2041 criado com sucesso: 'Chamado Urgente: Não consigo emitir o boleto' (prioridade alta)
+qwen2.5:0.5b,q_fatura,0,buscar_politica,buscar_politica,True,True,True,1002.7,9.06,23,"A segunda via da fatura e emitida no portal do cliente, aba Financeiro, opcao Segunda Via."
+qwen2.5:0.5b,q_devolucao,0,buscar_politica,buscar_politica,True,True,True,1157.6,7.27,23,Devolucao permitida em ate 30 dias corridos para produtos sem uso e com embalagem preservada.
+qwen2.5:0.5b,q_incidente,0,buscar_politica,criar_ticket,False,True,True,1334.8,6.85,28,Politica 'erro 500 desde ontem' nao encontrada.
+qwen2.5:0.5b,q_cancelamento,0,resumo_atendimento,buscar_politica,False,True,True,603.5,5.17,22,"Cliente nome_cliente: 2 atendimentos anteriores, nenhum incidente aberto, plano ativo."
+qwen2.5:0.5b,q_capacidade,0,resumo_atendimento,responder_direto,False,True,True,773.3,2.3,31,"Cliente nome_do_cliente: 2 atendimentos anteriores, nenhum incidente aberto, plano ativo."
+qwen2.5:0.5b,q_ticket,0,resumo_atendimento,criar_ticket,False,True,True,2610.1,2.43,39,"Cliente nao consigo emitir o boleto, preciso abrir um chamado urgente: 2 atendimentos anteriores, nenhum incidente aberto, plano ativo."
+qwen2.5:0.5b,q_fatura,1,buscar_politica,buscar_politica,True,True,True,678.5,2.63,23,"A segunda via da fatura e emitida no portal do cliente, aba Financeiro, opcao Segunda Via."
+qwen2.5:0.5b,q_devolucao,1,buscar_politica,buscar_politica,True,True,True,741.7,2.97,23,Devolucao permitida em ate 30 dias corridos para produtos sem uso e com embalagem preservada.
+qwen2.5:0.5b,q_incidente,1,buscar_politica,criar_ticket,False,True,True,888.6,2.38,28,Politica 'erro 500 desde ontem' nao encontrada.
+qwen2.5:0.5b,q_cancelamento,1,resumo_atendimento,buscar_politica,False,True,True,2706.1,21.53,22,"Cliente nome_cliente: 2 atendimentos anteriores, nenhum incidente aberto, plano ativo."
+qwen2.5:0.5b,q_capacidade,1,resumo_atendimento,responder_direto,False,True,True,950.0,4.59,31,"Cliente nome_do_cliente: 2 atendimentos anteriores, nenhum incidente aberto, plano ativo."
+qwen2.5:0.5b,q_ticket,1,resumo_atendimento,criar_ticket,False,True,True,7725.7,22.47,39,"Cliente nao consigo emitir o boleto, preciso abrir um chamado urgente: 2 atendimentos anteriores, nenhum incidente aberto, plano ativo."
+qwen2.5:1.5b,q_fatura,0,buscar_politica,buscar_politica,True,True,True,2754.2,8.08,31,"Nunca compartilhe senha, token ou dados de cartao com atendentes ou com o assistente."
+qwen2.5:1.5b,q_devolucao,0,buscar_politica,buscar_politica,True,True,True,2697.6,9.27,31,Devolucao permitida em ate 30 dias corridos para produtos sem uso e com embalagem preservada.
+qwen2.5:1.5b,q_incidente,0,buscar_politica,criar_ticket,False,True,True,5371.3,6.99,33,Politica 'erro 500' nao encontrada.
+qwen2.5:1.5b,q_cancelamento,0,resumo_atendimento,buscar_politica,False,True,True,982.1,6.88,29,"Cliente cliente: 2 atendimentos anteriores, nenhum incidente aberto, plano ativo."
+qwen2.5:1.5b,q_capacidade,0,resumo_atendimento,responder_direto,False,True,True,1436.2,5.51,29,"Cliente cliente: 2 atendimentos anteriores, nenhum incidente aberto, plano ativo."
+qwen2.5:1.5b,q_ticket,0,criar_ticket,criar_ticket,True,True,True,1731.2,6.41,42,ticket#2041 criado com sucesso: 'Boleto não pode ser emitido' (prioridade alta)
+qwen2.5:1.5b,q_fatura,1,buscar_politica,buscar_politica,True,True,True,2547.9,8.06,31,"Nunca compartilhe senha, token ou dados de cartao com atendentes ou com o assistente."
+qwen2.5:1.5b,q_devolucao,1,buscar_politica,buscar_politica,True,True,True,1702.7,4.59,31,Devolucao permitida em ate 30 dias corridos para produtos sem uso e com embalagem preservada.
+qwen2.5:1.5b,q_incidente,1,buscar_politica,criar_ticket,False,True,True,2265.6,3.07,33,Politica 'erro 500' nao encontrada.
+qwen2.5:1.5b,q_cancelamento,1,resumo_atendimento,buscar_politica,False,True,True,1113.9,3.46,29,"Cliente cliente: 2 atendimentos anteriores, nenhum incidente aberto, plano ativo."
+qwen2.5:1.5b,q_capacidade,1,resumo_atendimento,responder_direto,False,True,True,904.7,9.65,29,"Cliente cliente: 2 atendimentos anteriores, nenhum incidente aberto, plano ativo."
+qwen2.5:1.5b,q_ticket,1,criar_ticket,criar_ticket,True,True,True,3052.6,6.6,42,ticket#2041 criado com sucesso: 'Boleto não pode ser emitido' (prioridade alta)
+llama3.2:1b,q_fatura,0,buscar_politica,buscar_politica,True,True,True,1529.4,7.67,52,Politica 'fatura' nao encontrada.
+llama3.2:1b,q_devolucao,0,buscar_politica,buscar_politica,True,True,True,1053.1,4.02,54,Devolucao permitida em ate 30 dias corridos para produtos sem uso e com embalagem preservada.
+llama3.2:1b,q_incidente,0,buscar_politica,criar_ticket,False,True,True,1343.8,2.11,40,Politica 'erro 500' nao encontrada.
+llama3.2:1b,q_cancelamento,0,buscar_politica,buscar_politica,True,True,True,806.3,2.48,38,Cancelamento sem multa pode ser solicitado em ate 7 dias corridos apos a contratacao.
+llama3.2:1b,q_capacidade,0,responder_direto,responder_direto,True,True,True,6901.0,0.0,78,
+llama3.2:1b,q_ticket,0,criar_ticket,criar_ticket,True,True,True,968.3,7.24,49,ticket#2041 criado com sucesso: 'Chamado Urgente: Não consigo emitir o boleto' (prioridade alta)
+llama3.2:1b,q_fatura,1,buscar_politica,buscar_politica,True,True,True,1526.3,7.17,52,Politica 'fatura' nao encontrada.
+llama3.2:1b,q_devolucao,1,buscar_politica,buscar_politica,True,True,True,1041.0,6.05,54,Devolucao permitida em ate 30 dias corridos para produtos sem uso e com embalagem preservada.
+llama3.2:1b,q_incidente,1,buscar_politica,criar_ticket,False,True,True,1218.5,4.8,40,Politica 'erro 500' nao encontrada.
+llama3.2:1b,q_cancelamento,1,buscar_politica,buscar_politica,True,True,True,1600.7,6.0,38,Cancelamento sem multa pode ser solicitado em ate 7 dias corridos apos a contratacao.
+llama3.2:1b,q_capacidade,1,responder_direto,responder_direto,True,True,True,5717.4,0.0,78,
+llama3.2:1b,q_ticket,1,criar_ticket,criar_ticket,True,True,True,1705.2,8.89,49,ticket#2041 criado com sucesso: 'Chamado Urgente: Não consigo emitir o boleto' (prioridade alta)

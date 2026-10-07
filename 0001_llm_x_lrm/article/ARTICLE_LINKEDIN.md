@@ -2,9 +2,9 @@
 
 Grande parte das discussões sobre Inteligência Artificial aplicada à engenharia de software ainda trata qualquer modelo gerativo sob o mesmo rótulo genérico de modelo de linguagem. Equipes inteiras desenham fluxos agênticos, bots de suporte ou motores de automação assumindo que um modelo treinado para prever a próxima palavra é capaz de raciocinar com rigor lógico diante de problemas encadeados. Essa simplificação cobra um preço alto em produção, manifestando-se em alucinações confiantes, quebra de contratos de dados e custos imprevisíveis de infraestrutura.
 
-A emergência dos Large Reasoning Models (LRMs), impulsionada por arquiteturas focadas em computação no momento da inferência como as famílias OpenAI o1, DeepSeek-R1 e QwQ, estabeleceu uma divisão técnica clara. Não estamos diante de uma simples evolução incremental de parâmetros ou de um modelo maior que memorizou mais páginas da internet. Trata-se de uma mudança fundamental na forma como a computação é alocada entre a fase de treinamento e a fase de geração de respostas.
+Os chamados Large Reasoning Models (LRMs), como as famílias OpenAI o1, DeepSeek-R1 e QwQ, continuam sendo modelos de linguagem. O nome destaca treinamento e estratégias de inferência orientados a problemas de múltiplas etapas, não uma arquitetura oposta à dos LLMs. A decisão prática é quanto orçamento de computação dedicar ao problema antes de entregar a resposta.
 
-Compreender a diferença prática e econômica entre Large Language Models e Large Reasoning Models deixou de ser um detalhe teórico para se tornar uma decisão central de arquitetura. Escolher a ferramenta errada para uma tarefa operacional gera dois fracassos opostos: a frustração de exigir dedução lógica de um modelo puramente autorregressivo ou o desperdício massivo de latência e orçamento ao empregar um motor de raciocínio pesado para tarefas triviais de síntese textual.
+Compreender esse trade-off é uma decisão de arquitetura: avaliar qualidade, latência e custo no seu caso de uso. Um modelo conversacional também pode resolver problemas lógicos, e um modelo de raciocínio também pode errar. O objetivo não é escolher uma sigla, mas medir qual configuração cumpre o contrato do produto.
 
 ---
 
@@ -12,11 +12,11 @@ Compreender a diferença prática e econômica entre Large Language Models e Lar
 
 Para entender onde a fronteira se estabelece, é preciso olhar para a mecânica de inferência de um Large Language Model padrão.
 
-Um LLM convencional é um preditor autorregressivo de próximo token. A cada passo de tempo, o modelo consome a sequência anterior de caracteres e projeta uma distribuição de probabilidade sobre todo o vocabulário para selecionar a palavra estatisticamente mais provável. Essa operação possui custo computacional constante por token gerado. O modelo gasta exatamente a mesma quantidade de cálculo para escrever uma vírgula gramatical ou para responder a uma pergunta conceitual profunda.
+Um LLM autorregressivo estima a distribuição do próximo **token** — uma unidade que pode representar uma palavra, parte dela ou pontuação — a partir dos tokens anteriores. A seleção pode usar amostragem ou uma estratégia gulosa; não é sempre a palavra mais provável. O custo de cada passo depende da arquitetura, do comprimento do contexto, do cache KV e do hardware. Portanto, não é constante nem idêntico para qualquer posição da sequência.
 
-Essa característica faz com que os LLMs tradicionais operem de forma análoga ao que a psicologia cognitiva classifica como Sistema 1: um processamento rápido, intuitivo e baseado em reconhecimento estatístico de padrões superficiais. O modelo é extremamente competente em resumir documentos extensos, traduzir idiomas com fluidez, reescrever textos com tons corporativos variados e recuperar fatos amplamente documentados durante o pré-treinamento.
+A analogia com o Sistema 1 da psicologia ajuda a explicar respostas rápidas, mas não descreve literalmente o funcionamento de uma rede neural. LLMs podem resumir, traduzir e encadear raciocínios; o desempenho depende do treinamento, do prompt e da tarefa. Fluência não é prova de correção.
 
-O gargalo surge quando a tarefa exige raciocínio multi-etapa, verificação de restrições ou planejamento dedutivo. Como o LLM não possui uma etapa interna de reflexão antes de emitir o primeiro caractere, ele precisa acertar a trajetória da resposta logo na primeira palavra. Se a primeira escolha probabilística tomar um rumo equivocado, o modelo continuará gerando texto de forma coerente e convincente para justificar a premissa errada, gerando o fenômeno conhecido como alucinação lógica.
+O gargalo aparece quando a resposta exige preservar várias restrições ao longo da geração. Um passo incorreto pode contaminar os seguintes. Decomposição, ferramentas de cálculo, verificadores e tentativas adicionais ajudam a reduzir esse risco, inclusive com modelos que não são comercializados como modelos de raciocínio.
 
 ---
 
@@ -24,9 +24,9 @@ O gargalo surge quando a tarefa exige raciocínio multi-etapa, verificação de 
 
 Os Large Reasoning Models atacam essa limitação alterando a curva de escalabilidade do aprendizado de máquina. Durante anos, a indústria seguiu a lei de escala baseada em aumentar o tamanho dos modelos e o volume dos dados de pré-treinamento. Os LRMs exploram uma nova dimensão: o escalonamento do processamento durante a inferência (conhecido como test-time compute).
 
-Em vez de devolver uma resposta imediatamente após a leitura do prompt, o LRM gera uma cadeia deliberada de pensamento antes de formular o texto final visível. O modelo formula hipóteses, testa caminhos lógicos intermediários, identifica contradições em cálculos anteriores, faz backtracking quando percebe um beco sem saída e só então sintetiza a conclusão.
+Modelos de raciocínio podem produzir tokens intermediários antes da resposta final e aprender estratégias de revisão. Isso não significa que cada execução realize busca explícita, backtracking ou verificação formal. O texto de raciocínio exposto pode ser incompleto ou não refletir fielmente o processo; avalie o resultado e ferramentas de verificação.
 
-Esse comportamento não decorre de prompts mágicos como pedir para pensar passo a passo, mas de treinamento específico com aprendizado por reforço estruturado sobre trajetórias de pensamento. O motor é recompensado não pela semelhança estatística com textos humanos, mas pela correção verificável do resultado final em tarefas que admitem validação formal, a exemplo de matemática, depuração de código e testes lógicos.
+Treinamento supervisionado e aprendizado por reforço com resultados verificáveis podem melhorar raciocínio. As receitas variam por modelo, e prompts de decomposição também podem ajudar. Não há garantia de autocorreção: recompensas, dados e testes determinam o que foi aprendido.
 
 Na prática da engenharia de software, o LRM atua como o Sistema 2: deliberado, analítico, capaz de autocorreção e focado em consistência de longo prazo.
 
@@ -62,7 +62,7 @@ Se o cliente envia uma dúvida rápida perguntando qual é o rendimento atual do
 
 Por outro lado, quando o cliente solicita uma reestruturação de sua carteira de investimentos considerando perfil conservador, metas de liquidez em três horizontes temporais diferentes, tributação regressiva e projeções de inflação, o fluxo precisa ser roteado para um LRM. O modelo investirá vários segundos executando reflexões internas, avaliando trade-offs entre ativos e verificando restrições orçamentárias antes de emitir o plano de investimento auditável.
 
-![Arquitetura e Decisão Técnica: LLM vs LRM](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0001_llm_x_lrm/assets/05_arquitetura_llm_vs_lrm.png)
+![Arquitetura e Decisão Técnica: LLM vs LRM](../assets/05_arquitetura_llm_vs_lrm.png)
 
 > Figura 1. Arquitetura de decisão técnica mostrando o roteamento inteligente entre modelos de linguagem rápidos e motores de raciocínio profundo.
 
@@ -84,7 +84,7 @@ Terceiro, rejeite a tentação de usar tecnologias complexas como argumento de m
 
 ## Execução prática do laboratório passo a passo
 
-O repositório disponibiliza um ambiente completo para testar e comparar diretamente o comportamento de um LLM conversacional e um LRM de raciocínio estruturado utilizando a API de alto desempenho do Groq.
+O notebook compara `openai/gpt-oss-20b` com esforço baixo e `openai/gpt-oss-120b` com esforço alto via Groq. **Ambos são modelos de raciocínio**: o experimento varia tamanho e esforço ao mesmo tempo, portanto não isola uma diferença causal entre LLM e LRM. O modo explícito `LAB_PROVIDER=ollama` usa Qwen 0.5B/1.5B como baseline local para testar o fluxo sem chave; não substitui a avaliação dos modelos Groq.
 
 A execução do experimento local pode ser feita pelo terminal seguindo os passos de configuração:
 
@@ -102,7 +102,7 @@ python src/main.py --check
 Caso prefira rodar a análise de forma visual e interativa com gráficos e saída detalhada de tokens gerados, abra o notebook interativo:
 
 ```bash
-jupyter notebook notebooks/comparacao_llm_lrm.ipynb
+LAB_PROVIDER=ollama jupyter notebook notebooks/comparacao_llm_lrm.ipynb
 ```
 
 O laboratório também pode ser executado diretamente em nuvem sem instalação local por meio do Google Colab acessando o notebook pelo repositório oficial da Pathbit Academy no GitHub.

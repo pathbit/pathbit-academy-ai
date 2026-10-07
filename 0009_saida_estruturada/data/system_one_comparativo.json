@@ -7,9 +7,9 @@
   ],
   "chamadas_avaliadas": 6,
   "acuracia_pct": 100.0,
-  "latencia_media_ms": 15.11,
-  "latencia_p50_ms": 14.78,
-  "latencia_p95_ms": 17.01,
+  "latencia_media_ms": 12.97,
+  "latencia_p50_ms": 13.61,
+  "latencia_p95_ms": 17.22,
   "tokens_gerados": 0,
   "conformidade_schema_pct": 100.0
 }

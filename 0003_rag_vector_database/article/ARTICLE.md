@@ -8,25 +8,25 @@ A arquitetura de Geração Aumentada por Recuperação (RAG, ou Retrieval-Augmen
 
 ---
 
-## O mecanismo de RAG e a superação das alucinações
+## Como a recuperação ajuda a reduzir alucinações
 
 A premissa central do RAG baseia-se em desacoplar a memória paramétrica do modelo (o conhecimento estático internalizado em seus pesos) da memória não paramétrica (uma base de dados externa, viva e auditável).
 
-![Conceito de RAG](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0003_rag_vector_database/assets/01.png)
+![Conceito de RAG](../assets/01.png)
 
 > Figura 1. O pipeline de RAG desacoplando a recuperação de fatos atualizados da geração linguística do modelo.
 
 Em vez de exigir que o LLM responda com base apenas no que memorizou no passado, o sistema funciona em três fases coordenadas:
 
-Na primeira fase, o sistema intercepta a dúvida do usuário e realiza uma busca vetorial no repositório corporativo para identificar os fragmentos textuais mais relevantes. Na segunda fase, o motor constrói um prompt contextualizado que injeta esses trechos recuperados como fonte primária da verdade. Na terceira fase, o LLM sintetiza a resposta final referenciando explicitamente os dados fornecidos, mitigando alucinações e garantindo rastreabilidade factual.
+Primeiro, o sistema recupera trechos relevantes por busca vetorial, léxica ou híbrida. Depois, monta um prompt com esses trechos e suas origens. Por fim, o LLM gera a resposta. Para obter rastreabilidade, é preciso preservar identificadores e validar citações; anexar documentos ao prompt não garante que a resposta seja correta ou que a fonte sustente cada afirmação.
 
 ---
 
 ## O papel dos bancos de dados vetoriais na arquitetura
 
-Para que a recuperação de documentos funcione em escala com milhões de registros corporativos em tempo hábil, bancos de dados relacionais tradicionais são insuficientes. A busca por similaridade angular exige estruturas de dados capazes de navegar em espaços de centenas ou milhares de dimensões em poucos milissegundos.
+Busca vetorial em escala exige índices e uma estratégia de operação, mas não necessariamente um banco dedicado. PostgreSQL com pgvector e outros bancos relacionais oferecem índices vetoriais. A escolha depende de filtros, transações, volume, recall e latência exigidos; FAISS, listado abaixo, é uma biblioteca de indexação, não um banco de dados completo.
 
-![Fluxo do RAG](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0003_rag_vector_database/assets/02.png)
+![Fluxo do RAG](../assets/02.png)
 
 > Figura 2. O ciclo completo de ingestão e recuperação semântica em bases de conhecimento vetoriais.
 
@@ -42,7 +42,7 @@ A tabela abaixo compara os principais bancos de dados vetoriais utilizados na en
 | `Pinecone` | Proprietário | Cloud Gerenciada | Proprietário | Escala corporativa global sem gestão de infraestrutura |
 | `FAISS` | Open Source | Biblioteca C++/Python | IVFFlat, HNSW | Pesquisa acadêmica e indexação estática de altíssima escala |
 
-![Comparação de Vector Databases](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0003_rag_vector_database/assets/03.png)
+![Comparação de Vector Databases](../assets/03.png)
 
 > Figura 3. Comparativo estrutural de bancos vetoriais especializados para diferentes volumes de dados.
 
@@ -52,31 +52,31 @@ A tabela abaixo compara os principais bancos de dados vetoriais utilizados na en
 
 A flexibilidade de combinar busca vetorial e geração controlada sustenta casos de uso críticos em diversas verticais de negócio.
 
-![Chatbot Empresarial](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0003_rag_vector_database/assets/04.png)
+![Chatbot Empresarial](../assets/04.png)
 
 > Figura 4. Assistentes corporativos consultando normas e manuais com resposta ancorada em documentos oficiais.
 
 Em assistentes empresariais de atendimento interno, colaboradores consultam políticas de benefícios ou procedimentos operacionais padrão e recebem orientações imediatas acompanhadas de citações literais da documentação vigente.
 
-![Assistente Técnico](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0003_rag_vector_database/assets/05.png)
+![Assistente Técnico](../assets/05.png)
 
 > Figura 5. Assistentes de documentação para engenharia e suporte a infraestrutura computacional.
 
 Na engenharia de software e suporte de infraestrutura, assistentes de documentação técnica vasculham manuais de bancos de dados, guias de deploy e runbooks para orientar engenheiros na resolução de incidentes com comandos validados.
 
-![Suporte ao Cliente](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0003_rag_vector_database/assets/06.png)
+![Suporte ao Cliente](../assets/06.png)
 
 > Figura 6. Atendimento ao consumidor com recuperação dinâmica de status de pedidos e políticas comerciais.
 
 No suporte direto ao cliente, a integração do RAG com dados transacionais permite responder dúvidas complexas sobre garantias e prazos cruzando informações estáticas de FAQ com o histórico de compras do usuário.
 
-![Análise Legal](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0003_rag_vector_database/assets/07.png)
+![Análise Legal](../assets/07.png)
 
 > Figura 7. Auditoria de contratos e pareceres jurídicos apoiada por jurisprudência e precedentes.
 
 Em escritórios jurídicos e departamentos de compliance, o RAG acelera a análise de riscos contratuais identificando cláusulas abusivas com base em centenas de minutas anteriores e normas regulatórias.
 
-![Recomendação Inteligente](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0003_rag_vector_database/assets/08.png)
+![Recomendação Inteligente](../assets/08.png)
 
 > Figura 8. Motores de recomendação baseados na proximidade de características de produtos e histórico de consumo.
 
@@ -88,7 +88,7 @@ No setor financeiro e em plataformas de e-commerce, motores de recomendação se
 
 Um sistema de recuperação maduro opera como um fluxo desacoplado composto por seis módulos interdependentes.
 
-![Arquitetura RAG](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0003_rag_vector_database/assets/09.png)
+![Arquitetura RAG](../assets/09.png)
 
 > Figura 9. Diagrama arquitetural completo dos módulos de ingestão, indexação, recuperação e geração.
 
@@ -102,7 +102,7 @@ O terceiro componente é o modelo de embeddings, que converte cada trecho em um 
 
 A qualidade de um sistema RAG é definida primariamente na etapa de segmentação textual. Fragmentos longos demais diluem a atenção do modelo e misturam assuntos não relacionados, enquanto fragmentos curtos demais perdem o contexto necessário para que a resposta faça sentido.
 
-![Estratégias de Chunking](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0003_rag_vector_database/assets/10.png)
+![Estratégias de Chunking](../assets/10.png)
 
 > Figura 10. Panorama de abordagens de quebra de documentos para alimentação de bases vetoriais.
 
@@ -112,7 +112,7 @@ A segmentação recursiva (Recursive Character Splitting) resolve essa limitaç�
 
 A segmentação semântica monitora a variação do vetor de embedding entre sentenças adjacentes. Quando a distância angular entre duas frases ultrapassa um limiar estatístico, o algoritmo infere uma mudança de assunto e realiza a quebra automaticamente.
 
-Em todas as estratégias, o uso de sobreposição controlada de tokens entre blocos adjacentes (chunk overlap) é indispensável para evitar perda de sentido nas bordas de transição entre fragmentos contíguos.
+Sobreposição entre chunks pode preservar contexto nas bordas, mas aumenta duplicação, armazenamento e custo de recuperação. Não é obrigatória em todo documento: blocos semanticamente completos podem funcionar sem overlap. Ajuste tamanho e sobreposição com consultas de avaliação.
 
 ---
 
@@ -120,11 +120,11 @@ Em todas as estratégias, o uso de sobreposição controlada de tokens entre blo
 
 Ambientes corporativos de alta criticidade raramente dependem apenas de uma busca vetorial ingênua. Três técnicas avançadas são empregadas para elevar a precisão do sistema.
 
-![Otimizações RAG](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0003_rag_vector_database/assets/11.png)
+![Otimizações RAG](../assets/11.png)
 
 > Figura 11. Camadas avançadas de expansão de consulta, busca híbrida e re-ranking de candidatos.
 
-A busca híbrida combina a precisão semântica dos vetores densos com a exatidão léxica de algoritmos tradicionais como BM25. Por meio do método Reciprocal Rank Fusion (RRF), o sistema une as duas listas de resultados, garantindo que termos técnicos exatos, códigos de produtos ou números de CPF sejam recuperados mesmo quando a representação vetorial dispersar a relevância.
+A busca híbrida combina a precisão semântica dos vetores densos com a exatidão léxica de algoritmos tradicionais como BM25. Por meio do método Reciprocal Rank Fusion (RRF), o sistema une as duas listas de resultados, aumentando a chance de recuperar termos técnicos exatos e identificadores mesmo quando a representação vetorial dispersar a relevância.
 
 A expansão de consultas utiliza um LLM rápido para gerar variações semânticas da pergunta do usuário antes de consultar o banco. Se a dúvida original for concisa demais, a expansão gera perguntas complementares que cobrem diferentes ângulos do assunto, ampliando a cobertura de documentos relevantes recuperados.
 
@@ -136,7 +136,7 @@ O re-ranking atua como um filtro refinador sobre os candidatos preliminares. Enq
 
 Operar RAG em produção sem métricas objetivas é pilotar um sistema no escuro. A avaliação moderna decompõe a qualidade da solução em três camadas observáveis.
 
-![Métricas RAG](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0003_rag_vector_database/assets/12.png)
+![Métricas RAG](../assets/12.png)
 
 > Figura 12. As três dimensões de mensuração da qualidade em pipelines de RAG.
 
@@ -144,9 +144,9 @@ Nas métricas de recuperação, o Recall mede se todos os documentos essenciais 
 
 Nas métricas de geração, avalia-se a coerência linguística e a concisão do texto gerado por meio de pontuações semânticas.
 
-Nas métricas de ponta a ponta, destacam-se a fidelidade factual (Faithfulness), que verifica matematicamente se todas as afirmações da resposta podem ser deduzidas a partir do contexto fornecido, e a relevância da resposta (Answer Relevance), que mede se o texto gerado aborda diretamente a intenção inicial do usuário sem rodeios desnecessários.
+Na geração, **faithfulness** estima se as afirmações são sustentadas pelo contexto, e **answer relevance** avalia a aderência à pergunta. Métodos automáticos, inclusive LLM-as-a-judge, são aproximações: não provam matematicamente a verdade. Combine-os com checagem de citações, testes rotulados e revisão humana de casos críticos.
 
-![Ciclo de Vida do RAG](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0003_rag_vector_database/assets/13.png)
+![Ciclo de Vida do RAG](../assets/13.png)
 
 > Figura 13. O ciclo iterativo contínuo de ingestão, avaliação e refinamento de bases de conhecimento.
 
@@ -180,7 +180,7 @@ O laboratório também pode ser executado em nuvem sem custos utilizando o Googl
 
 ## Próximos passos na jornada de IA da Pathbit Academy
 
-A implementação de uma arquitetura de RAG soluciona a recuperação dinâmica de fatos corporativos em tempo real. No entanto, muitas equipes chegam a uma encruzilhada de engenharia: quando o desafio envolve alterar o vocabulário, o tom formal ou o raciocínio sintático do modelo, o RAG continua sendo a ferramenta adequada ou chegou a hora de realizar o fine-tuning dos pesos neurais?
+RAG permite atualizar a base sem retreinar o gerador, mas só recupera dados já ingeridos e acessíveis ao usuário. Monitore atualização do índice, permissões, recuperação e resposta. A próxima decisão é quando também ajustar o comportamento do modelo por fine-tuning.
 
 No [Artigo 0004 (RAG vs Fine-Tuning)](https://github.com/pathbit/pathbit-academy-ai/blob/master/0004_rag_vs_finetuning/article/ARTICLE.md), exploramos os trade-offs de infraestrutura, custos computacionais e riscos de esquecimento catastrófico para determinar a escolha certa entre ajustar dados externos ou retreinar parâmetros do modelo.
 

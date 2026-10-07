@@ -1,4 +1,7 @@
-# 🚀 Atualizações para Versões Mais Recentes
+# 🚀 Histórico de atualização de dependências
+
+> Registro histórico: as versões abaixo não são as mais recentes nem um lockfile.
+> Consulte `requirements.txt`, `python -m pip list` e o relatório desta revisão.
 
 ## ✅ Pacotes Atualizados
 
@@ -43,7 +46,8 @@ import IPython
 
 print(f"✅ Groq: {groq.__version__}")
 print(f"✅ IPython: {IPython.__version__}")
-print("✅ Jupyter: 1.1.1")
+from importlib.metadata import version
+print(f"Jupyter instalado: {version('jupyter')}")
 ```
 
 ## 🎯 Benefícios das Atualizações

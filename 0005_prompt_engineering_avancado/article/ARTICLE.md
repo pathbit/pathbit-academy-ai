@@ -12,7 +12,7 @@ Este artigo estabelece uma metodologia empírica para avaliar estratégias de in
 
 O erro mais comum ao integrar modelos gerativos em esteiras de software é confundir fluência linguística com adequação operacional.
 
-![Prompt Engineering na prática](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0005_prompt_engineering_avancado/assets/01.png)
+![Prompt Engineering na prática](../assets/01.png)
 
 > Figura 1. Respostas textualmente convincentes que falham em fornecer campos determinísticos para automação.
 
@@ -26,7 +26,7 @@ O prompt genérico cria uma armadilha cognitiva. Ao ser lido por um humano duran
 
 Para transformar o desenvolvimento de prompts em uma disciplina científica, o experimento deste módulo implementa uma matriz bidimensional que cruza arquiteturas de modelos com estratégias de instrução.
 
-![Framework de prompt](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0005_prompt_engineering_avancado/assets/02.png)
+![Framework de prompt](../assets/02.png)
 
 > Figura 2. Matriz experimental cruzando capacidade do modelo gerador com diferentes técnicas de engenharia de prompt.
 
@@ -40,7 +40,7 @@ No eixo de estratégias, comparamos quatro abordagens consolidadas na engenharia
 
 O ponto de inflexão na estabilidade de um sistema gerativo ocorre no momento em que o formato de saída deixa de ser uma sugestão e passa a ser uma especificação rígida.
 
-![Comparativo de prompt](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0005_prompt_engineering_avancado/assets/03.png)
+![Comparativo de prompt](../assets/03.png)
 
 > Figura 3. A transição de texto aberto para uma interface delimitada consumível por microsserviços.
 
@@ -78,7 +78,7 @@ Já a técnica de checklist instrui o modelo a avaliar mentalmente um conjunto d
 
 Medir a qualidade de um prompt exige ir além da simples observação humana de respostas isoladas. O laboratório implementa uma função objetiva de pontuação que avalia cada resposta sob quatro critérios complementares.
 
-![Benchmark de prompts](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0005_prompt_engineering_avancado/assets/04.png)
+![Benchmark de prompts](../assets/04.png)
 
 > Figura 4. Esteira de avaliação automatizada julgando simultaneamente conformidade sintática e qualidade semântica.
 
@@ -110,17 +110,17 @@ Essa separação impede os dois erros mais frequentes na homologação de prompt
 
 Os dados colhidos na bateria de testes revelam como a capacidade do modelo interage de forma profunda com o desenho do prompt.
 
-![Leitura do benchmark real](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0005_prompt_engineering_avancado/assets/05.png)
+![Leitura do benchmark real](../assets/05.png)
 
 > Figura 5. Gráfico consolidado de desempenho comparando ganhos percentuais de cada estratégia sobre o baseline.
 
-No modelo `Qwen2.5-0.5B-Instruct`, a estratégia `few_shot` foi a campeã absoluta, atingindo um escore consolidado de `0.741`, contra apenas `0.411` da estratégia `base`. Trata-se de uma evolução de mais de oitenta por cento de acurácia operacional obtida sem trocar de hardware e sem gastar um centavo a mais de infraestrutura. A presença de um exemplo explícito no prompt permitiu que o modelo compactasse seu raciocínio e acertasse a classificação categórica com consistência.
+Em `data/benchmark_resumo.csv`, Qwen com `few_shot` alcança score composto **0,741**, contra **0,408** no `base`: ganho de **0,333 pontos** ou **81,7% relativo**. Não é 81,7% a mais de acurácia: o score combina métricas diferentes. O acerto de prioridade foi 50% e a estrutura média 0,667, portanto a maior nota ainda deixa falhas operacionais. O recorte contém dois casos por estratégia; não sustenta uma conclusão universal nem prova custo de inferência inalterado.
 
-Por outro lado, no modelo `flan-t5-small`, a estratégia vencedora foi a de `checklist`, saltando de `0.266` no modelo base para `0.460`. Devido à sua arquitetura mais antiga e menor flexibilidade a contextos longos, o FLAN sofreu para absorver exemplos de few-shot, mas respondeu muito bem a diretrizes sequenciais curtas de verificação.
+No FLAN, `checklist` obteve **0,460**, contra **0,266** no `base` — ganho de 0,193 pontos, ou 72,6% relativo. Porém, estrutura e prioridade tiveram score zero. A semântica e as keywords elevaram a média sem tornar a saída pronta para automação. O experimento sugere testar estratégia por modelo, não atribuir o resultado apenas à idade da arquitetura.
 
 Esse achado desmistifica a ideia de que existe uma fórmula mágica universal de prompt. A técnica ideal depende diretamente da arquitetura e do tamanho do modelo utilizado.
 
-![Trilha de Auditoria](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0005_prompt_engineering_avancado/assets/06.png)
+![Trilha de Auditoria](../assets/06.png)
 
 > Figura 6. Registro tabular detalhado permitindo auditar o comportamento de cada par prompt-modelo caso a caso.
 
@@ -139,7 +139,8 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-python src/main.py --check
+python src/main.py --check  # verifica o launcher; não executa o benchmark
+python src/prompt_benchmark.py --limit 2
 ```
 
 A execução interativa acompanhada por gráficos comparativos e inspeção visual das respostas geradas pode ser realizada diretamente pelo Jupyter Notebook:

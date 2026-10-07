@@ -150,7 +150,7 @@ else:
 ## 🔗 Recursos
 
 - **Groq Console:** https://console.groq.com/keys
-- **Colab Secrets:** https://colab.research.google.com/drive/1HwqE2QrYy2j2q2q2q2q2q2q2q2q2q2q2q2q2q2q
+- **Colab Secrets:** https://colab.research.google.com/
 - **Documentação Groq:** https://console.groq.com/docs
 
 ---

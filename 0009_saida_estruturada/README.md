@@ -11,12 +11,12 @@
 
 ### Resumo
 
-Este módulo prova como transformar a inferência probabilística de LLMs locais em chamadas de função determinísticas e tipadas, comparando três níveis de contrato em modelos compactos (`qwen2.5:0.5b`, `qwen2.5:1.5b` e `llama3.2:1b`):
+Este módulo prova como validar sintaxe e contrato das respostas sem confundir isso com correção de negócio, comparando três níveis de contrato em modelos compactos (`qwen2.5:0.5b`, `qwen2.5:1.5b` e `llama3.2:1b`):
 
 - **Modo Livre (Prompt Only):** apenas pede JSON no prompt textual (fragilidade de parse e fences).
 - **Modo JSON (`format: "json"`):** garante sintaxe parseável, mas campos e enums permanecem desgovernados.
 - **Modo Schema (`format: <json_schema>`):** impõe contrato estrito via decodificação constrangida (Grammar-Guided Sampling com máscara de logits).
-- **A Fronteira System 1 (Jev vs Laya / Kev):** demonstra por que modelos de decisão direta em passada única (Single Forward Pass) superam a autoregressão em tarefas de roteamento e guardrails com latências em torno de 13 ms (> 30x mais velozes).
+- **Baseline não generativa:** roteador por embeddings `nomic-embed-text`; não executa Jev, Laya ou Kev e não oferece probabilidades calibradas.
 - **Análise de Latência e Retry:** demonstra empiricamente por que retries via prompt duplicam o tempo de resposta, enquanto contratos formais resolvem na largada.
 
 Tudo testado e medido em CPU local via Ollama.
@@ -30,7 +30,7 @@ Tudo testado e medido em CPU local via Ollama.
 - **Modelos de linguagem:** `qwen2.5:0.5b`, `qwen2.5:1.5b`, `llama3.2:1b`
 - **Validação de contratos:** `jsonschema`, Python `urllib` padrão
 - **Análise e visualização:** `pandas`, `matplotlib`
-- **Ambiente:** Python 3.10+
+- **Ambiente:** Python 3.14+ (compatível com 3.10+) em ambiente virtual isolado (.venv)
 
 ---
 
@@ -106,10 +106,10 @@ Ao executar o laboratório, você terá:
 - `data/structured_resultados.csv` - linha a linha de cada chamada medida (parse, validação de schema, assertividade semântica, latência e tokens)
 - `data/structured_resumo.csv` - consolidação por nível de contrato (Livre, JSON, Schema)
 - `data/structured_resumo_modelo.csv` - consolidação individual por modelo e modo
-- `data/system_one_comparativo.json` - métricas e latências do decisor System 1 (Single Forward Pass)
+- `data/system_one_comparativo.json` - métricas do roteador por embeddings; nome histórico preservado
 - `data/structured_relatorio.md` - relatório técnico pronto para leitura
 - `data/structured_comparativo.png` - gráfico comparativo de conformidade e latência
-- `assets/evidence_notebook.png` - comprovação visual de execução do notebook interativo
+- `../tmp/evidencias_notebooks/0009_saida_estruturada/evidence_notebook.png` - comprovação visual de execução do notebook interativo
 
 ---
 

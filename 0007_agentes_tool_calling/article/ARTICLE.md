@@ -12,7 +12,7 @@ Este artigo disseca a construção de um agente híbrido e observável executado
 
 Muitos sistemas rotulados como agentes no mercado nada mais são do que fluxos rígidos de if e else disfarçados de inteligência artificial.
 
-![Fluxo simples versus agente](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0007_agentes_tool_calling/assets/01.png)
+![Fluxo simples versus agente](../assets/01.png)
 
 > Figura 1. A evolução de fluxos rígidos para uma arquitetura agêntica com planejamento autônomo e observabilidade estrita.
 
@@ -28,7 +28,7 @@ Para provar que autonomia controlada não depende de faturamentos astronômicos 
 
 O modelo `Qwen2.5-0.5B-Instruct` é empregado para duas tarefas distintas: a etapa de planejamento estruturado (planner) e a síntese da resposta conversacional final. A biblioteca `sentence-transformers` com os pesos multilíngues do `paraphrase-multilingual-MiniLM-L12-v2` sustenta o roteamento semântico de intenções e a recuperação de documentos. Na camada de persistência local, catálogos em formato JSON padronizam o registro de ferramentas disponíveis, a base de conhecimento e os cenários reais de homologação.
 
-Todo o ciclo opera sem chaves de API, sem autenticações externas e sem custos de tokens, garantindo repetibilidade absoluta em qualquer ambiente corporativo isolado.
+Após baixar os pesos, o ciclo pode operar sem API externa. Isso elimina cobrança de tokens por um provedor, não custos de memória, energia ou operação. Geração e métricas podem variar entre versões de bibliotecas e hardware; inferência local não garante repetibilidade absoluta.
 
 ---
 
@@ -36,7 +36,7 @@ Todo o ciclo opera sem chaves de API, sem autenticações externas e sem custos 
 
 Em uma arquitetura de missão crítica, a inferência gerativa nunca deve ser o primeiro ponto de contato com o dado do usuário. A decisão começa restringindo o espaço de incerteza.
 
-![Guardrails de segurança](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0007_agentes_tool_calling/assets/02.png)
+![Guardrails de segurança](../assets/02.png)
 
 > Figura 2. A esteira de triagem posicionando guardrails determinísticos e regras de negócio antes do acionamento do planner.
 
@@ -61,7 +61,7 @@ O segundo escudo é a regra de negócio determinística. Solicitações recorren
 
 Quando a solicitação supera os filtros iniciais e exige raciocínio contextual, o controle é transferido para o módulo planejador (planner).
 
-![Tool calling na prática](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0007_agentes_tool_calling/assets/03.png)
+![Tool calling na prática](../assets/03.png)
 
 > Figura 3. O planner gerando chamadas de ferramentas sob contrato estrito de dados validável pelo backend.
 
@@ -121,7 +121,7 @@ Se a tentativa de decodificação do JSON falhar, a esteira ativa o roteador sem
 
 Um dos maiores erros de design em agentes é misturar a tomada de decisão com a execução de efeitos colaterais e a formatação final do texto.
 
-![Arquitetura mínima de agente](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0007_agentes_tool_calling/assets/04.png)
+![Arquitetura mínima de agente](../assets/04.png)
 
 > Figura 4. Camadas desacopladas separando o planejamento estratégico da execução de ferramentas e da síntese final.
 
@@ -135,11 +135,11 @@ Apenas após a coleta dos dados operacionais da ferramenta é que o modelo de li
 
 Autonomia sem rastreabilidade é inaceitável em ambientes corporativos sujeitos a conformidade regulatória.
 
-![Casos ideais de uso](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0007_agentes_tool_calling/assets/05.png)
+![Casos ideais de uso](../assets/05.png)
 
 > Figura 5. Trilha forense de auditoria capturando cada transição de estado, ferramenta acionada e justificativa do agente.
 
-A esteira registra cada passo do ciclo agêntico no arquivo `data/agent_audit_trail.csv`. Para cada interação do usuário, o sistema audita o texto original recebido, o status do guardrail de segurança, a decisão do planejador com seu payload JSON bruto, o caminho de execução utilizado (se houve acionamento normal, bypass de regra de negócio ou fallback semântico), a ferramenta invocada, o tempo de execução e a resposta final entregue.
+A esteira grava execuções em `data/agent_runs.csv` e eventos em `data/agent_audit_log.jsonl`, além de resumos de decisão e recuperação. Esses registros ajudam a explicar caminho de execução, ferramenta e resposta; não são uma trilha imutável ou à prova de adulteração. Em produção, aplique controles de acesso, retenção e minimização de dados sensíveis.
 
 Essa trilha permite que auditores e engenheiros inspecionem anomalias, identifiquem ferramentas que falham com frequência e depurem o comportamento do agente sem depender de suposições.
 
@@ -158,7 +158,8 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-python src/main.py --check
+python src/main.py --check  # verifica o launcher
+python src/agent_runner.py
 ```
 
 Para inspecionar visualmente as ativações de ferramentas, os bloqueios de guardrails e o arquivo de auditoria linha a linha, inicie o Jupyter Notebook interativo:
@@ -167,7 +168,7 @@ Para inspecionar visualmente as ativações de ferramentas, os bloqueios de guar
 jupyter notebook notebooks/agentes_tool_calling.ipynb
 ```
 
-A execução é puramente local e consome menos de um gigabyte de memória RAM em CPU convencional.
+O consumo de RAM depende dos pesos, precisão numérica, contexto e bibliotecas. O laboratório não mede RSS máximo, portanto não sustenta um limite de menos de 1 GB. Verifique memória e latência no hardware de destino.
 
 ---
 

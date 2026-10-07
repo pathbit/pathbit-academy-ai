@@ -27,18 +27,25 @@ Inclui exemplos práticos, código em Python e comparações de desempenho.
 
 ---
 
-### 🚀 Como Executar os Exemplos
+### Modo local explícito sem chave cloud
+
+`LAB_PROVIDER=ollama python src/main.py` abre o notebook usando Qwen local
+nas chamadas de comparação. É uma baseline para validar o fluxo: não mede
+Groq nem um modelo LRM. Sem essa variável, as etapas cloud exigem
+`GROQ_API_KEY`. O fine-tuning LoRA do artigo 0004 continua real e local.
+
+## 🚀 Como Executar os Exemplos
 
 #### 📋 Pré-requisitos
 
-- Python 3.10 ou superior (testado no Python 3.10 até 3.14)
+- Python 3.14+ (compatível com 3.10+) executando em ambiente virtual isolado (.venv)
 - Conta gratuita no [Groq Cloud](https://console.groq.com/keys) com API Key gerada
 
 #### 📦 Versões dos Pacotes
 
-- **Groq:** 0.32.0 (mais recente)
-- **Jupyter:** 1.1.1 (mais recente)
-- **IPython:** 9.5.0 (mais recente)
+- **Groq:** 0.32.0 (versão histórica; consulte o ambiente instalado)
+- **Jupyter:** 1.1.1 (versão histórica; consulte o ambiente instalado)
+- **IPython:** 9.5.0 (versão histórica; consulte o ambiente instalado)
 
 #### 🔧 Configuração da API Key
 

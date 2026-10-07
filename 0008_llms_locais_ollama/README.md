@@ -29,7 +29,7 @@ Tudo medido na própria máquina, em CPU.
 - **Modelos de chat:** `qwen2.5:0.5b`, `qwen2.5:1.5b`, `llama3.2:1b`
 - **Modelo de embeddings:** `nomic-embed-text`
 - **Cliente:** Python padrão (`urllib`), sem SDK
-- **Ambiente:** Python 3.10+, Pandas, Matplotlib
+- **Ambiente:** Python 3.14+ (compatível com 3.10+) em ambiente virtual isolado (.venv), Pandas, Matplotlib
 
 ---
 
@@ -51,8 +51,8 @@ Tudo medido na própria máquina, em CPU.
 #### Pré-requisitos
 
 - Docker Desktop ou Docker Engine (sem conta no registry: a imagem `ollama/ollama` é pública)
-- Python 3.10 ou superior
-- Sem chave de API (100% local e gratuito)
+- Python 3.14+ (compatível com 3.10+) executando em ambiente virtual isolado (.venv)
+- Sem cobrança de API por token após baixar modelos; hardware e energia têm custo
 - Conexão de internet apenas para baixar a imagem e os modelos abertos na primeira execução
 
 #### Subir o Ollama e puxar os modelos

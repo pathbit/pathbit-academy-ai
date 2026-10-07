@@ -159,6 +159,19 @@ def weighted_score(score: float, criticidade: str) -> float:
     return score * CRITICALITY_WEIGHTS.get(criticidade, 1.0)
 
 
+def evaluate_release_gate(summary: pd.DataFrame, regressions: pd.DataFrame) -> tuple[float, pd.DataFrame, str]:
+    """Julga somente o candidato escolhido, sem misturar regressões de outros."""
+    best = summary.iloc[0]
+    baseline = summary[summary["candidate"] == "qwen_generico"].iloc[0]
+    gain = float(best["score_ponderado"] - baseline["score_ponderado"])
+    critical = regressions[
+        (regressions["candidate"] == best["candidate"])
+        & (regressions["criticidade"] == "alta")
+    ]
+    gate = "aprovado" if gain >= 0.05 and critical.empty else "reprovado"
+    return gain, critical, gate
+
+
 def build_category_summary(results: pd.DataFrame) -> pd.DataFrame:
     """Resume performance por categoria e candidato."""
     return (
@@ -241,9 +254,16 @@ def run_evals(
     if limit is not None:
         df = df.head(limit)
 
-    embedder = build_embedder(embedding_model)
     registry = build_candidate_registry()
     candidate_names = candidate_names or DEFAULT_CANDIDATES
+    if "qwen_generico" not in candidate_names:
+        raise ValueError("Inclua qwen_generico: o gate precisa da baseline para comparar candidatos.")
+    unknown = set(candidate_names) - set(registry)
+    if unknown:
+        raise ValueError(f"Candidatos desconhecidos: {', '.join(sorted(unknown))}")
+    if df.empty:
+        raise ValueError("O recorte de avaliação deve conter pelo menos um caso.")
+    embedder = build_embedder(embedding_model)
     generators = {}
     for candidate_name in candidate_names:
         model_name = registry[candidate_name]["model"]
@@ -311,9 +331,7 @@ def run_evals(
 
     best_candidate = summary.iloc[0]
     baseline_summary = summary[summary["candidate"] == baseline_name].iloc[0]
-    gain = float(best_candidate["score_ponderado"] - baseline_summary["score_ponderado"])
-    critical_regressions = regressions[regressions["criticidade"] == "alta"]
-    gate = "aprovado" if gain >= 0.05 and critical_regressions.empty else "reprovado"
+    gain, critical_regressions, gate = evaluate_release_gate(summary, regressions)
 
     report = f"""# Relatório de Evals
 

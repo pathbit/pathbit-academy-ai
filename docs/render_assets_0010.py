@@ -410,6 +410,8 @@ TEMPLATES["0010_mcp_local/assets/05.png"] = f"""{BASE_HEAD}
 
 
 def render_all() -> None:
+    from measured_assets import overrides
+    TEMPLATES.update({key: value for key, value in overrides().items() if key in TEMPLATES})
     print(f"Renderizando {len(TEMPLATES)} ativos visuais para 0010_mcp_local...")
     for rel_path, html in TEMPLATES.items():
         output_png = ROOT / rel_path

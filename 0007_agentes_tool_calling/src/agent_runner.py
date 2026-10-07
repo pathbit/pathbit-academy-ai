@@ -160,7 +160,7 @@ def parse_plan(raw_text: str) -> dict[str, str] | None:
         return None
     try:
         plan = json.loads(match.group(0))
-        if {"tool", "argument", "reason"}.issubset(plan.keys()):
+        if isinstance(plan, dict) and {"tool", "argument", "reason"}.issubset(plan) and all(isinstance(plan[key], str) for key in ("tool", "argument", "reason")):
             return {
                 "tool": str(plan["tool"]),
                 "argument": str(plan["argument"]),

@@ -30,25 +30,32 @@ Inclui fine-tuning REAL com LoRA (demonstrativo), exemplos executáveis em Pytho
 
 ---
 
-### 🚀 Como Executar os Exemplos
+### Modo local explícito sem chave cloud
+
+`LAB_PROVIDER=ollama python src/main.py` abre o notebook usando Qwen local
+nas chamadas de comparação. É uma baseline para validar o fluxo: não mede
+Groq nem um modelo LRM. Sem essa variável, as etapas cloud exigem
+`GROQ_API_KEY`. O fine-tuning LoRA do artigo 0004 continua real e local.
+
+## 🚀 Como Executar os Exemplos
 
 #### 📋 Pré-requisitos
 
-- Python 3.10 ou superior (testado no Python 3.10 até 3.14)
+- Python 3.14+ (compatível com 3.10+) executando em ambiente virtual isolado (.venv)
 - Conta gratuita no [Groq Cloud](https://console.groq.com/keys) com API Key
 - Acesso ao Hugging Face (pesos e datasets públicos baixados automaticamente)
 
 #### 📦 Versões dos Pacotes
 
-- **groq:** 0.11.0 (mais recente)
-- **langchain:** 0.3.7 (mais recente)
-- **chromadb:** 0.5.23 (mais recente)
-- **sentence-transformers:** 3.3.1 (mais recente)
+- **groq:** 0.11.0 (versão histórica; consulte o ambiente instalado)
+- **langchain:** 0.3.7 (versão histórica; consulte o ambiente instalado)
+- **chromadb:** 0.5.23 (versão histórica; consulte o ambiente instalado)
+- **sentence-transformers:** 3.3.1 (versão histórica; consulte o ambiente instalado)
 - **transformers:** 4.46.3 (fine-tuning)
 - **peft:** 0.13.2 (LoRA)
 - **torch:** latest (PyTorch)
 - **pandas:** 2.2.3 (análise)
-- **jupyter:** 1.1.1 (mais recente)
+- **jupyter:** 1.1.1 (versão histórica; consulte o ambiente instalado)
 
 #### 🔧 Configuração da API Key
 
@@ -157,13 +164,13 @@ Para problemas específicos, consulte a documentação na pasta `docs/`:
 - **Fine-Tuning:** ~$200 (+ $500 manutenção)
 - **Híbrido:** ~$500
 
-**Conclusão:** RAG é 3-4x mais barato que fine-tuning na maioria dos casos.
+**Limite:** estes valores são hipóteses didáticas, não benchmark de custo. Na calculadora do notebook, 10 mil consultas/mês durante 12 meses resultam em US$ 12 (base), US$ 1.136 (RAG) e US$ 16.024 (fine-tuning), incluindo setups/manutenção assumidos. O break-even RAG/FT é cerca de 12,42 milhões de consultas/mês sob essas mesmas hipóteses.
 
 ---
 
 ### 🎓 Tecnologias Utilizadas
 
-- **LLM:** Groq (Llama 3.3 70B) - Rápido e gratuito
+- **LLM:** Groq (`openai/gpt-oss-120b`) ou baseline Qwen local explicitamente selecionada
 - **RAG Framework:** LangChain
 - **Vector Database:** ChromaDB
 - **Embeddings:** Sentence-Transformers (all-MiniLM-L6-v2)
@@ -289,7 +296,7 @@ Tecnicamente sim, mas resultados são ruins. Mínimos recomendados:
 - **10.000+ exemplos:** Ideal para boa qualidade
 - **50.000+ exemplos:** Excelente para casos complexos
 
-**Dica:** Se tem < 1.000 exemplos de qualidade, use RAG + Prompt Engineering.
+**Dica:** quantidade não substitui representatividade. Reserve teste separado e meça a curva de aprendizado; não há um mínimo universal de mil exemplos.
 
 #### **Posso fazer fine-tuning grátis?**
 
@@ -334,7 +341,14 @@ Mas requer modelos especializados (não coberto neste artigo).
 
 ---
 
-### 🚀 Como Executar
+### Modo local explícito sem chave cloud
+
+`LAB_PROVIDER=ollama python src/main.py` abre o notebook usando Qwen local
+nas chamadas de comparação. É uma baseline para validar o fluxo: não mede
+Groq nem um modelo LRM. Sem essa variável, as etapas cloud exigem
+`GROQ_API_KEY`. O fine-tuning LoRA do artigo 0004 continua real e local.
+
+## 🚀 Como Executar
 
 #### Opção 1 - Google Colab (Recomendado)
 
@@ -374,7 +388,7 @@ python src/main.py
 
 #### ⚠️ Avisos Importantes
 
-- **Fine-tuning:** Funciona em CPU mas GPU é recomendado (10x mais rápido)
+- **Fine-tuning:** Funciona em CPU mas GPU pode acelerar; o ganho depende do modelo e hardware
 - **Tempo de execução:** 5-10 minutos (primeira vez), 2-3 minutos (subsequentes)
 - **Espaço em disco:** ~2GB (modelos de embeddings e GPT-2)
 - **Memória RAM:** Mínimo 4GB, recomendado 8GB+
@@ -432,3 +446,9 @@ Contribuições são bem-vindas! Para contribuir:
 ---
 
 **Desenvolvido com ❤️ pela [Pathbit](https://pathbit.com)**
+
+## Limites das estimativas financeiras
+
+Todas as faixas de dólares, exemplos e tempos acima são cenários ilustrativos,
+não medições em `data/` nem preços atuais de um fornecedor. Consulte preços,
+tokens, hardware e volume do seu projeto. Few-shot prompting não é fine-tuning.

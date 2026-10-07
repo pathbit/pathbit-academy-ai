@@ -42,7 +42,7 @@ Release gate olha ranking e regressão ao mesmo tempo
 A decisão final não depende só do campeão da média. O runner calcula delta contra a baseline e procura regressões críticas antes de aprovar a mudança.
 
 > Melhor candidato: `flan_estruturado` com 1.357.
-> Gate atual: reprovado por 2 regressões críticas.
+> Gate corrigido: aprovado para FLAN; as regressões registradas pertencem ao Qwen estruturado.
 
 **Slide 5**
 [layout: split]
@@ -52,7 +52,7 @@ A decisão final não depende só do campeão da média. O runner calcula delta 
 
 O melhor resultado agregado não liberou produção
 
-A baseline ponderada ficou em `0.932` e o melhor candidato abriu ganho de `0.425`. Mesmo assim, o release foi bloqueado porque o conjunto comparado criou risco em casos críticos.
+A baseline preservada é 0,750 e o vencedor 1,357: ganho de 0,607 pontos. O gate anterior misturava candidatos; agora verifica apenas regressões críticas do escolhido. Relatórios históricos em data/ não foram alterados.
 
 Leaderboard bonito perde para política de release defensável.
 

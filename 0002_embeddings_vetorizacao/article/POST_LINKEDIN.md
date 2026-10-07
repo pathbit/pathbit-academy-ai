@@ -8,7 +8,7 @@ Analisamos o funcionamento sob o capô:
 - A decomposição da sequência em subtokens e a atenção contextual do Transformer.
 - A consolidação do vetor da sentença via pooling e a normalização L2.
 - A geometria da similaridade de cosseno, que avalia o ângulo entre vetores e não o tamanho do texto.
-- O perigo invisível de modelos de embeddings: usar modelos exclusivamente treinados em inglês para avaliar textos em português inverte completamente a classificação de similaridade.
+- O perigo invisível de modelos de embeddings: usar um modelo orientado a inglês pode prejudicar rankings em português; valide consultas rotuladas antes de escolher.
 
 Também comparamos as principais opções abertas e proprietárias em uma matriz objetiva de latência, dimensões e custos de infraestrutura, além de demonstrar casos reais de triagem de suporte e classificação com classificadores lineares sobre vetores.
 

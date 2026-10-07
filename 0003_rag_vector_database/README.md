@@ -34,21 +34,21 @@ Inclui exemplos práticos, código em Python e comparações de performance entr
 
 ### 📋 Pré-requisitos
 
-- Python 3.10 ou superior (testado no Python 3.10 até 3.14)
+- Python 3.14+ (compatível com 3.10+) executando em ambiente virtual isolado (.venv)
 - Conta gratuita no [Groq Cloud](https://console.groq.com/keys) com API Key (opcional para geração)
 - ChromaDB (embarcado e executado 100% localmente)
 
 ### 📦 Versões dos Pacotes
 
-- **groq:** 0.32.0 (mais recente)
-- **chromadb:** 0.4.22 (mais recente)
-- **sentence-transformers:** 3.1.1 (mais recente)
-- **numpy:** 1.26.4 (mais recente)
-- **pandas:** 2.2.2 (mais recente)
-- **matplotlib:** 3.9.0 (mais recente)
-- **seaborn:** 0.13.2 (mais recente)
-- **jupyter:** 1.1.1 (mais recente)
-- **ipython:** 9.5.0 (mais recente)
+- **groq:** 0.32.0 (versão histórica; consulte o ambiente instalado)
+- **chromadb:** 0.4.22 (versão histórica; consulte o ambiente instalado)
+- **sentence-transformers:** 3.1.1 (versão histórica; consulte o ambiente instalado)
+- **numpy:** 1.26.4 (versão histórica; consulte o ambiente instalado)
+- **pandas:** 2.2.2 (versão histórica; consulte o ambiente instalado)
+- **matplotlib:** 3.9.0 (versão histórica; consulte o ambiente instalado)
+- **seaborn:** 0.13.2 (versão histórica; consulte o ambiente instalado)
+- **jupyter:** 1.1.1 (versão histórica; consulte o ambiente instalado)
+- **ipython:** 9.5.0 (versão histórica; consulte o ambiente instalado)
 
 ### 🔧 Configuração das API Keys (Opcional)
 

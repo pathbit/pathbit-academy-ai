@@ -1,4 +1,4 @@
 modo,parse_ok_pct,schema_ok_pct,semantico_ok_pct,recuperado_pct,total_medio_ms,tokens_medios,chamadas
-json,83.3,0.0,0.0,0.0,944.9,38.3,18
-livre,0.0,0.0,0.0,0.0,2514.9,79.8,18
-schema,100.0,100.0,44.4,,352.9,22.7,18
+json,88.9,0.0,0.0,0.0,1158.3,39.2,18
+livre,0.0,0.0,0.0,0.0,3007.7,87.2,18
+schema,100.0,100.0,44.4,,400.5,22.7,18

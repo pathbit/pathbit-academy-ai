@@ -6,7 +6,7 @@ No módulo 0009 da Pathbit Academy, mostramos por que prompt não é contrato e 
 
 Analisamos o Grammar-Guided Sampling por baixo dos panos. Em vez de torcer para o modelo gerar a sintaxe certa, o JSON Schema é compilado em uma máquina de estados finitos que mascara os logits a cada token gerado. Qualquer caractere que viole a gramática recebe probabilidade zero antes mesmo da amostragem. O resultado é 100% de conformidade sintática e tipada.
 
-Também exploramos uma reflexão importante que está mudando a arquitetura de sistemas com IA: por que gastar dezenas de passos sequenciais gerando chaves e colchetes quando o sistema precisa apenas de um enum ou de uma decisão discreta? Apresentamos a fronteira dos modelos System 1, como Laya e Jev, capazes de resolver roteamentos e classificações em uma única passada de tensores em cerca de 13 milissegundos, mais de trinta vezes mais rápido que um LLM tradicional.
+A baseline local usa embeddings para escolher entre três rotas; não mede produtos comerciais e não substitui validação semântica.
 
 O laboratório prático com validação Pydantic, scripts de benchmark e dados reais medidos na máquina já está disponível no repositório.
 

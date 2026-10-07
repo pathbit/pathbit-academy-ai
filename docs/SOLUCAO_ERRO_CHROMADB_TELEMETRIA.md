@@ -1,5 +1,9 @@
 # 🔧 Solução: Erros de Telemetria do ChromaDB
 
+> Nota de versão: patches em APIs privadas abaixo são históricos e podem não
+> existir em Chroma atual. Prefira `Settings(anonymized_telemetry=False)` e
+> teste a versão instalada; não faça downgrade automático para 0.5.23.
+
 ## 🎯 Problema
 
 Ao usar o ChromaDB, você pode encontrar os seguintes erros:
@@ -22,7 +26,7 @@ Esses erros são causados por uma incompatibilidade na biblioteca de telemetria 
 Atualize para a versão `0.5.23` ou superior:
 
 ```bash
-pip install --upgrade chromadb==0.5.23
+python -m pip install --upgrade chromadb
 ```
 
 Ou atualize seu `requirements.txt`:
@@ -100,7 +104,7 @@ print("✅ ChromaDB configurado corretamente!")
 ## 🔗 Referências
 
 - [Documentação do ChromaDB](https://docs.trychroma.com/)
-- [Configurações do ChromaDB](https://docs.trychroma.com/usage-guide#client-settings)
+- [Configurações do ChromaDB](https://docs.trychroma.com/)
 - [GitHub do ChromaDB](https://github.com/chroma-core/chroma)
 
 ---

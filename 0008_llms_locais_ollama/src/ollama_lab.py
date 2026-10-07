@@ -20,7 +20,6 @@ import numpy as np
 import pandas as pd
 import matplotlib
 
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 DEFAULT_BASE_URL = "http://localhost:11434"
@@ -164,7 +163,7 @@ def chat_with_metrics(base_url: str, model: str, prompt: str, timeout: float = 3
             "model": model,
             "messages": [{"role": "user", "content": prompt}],
             "stream": True,
-            "options": {"temperature": 0},
+            "options": {"temperature": 0, "num_predict": 128, "num_thread": 4},
         }
     ).encode("utf-8")
     request = urllib.request.Request(
@@ -476,6 +475,7 @@ def run_lab(
 
 
 def main() -> None:
+    matplotlib.use("Agg")
     parser = argparse.ArgumentParser(description="Laboratorio local de LLMs com Ollama em Docker")
     parser.add_argument("--base-url", default=DEFAULT_BASE_URL, help="Endpoint do Ollama")
     parser.add_argument("--models", default=DEFAULT_CHAT_MODELS, help="Modelos de chat separados por virgula")

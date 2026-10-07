@@ -94,7 +94,7 @@ axes[1, 1].set_title('Resumo do Sistema')
 ## 🔗 Referências
 
 - [Documentação do Matplotlib - Fonts](https://matplotlib.org/stable/tutorials/text/text_props.html)
-- [Unicode Support in Matplotlib](https://matplotlib.org/stable/tutorials/text/unicode.html)
+- [Unicode Support in Matplotlib](https://matplotlib.org/stable/users/explain/text/text_props.html)
 
 ---
 

@@ -12,7 +12,7 @@ Este artigo apresenta uma esteira automatizada e rigorosa de avaliação contín
 
 O perigo mais insidioso em esteiras de inteligência artificial não é o modelo responder mal em todos os cenários, mas introduzir regressões pontuais em casos de alta sensibilidade.
 
-![Risco de regressão](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0006_llm_evals_regressao/assets/01.png)
+![Risco de regressão](../assets/01.png)
 
 > Figura 1. O perigo de aprovar alterações guiando-se por médias agregadas que ocultam falhas em cenários de alta criticidade.
 
@@ -56,7 +56,7 @@ Esse desenho modular permite comparar promoção de prompts, migração de model
 
 Diferente de datasets ingênuos que se limitam a pares de pergunta e resposta, o arquivo de avaliação deste laboratório (`eval_dataset.csv`) incorpora metadados operacionais essenciais para governança.
 
-![Dataset de evals](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0006_llm_evals_regressao/assets/02.png)
+![Dataset de evals](../assets/02.png)
 
 > Figura 2. Estrutura do dataset incorporando contexto factual, gabarito de referência, termos mandatórios e classificação de risco.
 
@@ -70,11 +70,11 @@ Essa catalogação prévia estabelece a base para ponderar a severidade das falh
 
 A avaliação de cada candidato evita depender exclusivamente de julgamentos subjetivos, combinando três métricas algorítmicas complementares.
 
-![Métricas de avaliação](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0006_llm_evals_regressao/assets/03.png)
+![Métricas de avaliação](../assets/03.png)
 
 > Figura 3. Cálculo da pontuação multidimensional combinando similaridade semântica, retenção de palavras críticas e fidelidade ao contexto.
 
-O primeiro componente é a similaridade semântica, calculada pelo cosseno entre os vetores de embedding da resposta gerada e do gabarito humano através do modelo `paraphrase-multilingual-MiniLM-L12-v2`. O segundo componente é a cobertura de palavras críticas (keyword recall), que valida determinísticamente se termos indispensáveis foram emitidos pelo modelo. O terceiro elemento é a fidelidade factual (faithfulness), que afere se o texto produzido está estritamente contido no contexto factual fornecido.
+A similaridade semântica compara embeddings da resposta e do gabarito. O keyword recall mede cobertura literal de termos. A função chamada `faithfulness` neste runner mede **sobreposição de tokens da resposta com o contexto**, não implicação lógica nem verdade factual. Uma frase que troca “permitido” por “não permitido” pode preservar muitas palavras e obter nota alta; casos assim exigem verificações específicas.
 
 ```python
 score_semantic = semantic_similarity(embedder, row["gold"], pred)
@@ -100,7 +100,7 @@ Essa multiplicação recalibra a influência dos casos no ranking global. Um can
 
 O diferencial entre um leaderboard decorativo e um sistema de engenharia reside na capacidade de impedir deploys que violem políticas de qualidade.
 
-![Gate de release](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0006_llm_evals_regressao/assets/04.png)
+![Gate de release](../assets/04.png)
 
 > Figura 4. O mecanismo de gate automatizado avaliando deltas de regressão cenário a cenário antes de autorizar o deploy.
 
@@ -114,7 +114,7 @@ regressions = comparison[
 ]
 ```
 
-Qualquer queda de desempenho superior a cinco pontos percentuais em relação à baseline é catalogada como uma regressão. Se essa queda ocorrer em um cenário classificado como de alta criticidade, o sistema aciona um alarme vermelho.
+Uma queda maior que **0,05 pontos de score ponderado** é registrada como regressão. Não são cinco pontos percentuais de acurácia: o score é multiplicado por criticidade e pode ultrapassar 1. O relatório lista todos os candidatos, mas a decisão de deploy considera apenas regressões do candidato escolhido.
 
 A regra de liberação de versão implementada na esteira é intencionalmente conservadora:
 
@@ -122,11 +122,11 @@ A regra de liberação de versão implementada na esteira é intencionalmente co
 gate = "aprovado" if gain >= 0.05 and critical_regressions.empty else "reprovado"
 ```
 
-Para que uma nova versão seja aprovada, ela precisa apresentar um ganho global ponderado de pelo menos cinco pontos percentuais sobre a baseline e, simultaneamente, apresentar zero regressões críticas. Mesmo que um candidato eleve a média geral em quarenta por cento, se ele piorar a assertividade de um único caso financeiro ou contratual, o gate de release reprova a entrega automaticamente.
+O candidato escolhido precisa ganhar pelo menos **0,05 pontos ponderados** sobre a baseline e não ter regressões críticas acima do limiar. Essa regra não detecta quedas menores que 0,05 nem garante qualidade absoluta. Em produção, acrescente pisos por categoria, casos adversos e repetições; uma comparação relativa pode aprovar dois candidatos ruins.
 
-Nos dados apurados neste módulo, embora o candidato `flan_estruturado` tenha atingido o maior escore ponderado médio (1.357 contra 0.932 da baseline), o conjunto do experimento registrou duas regressões severas em cenários de alta criticidade no modelo estruturado, resultando na reprovação imediata da esteira e demonstrando o rigor prático do método.
+Os dados preservados registram `flan_estruturado` com **1,357** e baseline `qwen_generico` com **0,750**. As regressões registradas pertencem a `qwen_estruturado`, não ao FLAN. A versão anterior do gate misturava candidatos e podia reprovar o vencedor por falhas de outro; o runner agora filtra pelo candidato escolhido. Os relatórios históricos em `data/` permanecem intactos e devem ser lidos como evidência daquela versão, não como decisão do código corrigido.
 
-![Pipeline de avaliação contínua](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0006_llm_evals_regressao/assets/05.png)
+![Pipeline de avaliação contínua](../assets/05.png)
 
 > Figura 5. O fluxo contínuo de auditoria gerando artefatos estruturados para conferência detalhada da equipe de engenharia.
 
@@ -145,10 +145,11 @@ python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
-python src/main.py --check
+python src/main.py --check  # verifica o launcher
+python src/eval_runner.py --limit 3
 ```
 
-Para inspecionar as distribuições de notas, a matriz de confusão e as saídas detalhadas de cada candidato passo a passo, utilize o ambiente interativo:
+Para inspecionar o ranking, os deltas por caso e as respostas de cada candidato, utilize o notebook:
 
 ```bash
 jupyter notebook notebooks/llm_evals_regressao.ipynb

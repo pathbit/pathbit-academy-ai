@@ -19,15 +19,20 @@ services:
       - "11434:11434"
     volumes:
       - ollama-data:/root/.ollama
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+      - OLLAMA_NUM_PARALLEL=2
     restart: unless-stopped
-    # Opcional (Linux com NVIDIA): descomente para usar a GPU.
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices:
-    #         - driver: nvidia
-    #           count: all
-    #           capabilities: [gpu]
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        # Opcional (Linux com NVIDIA): descomente para usar a GPU.
+        # reservations:
+        #   devices:
+        #     - driver: nvidia
+        #       count: all
+        #       capabilities: [gpu]
 
 volumes:
   ollama-data:

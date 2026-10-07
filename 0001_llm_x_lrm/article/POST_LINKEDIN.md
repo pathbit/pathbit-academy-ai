@@ -6,7 +6,7 @@ No módulo 0001 da Pathbit Academy, desmontamos essa confusão conceitual e comp
 
 A diferença fundamental não é a quantidade de parâmetros memorizados, mas a física da computação no momento da inferência. 
 
-Um LLM convencional atua como um preditor estatístico de próximo token, gastando o mesmo esforço computacional para escrever uma vírgula ou para formular uma tese. É o nosso Sistema 1: rápido, intuitivo, imbatível em síntese de textos, conversação e tarefas de baixa latência.
+Um LLM estima o próximo token; custo depende de contexto, cache, arquitetura e hardware. Modelos de raciocínio também são LLMs: a distinção útil é orçamento de inferência, treinamento e qualidade medida, não uma oposição rígida entre duas arquiteturas.
 
 Já um LRM explora a escalabilidade da computação durante a inferência. Antes de devolver o primeiro caractere, o modelo gera uma cadeia oculta de reflexão, formula hipóteses, detecta inconsistências em passos anteriores e se autocorrige. É o Sistema 2: deliberado, analítico e essencial para lógica formal, auditoria de dados e geração de código complexo.
 

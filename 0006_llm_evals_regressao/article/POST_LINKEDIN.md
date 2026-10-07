@@ -7,7 +7,7 @@ No módulo 0006 da Pathbit Academy, implementamos uma esteira completa de LLM Ev
 Analisamos a metodologia sob o capô:
 - A avaliação de candidatos completos de implantação combinando modelos e prompts de forma atômica.
 - Um dataset estruturado com contextos, gabaritos de referência, palavras-chave mandatórias e pesos de criticidade por risco de negócio.
-- O cálculo da pontuação técnica integrando similaridade semântica por embeddings, retenção de termos essenciais e fidelidade factual.
+- O cálculo da pontuação técnica integrando similaridade semântica por embeddings, retenção de termos essenciais e sobreposição lexical com o contexto (uma heurística, não prova factual).
 - A detecção determinística de regressões por cenário contra a baseline histórica.
 - Um gate automatizado de release que reprova deploys se houver qualquer regressão em casos de alta criticidade, mesmo que a média agregada tenha subido.
 

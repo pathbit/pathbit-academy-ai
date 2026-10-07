@@ -1186,3 +1186,7 @@ $RECYCLE.BIN/
 ### Not Ignored ###
 **/.vscode/
 **/highlights/
+
+# Testes de regressão são fonte, não artefatos temporários.
+!/tests/
+!/tests/*.py

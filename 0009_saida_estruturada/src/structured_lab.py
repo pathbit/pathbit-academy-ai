@@ -22,8 +22,6 @@ from pathlib import Path
 import jsonschema
 import pandas as pd
 import matplotlib
-
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 DEFAULT_BASE_URL = "http://localhost:11434"
@@ -114,7 +112,7 @@ def gerar(base_url: str, model: str, prompt: str, modo: str, schema: dict | None
         "model": model,
         "prompt": prompt,
         "stream": False,
-        "options": {"temperature": temperature, "num_predict": 128},
+        "options": {"temperature": temperature, "num_predict": 128, "num_thread": 4},
     }
     if modo == "json":
         payload["format"] = "json"
@@ -184,7 +182,10 @@ def run_task_case(base_url: str, model: str, task: dict, modo: str) -> dict:
         )
         if parse_ok and schema_ok:
             break
-    return tentativas[-1] if len(tentativas) == 1 else _linha_consolidada(tentativas)
+    if len(tentativas) == 1:
+        tentativas[0]["recuperado"] = False
+        return tentativas[0]
+    return _linha_consolidada(tentativas)
 
 
 def _linha_consolidada(tentativas: list[dict]) -> dict:
@@ -194,11 +195,16 @@ def _linha_consolidada(tentativas: list[dict]) -> dict:
     final["tentativa"] = len(tentativas)
     final["recuperado"] = falhou_primeira and (final["parse_ok"] and final["schema_ok"])
     final["total_ms"] = round(sum(t["total_ms"] for t in tentativas), 1)
+    final["tokens"] = sum(t["tokens"] for t in tentativas)
     return final
 
 
 def benchmark_system_one(base_url: str, repeat: int = 5) -> dict:
-    """Mede a tomada de decisao direta em passada unica (System 1) sem geracao autoregressiva."""
+    """Mede roteamento por similaridade de embeddings, sem decoder autoregressivo.
+
+    Não executa Jev, Laya ou outro modelo comercial de decisão. As pontuações
+    softmax abaixo ordenam similaridades; não são probabilidades calibradas.
+    """
     import math
 
     classes = {
@@ -257,8 +263,8 @@ def benchmark_system_one(base_url: str, repeat: int = 5) -> dict:
     media = sum(latencias) / len(latencias)
 
     return {
-        "paradigma": "System 1 (Single Forward Pass / Decisor Direto)",
-        "frameworks_referencia": ["Laya (Open-Source)", "Jev (TypeSafe AI)", "Kev"],
+        "paradigma": "Roteador por embeddings nomic-embed-text e similaridade de cosseno",
+        "frameworks_referencia": ["Ollama / nomic-embed-text"],
         "chamadas_avaliadas": total_calls,
         "acuracia_pct": round(100 * acertos / total_calls, 1),
         "latencia_media_ms": round(media, 2),
@@ -391,18 +397,18 @@ def montar_relatorio(server: dict, resumo: pd.DataFrame, por_modelo: pd.DataFram
     if sys1:
         linhas.extend(
             [
-                "## A Nova Fronteira: Modelos System 1 (Passada Unica sem Geracao)",
+                "## Baseline não generativa: roteamento por embeddings",
                 "",
                 f"- **Paradigma:** `{sys1['paradigma']}`",
                 f"- **Referencias da Industria:** `{', '.join(sys1['frameworks_referencia'])}`",
-                f"- **Latencia Mediana (p50):** `{sys1['latencia_p50_ms']} ms` (vs ~1.500 ms no modo schema)",
+                f"- **Latencia Mediana (p50):** `{sys1['latencia_p50_ms']} ms`",
                 f"- **Latencia Percentil 95 (p95):** `{sys1['latencia_p95_ms']} ms`",
                 f"- **Latencia Media:** `{sys1['latencia_media_ms']} ms`",
                 f"- **Tokens gerados no decoder:** `{sys1['tokens_gerados']}` (sem loop autoregressivo)",
                 f"- **Conformidade com schema:** `{sys1['conformidade_schema_pct']}%`",
                 f"- **Acuracia de decisao:** `{sys1['acuracia_pct']}%`",
                 "",
-                "> **Conclusao:** Enquanto LLMs generativos com JSON Schema garantem a integridade de payloads complexos com texto livre (~1.500 ms), modelos System 1 (como o Laya em open-source ou Jev na nuvem) resolvem roteamento e selecao de tools com mais de 50x de reducao de latencia.",
+                "> **Limite:** esta baseline escolhe entre três rótulos fixos usando embeddings. Não mede Jev ou Laya, não extrai argumentos e não demonstra equivalência com um modelo generativo. Compare a latência com o resumo desta execução, sem extrapolar para outros produtos.",
                 "",
             ]
         )
@@ -421,6 +427,7 @@ def montar_relatorio(server: dict, resumo: pd.DataFrame, por_modelo: pd.DataFram
 
 
 def main() -> None:
+    matplotlib.use("Agg")
     parser = argparse.ArgumentParser(description="Laboratorio de saida estruturada com Ollama")
     parser.add_argument("--base-url", default=DEFAULT_BASE_URL)
     parser.add_argument("--models", default=DEFAULT_CHAT_MODELS)

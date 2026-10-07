@@ -6,9 +6,9 @@ O desenvolvedor testa três vezes no terminal, comemora que o resultado veio em 
 
 Na segunda-feira de manhã, o primeiro incidente de severidade alta acontece. O modelo decidiu prefixar a resposta com blocos de markdown na primeira linha, inseriu uma saudação cortês antes das chaves, trocou o nome da chave `status` por `situacao`, formatou um valor monetário como texto em vez de número decimal ou alucinou uma opção inexistente fora do enum esperado. O backend executa o parser JSON, estoura uma exceção fatal de sintaxe ou de chave ausente, e a esteira inteira de atendimento é interrompida.
 
-No [Artigo 0008 da Pathbit Academy](https://github.com/pathbit/pathbit-academy-ai/blob/master/0008_llms_locais_ollama/article/ARTICLE.md), provamos como rodar uma stack completa de IA 100% local em Docker via Ollama, eliminando custos por token e dependências de nuvem. No entanto, ter o modelo rodando localmente não resolve por si só a fragilidade da interface de saída.
+No [Artigo 0008 da Pathbit Academy](https://github.com/pathbit/pathbit-academy-ai/blob/master/0008_llms_locais_ollama/article/ARTICLE.md), provamos como rodar uma stack completa de IA 100% local em Docker via Ollama, eliminando cobrança de API por token, após baixar pesos e dependências. No entanto, ter o modelo rodando localmente não resolve por si só a fragilidade da interface de saída.
 
-Este artigo aprofunda exatamente essa fronteira crítica de engenharia sobre como transformar a inferência probabilística de um LLM em uma chamada de função determinística e fortemente tipada. Comparamos na prática três níveis de contrato em modelos locais compactos (Qwen 2.5 0.5B, Qwen 2.5 1.5B e Llama 3.2 1B) e apresentamos a nova fronteira da indústria de IA, que são os modelos System 1 para decisões instantâneas em passada única.
+O contrato precisa separar três perguntas: a saída é JSON válido, respeita o schema e contém a decisão correta? As duas primeiras podem ser verificadas pelo software; a terceira exige dados rotulados e regras de negócio. Saída estruturada reduz erros de integração, mas não transforma a inferência probabilística em uma função semanticamente determinística.
 
 ---
 
@@ -16,9 +16,9 @@ Este artigo aprofunda exatamente essa fronteira crítica de engenharia sobre com
 
 A relação entre código de engenharia e modelos de linguagem evoluiu através de três paradigmas bem definidos de acoplamento.
 
-![Os Três Níveis de Contrato com LLMs](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0009_saida_estruturada/assets/01.png)
+![Os Três Níveis de Contrato com LLMs](../assets/01.png)
 
-> Figura 1. Da incerteza do texto livre à garantia matemática estrita imposta pelo motor de inferência.
+> Figura 1. Da solicitação textual à restrição de formato e validação no consumidor.
 
 ### O prompt otimista em modo livre
 
@@ -31,13 +31,13 @@ Não inclua explicações nem blocos markdown.
 Entrada: 'Quero devolver uma televisão comprada há 10 dias.'"""
 ```
 
-O problema desse nível é que ele falha sob qualquer variação de contexto. Como os modelos são treinados em bases massivas de código com tutoriais, a probabilidade estatística de envolver o JSON em blocos markdown com crases triplas é altíssima. Além disso, saudações de cortesia poluem o início e o fim da mensagem. 
+O problema desse nível é que ele falha sob qualquer variação de contexto. Como os modelos são treinados em bases massivas de código com tutoriais, a probabilidade estatística de envolver o JSON em blocos markdown com crases triplas é altíssima. Além disso, saudações de cortesia poluem o início e o fim da mensagem.
 
-Muitas equipes tentam contornar isso com expressões regulares artesanais para localizar chaves de abertura e fechamento, mas qualquer aspa desbalanceada no meio do texto quebra o parser. Nos nossos testes medidos, quase 30% das chamadas sequer passaram na leitura inicial do JSON, e a assertividade de negócio caiu para 44.4%.
+Limpar code fences pode resgatar JSON, mas não corrige campos ou decisões erradas. Nos dados preservados, o modo livre teve 0% de parse; schema chegou a 100% de conformidade, mas somente 44,4% de acerto de negócio. Não confunda robustez sintática com qualidade da decisão.
 
 ### O modo JSON sintático
 
-O motor de inferência, como o Ollama ou o llama.cpp, restringe a decodificação para forçar que a sequência de tokens gerada seja um documento JSON sintaticamente válido. O modelo não consegue concluir a geração sem fechar aspas, vírgulas e colchetes.
+O motor pode restringir a geração à sintaxe JSON. Ainda assim, timeout, limite de tokens ou interrupção podem produzir saída incompleta, e JSON válido pode ser um objeto com campos errados. Faça parsing e validação no consumidor, mesmo em modo JSON.
 
 ```json
 {
@@ -73,9 +73,9 @@ Qualquer token do vocabulário que gere uma chave inexistente, viole a tipagem n
 
 ## A matemática do Grammar-Guided Sampling sob o capô
 
-Para compreender por que o Nível 3 oferece garantia estrutural total sem quebras de parse, é preciso examinar o ciclo autoregressivo de geração de um modelo.
+Para compreender como o Nível 3 restringe a estrutura, sem dispensar validação de parse, é preciso examinar o ciclo autoregressivo de geração de um modelo.
 
-![Mecanismo de Decodificação Constrangida](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0009_saida_estruturada/assets/02.png)
+![Mecanismo de Decodificação Constrangida](../assets/02.png)
 
 > Figura 2. Máscara dinâmica de logits guiada por Autômato de Estados Finitos a cada token gerado.
 
@@ -83,15 +83,15 @@ A cada passo de tempo $t$, o modelo processa o contexto acumulado e calcula um v
 
 $$\mathbf{z}_t = [z_{t, 1}, z_{t, 2}, \dots, z_{t, V}] \in \mathbb{R}^V$$
 
-onde $V$ representa o tamanho total do vocabulário do tokenizer, que gira entre 128 mil e 152 mil tokens nos modelos modernos.
+onde $V$ representa o tamanho total do vocabulário do tokenizer, que depende do modelo e do tokenizer (não há uma faixa universal).
 
 Em amostragem livre com temperatura $T$, a probabilidade de selecionar determinado token é calculada pela função Softmax.
 
 $$P(\text{token}_i) = \frac{e^{z_{t, i} / T}}{\sum_{j=1}^V e^{z_{t, j} / T}}$$
 
-Antes de iniciar a geração, a biblioteca llama.cpp no Ollama compila a especificação JSON Schema em uma Gramática Livre de Contexto (CFG / EBNF) e constrói um Autômato de Estados Finitos (FSM). 
+O runtime converte o subconjunto suportado de JSON Schema em uma gramática e restringe tokens compatíveis com o prefixo gerado. JSON aninhado requer estado de pilha; não é correto reduzir toda gramática livre de contexto a um autômato finito. Nem toda palavra-chave de JSON Schema é suportada pelo motor: valide novamente no consumidor.
 
-No estado inicial, o único caractere permitido pela gramática é a chave de abertura `{`. Uma vez aberta a chave, o autômato passa para o estado que exige o nome de uma propriedade declarada. Se o modelo tentar emitir qualquer letra que não inicie uma chave válida, essa transição é considerada proibida.
+Para um schema de objeto, a geração pode começar com whitespace permitido e a abertura `{`. Uma vez aberta a chave, o autômato passa para o estado que exige o nome de uma propriedade declarada. Se o modelo tentar emitir qualquer letra que não inicie uma chave válida, essa transição é considerada proibida.
 
 Para aplicar essa regra fisicamente, o motor calcula o conjunto de tokens válidos no estado atual da máquina de estados. Todos os tokens ilegais têm seus valores de logits sobrescritos para menos infinito.
 
@@ -99,7 +99,7 @@ $$\tilde{z}_{t, i} = \begin{cases} z_{t, i}, & \text{se } i \in V_{\text{válido
 
 Como a exponencial de menos infinito é exatamente zero, a probabilidade de qualquer token fora da gramática torna-se absolutamente nula na equação da Softmax.
 
-Esse mecanismo traz um efeito colateral valioso observado em laboratório. O modelo não apenas respeita a sintaxe, mas torna-se semanticamente mais preciso. Em geração livre, o modelo dispersa atenção tentando equilibrar pontuação e aspas. Quando os tokens proibidos são descartados, toda a massa de probabilidade se redistribui exclusivamente entre as escolhas válidas de negócio.
+A máscara elimina escolhas incompatíveis com a gramática, não decisões de negócio incorretas entre opções permitidas. Os dados deste laboratório mostram ganho semântico relativo, mas não justificam atribuí-lo a uma suposta redistribuição de atenção nem garantem precisão fora do recorte.
 
 ---
 
@@ -109,19 +109,23 @@ Para avaliar esse comportamento na prática, construímos um laboratório automa
 
 Avaliamos três modelos compactos em CPU com 54 chamadas distribuídas uniformemente, cobrindo o Qwen 2.5 0.5B, o Qwen 2.5 1.5B e o Llama 3.2 1B.
 
-![Resultados Comparativos Medidos](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0009_saida_estruturada/assets/03.png)
+![Resultados Comparativos Medidos](../assets/03.png)
 
 > Figura 3. Taxa de parse direto, conformidade formal com schema e assertividade semântica medida na máquina.
 
 Os resultados consolidados por nível de contrato demonstram com clareza o salto de maturidade.
 
-| Modo de Contrato | Parse OK (%) | Conformidade de Schema (%) | Acurácia Semântica de Negócio (%) | Latência Média por Chamada |
-| :--- | :---: | :---: | :---: | :---: |
-| Livre (Prompt Only) | 72.2% | 55.6% | 44.4% | ~1.150 ms |
-| JSON Sintático (`format: "json"`) | 100.0% | 66.7% | 55.6% | ~1.210 ms |
-| JSON Schema Estrito (`format: <schema>`) | 100.0% | 100.0% | 94.4% | ~1.380 ms |
+| Modo | Parse (%) | Schema (%) | Acerto semântico (%) | Média consolidada (ms) |
+| :--- | ---: | ---: | ---: | ---: |
+| Livre | 0,0 | 0,0 | 0,0 | 3.007,7 |
+| JSON | 88,9 | 0,0 | 0,0 | 1.158,3 |
+| Schema | 100,0 | 100,0 | 44,4 | 400,5 |
 
-O teste deixa três lições práticas para arquitetura. O modo livre é inviável em produção porque quase um terço das respostas quebra o parser e mais da metade falha nas regras de negócio. O modo JSON sintático cria uma falsa sensação de segurança, pois passa no parser mas entrega dados corrompidos ou incompletos em um terço das tentativas. Por fim, a restrição com JSON Schema elevou o acerto de negócio para 94.4%, adicionando apenas 170 milissegundos de sobrecarga de amostragem.
+Fonte: `data/structured_resumo.csv`, com 18 linhas consolidadas por modo.
+O runner tenta novamente quando parse/schema falham; portanto 54 linhas não
+significam apenas 54 requisições físicas. O parse também admite limpeza de
+code fences. Schema melhorou o contrato neste recorte, mas não resolveu a
+maioria das decisões de negócio: 44,4% de acerto não basta para produção.
 
 ---
 
@@ -129,13 +133,13 @@ O teste deixa três lições práticas para arquitetura. O modo livre é inviáv
 
 Um padrão comum em pipelines frágeis é o loop de retry reativo. Quando o backend falha ao ler o JSON gerado, ele captura a mensagem de erro do parser, monta um novo prompt e reenvia para o modelo tentar consertar a saída.
 
-![Trade-off de Latência e Retry](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0009_saida_estruturada/assets/04.png)
+![Trade-off de Latência e Retry](../assets/04.png)
 
 > Figura 4. O custo real do retry reativo em comparação ao overhead desprezível da máscara de gramática.
 
-Esse padrão é prejudicial por três motivos. Primeiro, dobra a latência total observada pelo usuário, saltando de cerca de 1.380 ms para mais de 2.400 ms em cada ocorrência de erro. Segundo, se o modelo já errou o formato na primeira tentativa sob determinado contexto, a chance de reincidir em erros sutis na segunda chamada é elevada. Terceiro, em ambientes locais com recursos compartilhados de CPU, disparar chamadas repetidas satura os núcleos do servidor e prejudica os demais processos.
+Retries aumentam latência e consumo, mas não necessariamente dobram o tempo: o custo depende das duas chamadas e filas. O runner faz no máximo uma nova tentativa de parse/schema, com temperatura diferente e o mesmo prompt; não corrige erros semânticos se o schema passou. Meça recuperação e custo acumulado, imponha limites e evite repetir ações não idempotentes.
 
-A abordagem de engenharia correta é garantir o formato na primeira chamada com decodificação constrangida. Loops de retry devem ser reservados exclusivamente para validações externas de negócio, como verificar se um número de pedido existe no banco relacional, e nunca para tratar vírgulas ausentes ou nomes de campos trocados.
+Prefira restrição de formato quando disponível, mas mantenha parsing, validação, timeout e uma política de falha. Retries limitados podem tratar falhas transitórias ou truncamento; não substituem avaliação semântica nem justificam repetir indefinidamente.
 
 ---
 
@@ -143,7 +147,7 @@ A abordagem de engenharia correta é garantir o formato na primeira chamada com 
 
 Em sistemas empresariais em Python, os contratos de dados devem ser mantidos como modelos tipados com Pydantic, aproveitando a extração automática de JSON Schema e a validação ultrarrápida compilada em Rust.
 
-![Arquitetura de Integração em Produção](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0009_saida_estruturada/assets/05.png)
+![Arquitetura de Integração em Produção](../assets/05.png)
 
 > Figura 5. Pipeline desacoplado e tipado entre LLMs locais e serviços de backend.
 
@@ -174,7 +178,7 @@ SCHEMA_PLANO = PlanoAtendimento.model_json_schema()
 
 def executar_triagem_estruturada(pergunta_cliente: str, base_url: str = "http://localhost:11434") -> PlanoAtendimento:
     prompt = f"Analise a solicitação do cliente e decida o plano de ação: '{pergunta_cliente}'"
-    
+
     payload = json.dumps({
         "model": "qwen2.5:0.5b",
         "prompt": prompt,
@@ -188,47 +192,54 @@ def executar_triagem_estruturada(pergunta_cliente: str, base_url: str = "http://
         data=payload,
         headers={"Content-Type": "application/json"}
     )
-    
+
     with urllib.request.urlopen(req, timeout=30) as res:
         resposta_raw = json.loads(res.read().decode("utf-8"))
 
     return PlanoAtendimento.model_validate_json(resposta_raw["response"])
 ```
 
-Esse fluxo garante que a resposta do Ollama seja deserializada diretamente na classe tipada sem risco de quebras de contrato ou chaves inexistentes.
+Esse fluxo valida a saída e produz uma instância tipada ou uma exceção. Trate ValidationError, timeout e truncamento antes de executar ferramentas; schema não garante decisão correta.
 
 ---
 
-## A nova fronteira dos modelos System 1 com Laya e Jev
+## Decisão sem gerar texto: a baseline de embeddings e a proposta System 1
 
-Com o Grammar-Guided Sampling, aprendemos a conter um modelo autoregressivo para gerar JSON válido. Porém, uma reflexão arquitetural importante surgiu na comunidade técnica sobre a real necessidade de gastar dezenas de passos sequenciais gerando chaves e espaços quando a aplicação precisa apenas de uma decisão discreta ou de um enum.
+Se a aplicação só precisa escolher entre rótulos fixos, gerar um objeto longo
+pode ser desnecessário. O laboratório oferece uma alternativa concreta:
+`benchmark_system_one` calcula embeddings com `nomic-embed-text`, compara-os
+com três descrições de rota e escolhe a maior similaridade.
 
-Essa distinção resgata a teoria cognitiva de Daniel Kahneman sobre dois modos de pensamento.
+![Decisão direta versus geração](../assets/06.png)
 
-![Modelos System 1 vs LLMs Generativos](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0009_saida_estruturada/assets/06.png)
+> Figura 6. Comparação conceitual. O código deste repo mede embeddings, não
+> um produto comercial de decisão.
 
-> Figura 6. A dicotomia entre a geração sequencial token a token e a decisão direta em passada única.
+Em `data/system_one_comparativo.json`, essa baseline registrou **12,97 ms de
+média**, p50 de **13,61 ms**, p95 de **17,22 ms** e seis chamadas corretas.
+O nome histórico do arquivo e seus rótulos foram preservados, mas não devem
+ser interpretados como evidência de execução de Jev, Laya ou Kev.
 
-O modo System 2 corresponde aos modelos generativos tradicionais, como Qwen e Llama. Eles são lentos, deliberativos e computam uma passada completa pela rede neural para cada novo token emitido. Esse comportamento é indispensável quando a tarefa exige redigir respostas livres em texto natural. No entanto, para decidir qual ferramenta acionar em um catálogo fixo, esse processo consome entre 400 e 2.200 milissegundos.
+Uma chamada ao encoder não tem complexidade constante em relação ao tamanho
+do texto. Além disso, converter similaridades com softmax não produz, por si
+só, probabilidades calibradas. O catálogo pequeno e o teste de seis chamadas
+também não permitem concluir precisão de 100% em produção.
 
-O modo System 1 reúne modelos focados em decisão direta em vez de geração de texto. Utilizando arquiteturas de encoder como ModernBERT, o modelo processa todo o contexto em uma única passada paralela em ordem $O(1)$, avaliando cabeças de classificação dedicadas para responder em cerca de 13 a 35 milissegundos.
-
-Os modelos System 1 operam sobre três primitivas universais bem definidas. A primitiva Choice é voltada para seleções categóricas sobre enums fechados com distribuição de probabilidade calibrada. A primitiva Score lida com a atribuição de notas contínuas ou ordinais, a exemplo de risco de cancelamento ou nível de prioridade de chamados. Por fim, a primitiva Bool executa validações binárias de regras lógicas, atuando como guardrail instantâneo de ativação de sistemas.
-
-No cenário da indústria, duas iniciativas se destacam. O Jev, criado pela TypeSafe AI sob liderança de Diogo Almeida, oferece essa capacidade como uma API gerenciada em nuvem para roteamento rápido em pipelines corporativos. Em contrapartida, projetos open-source e com pesos abertos como Laya e Kev, desenvolvidos pela Convai Innovations sob licença Apache 2.0, permitem rodar essa mesma arquitetura de decisão em hardware local comum, sem tráfego de dados externo nem custos por requisição.
-
-| Critério Arquitetural | LLM Generativo com Grammar Mask (Ollama) | Modelo System 1 Dedicado (Laya / Jev) |
+| Aspecto | LLM com schema | Baseline deste laboratório |
 | :--- | :--- | :--- |
-| Mecanismo Neural | Decoder Autoregressivo ($N$ passadas sequenciais) | Encoder de Passada Única ($O(1)$ passada paralela) |
-| Natureza da Saída | Objeto JSON completo com texto gerado | Primitivas Tipadas (Choice, Score, Bool) |
-| Latência Típica em CPU | 400 ms a 2.200 ms | 12 ms a 35 ms (mais de 30x mais veloz) |
-| Garantia de Estrutura | 100% imposta por FSM e máscara de logits | 100% imposta pela cabeça de classificação |
-| Consumo de Memória | Médio a alto com KV Cache expansível | Baixo e fixo sem necessidade de KV Cache |
-| Cenário Recomendado | Extração dinâmica de texto e síntese livre | Roteamento de agentes, tools MCP e guardrails |
+| Saída | JSON com campos e texto gerados | Um entre três rótulos fixos |
+| Validação | Parsing e schema no consumidor | Rótulo conhecido por construção |
+| Latência média preservada | 400,5 ms | 12,97 ms |
+| Limite da comparação | Extração, classificação e geração | Apenas roteamento simples |
 
-No laboratório deste módulo, o decisor System 1 alcançou latência média de 12.97 ms com 100% de acerto de roteamento, comparado a 400.5 ms no modo schema do LLM e mais de 3.000 ms em modo livre.
+A TypeSafe AI apresenta **Jev** como modelo de decisões tipadas com confiança.
+Isso é uma proposta comercial distinta desta baseline. Não há chamada à API
+Jev neste código, e o link anteriormente citado para `convai/laya` retorna
+404; por isso, não atribuímos arquitetura, licença ou desempenho a Laya/Kev.
 
-A recomendação para arquiteturas maduras é combinar os dois mundos em um padrão de dois níveis. O modelo System 1 atua no portão de entrada para triagem, guardrails e roteamento em menos de 20 milissegundos. Quando a requisição demanda redação complexa ou síntese de texto, o fluxo encaminha a tarefa para o LLM generativo sob contrato formal de JSON Schema.
+O desenho em dois níveis continua útil: um roteador escolhe caminhos simples;
+um LLM atende os casos que exigem geração. Antes de agir, calibre limiares,
+inclua uma opção de abstenção e valide ambos com casos não vistos.
 
 ---
 
@@ -270,15 +281,15 @@ python src/main.py
 
 A imagem abaixo ilustra a execução interativa do laboratório com a validação estrita dos contratos Pydantic e as respostas geradas pelo Ollama.
 
-![Evidência de Execução do Notebook 0009](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0009_saida_estruturada/assets/evidence_notebook.png)
+![Evidência de Execução do Notebook 0009](../../tmp/evidencias_notebooks/0009_saida_estruturada/evidence_notebook.png)
 
 ---
 
 ## Próximos passos
 
-Com as garantias matemáticas de saída estruturada estabelecidas e o ganho de velocidade proporcionado pelos modelos System 1, o próximo passo da trilogia conecta essas decisões à execução prática de tarefas corporativas.
+Com validação de saída e limites semânticos explícitos, o próximo passo conecta decisões à execução de ferramentas. Contratos devem ser verificados antes de qualquer efeito colateral.
 
-No [Artigo 0010 (MCP Local via Stdio)](https://github.com/pathbit/pathbit-academy-ai/blob/master/0010_mcp_local/article/ARTICLE.md), conectamos modelos locais ao Model Context Protocol da Anthropic por canais seguros do sistema operacional, permitindo descobrir ferramentas dinamicamente e executá-las com menos de 1 milissegundo de sobrecarga de protocolo.
+No [Artigo 0010 (MCP Local via Stdio)](../../0010_mcp_local/article/ARTICLE.md), descobrimos ferramentas e medimos chamadas por pipes. Stdio reduz exposição de rede, mas não é sandbox; tempos são medições locais, não garantias do protocolo.
 
 ---
 
@@ -289,7 +300,7 @@ No [Artigo 0010 (MCP Local via Stdio)](https://github.com/pathbit/pathbit-academ
 - [Documentação técnica sobre amostragem guiada por gramática no llama.cpp](https://github.com/ggerganov/llama.cpp/blob/master/grammars/README.md)
 - [Documentação oficial do framework de validação tipada Pydantic](https://docs.pydantic.dev/)
 - [Documentação e especificações do modelo Jev pela TypeSafe AI](https://typesafe.ai)
-- [Repositório do projeto open source Laya da Convai Innovations](https://github.com/convai/laya)
+- [Model card do embedding usado na baseline local](https://huggingface.co/nomic-ai/nomic-embed-text-v1.5)
 - [Obra Thinking Fast and Slow de Daniel Kahneman](https://en.wikipedia.org/wiki/Thinking,_Fast_and_Slow)
 
 ---

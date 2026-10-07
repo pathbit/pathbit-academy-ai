@@ -20,17 +20,17 @@ Este artigo parte exatamente de onde o [Artigo 0007 (Agentes e Tool Calling)](ht
 
 A transição da inferência gerenciada na nuvem para a inferência local altera radicalmente a física e a economia do software.
 
-![Nuvem versus local](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0008_llms_locais_ollama/assets/01.png)
+![Nuvem versus local](../assets/01.png)
 
 > Figura 1. Na nuvem, cada chamada cruza internet, chaves e faturamento dinâmico. No local, o ciclo inteiro opera dentro dos limites físicos do seu hardware.
 
 São quatro mudanças práticas que transformam a operação do sistema.
 
-Primeiro, a latência de rede vira latência de loopback. Em chamadas para a nuvem, o tempo total percebido pelo cliente acumula resolução DNS, handshake TLS, trânsito pelas operadoras e filas no provedor antes mesmo que o primeiro token comece a ser gerado. No ambiente local, o transporte acontece por um socket em memória na interface de loopback (127.0.0.1), onde o custo de rede é inferior a um milissegundo. A única métrica que passa a dominar é a velocidade física de processamento do hardware.
+Primeiro, a chamada passa a usar loopback, sem o trânsito até um provedor externo. Ainda há custo de HTTP, filas, carregamento dos pesos e inferência. No Docker Desktop para macOS, o container roda em uma VM Linux; usar Docker não equivale a aproveitar a GPU Metal do host. Meça o tempo até o primeiro token e a latência completa.
 
-Segundo, o custo marginal por token desaparece. Quando cada palavra gerada custa frações de centavo, a equipe de engenharia é induzida a cortar caminhos perigosos, a exemplo de encurtar prompts de sistema, omitir exemplos práticos, limitar o histórico de conversa e podar loops de autoavaliação do agente. No hardware local, o custo passa a ser fixo. É possível gerar centenas de milhares de tokens por dia para testes e auditorias sem alterar em nada o orçamento da empresa.
+Segundo, desaparece a cobrança de API por token, não o custo marginal de computação. Energia, ocupação do hardware, refrigeração e operação continuam existindo. A capacidade é finita: aumentar requisições ou contexto pode exigir mais recursos.
 
-Terceiro, o isolamento dos dados passa a ser absoluto. Ao desconectar a máquina da internet, o sistema continua funcionando com plena capacidade. Para setores como financeiro, saúde e jurídico, essa característica elimina semanas de burocracia e auditorias de conformidade com LGPD ou normas de sigilo bancário.
+Terceiro, o processamento pode permanecer local após baixar pesos e dependências. Isso não garante isolamento absoluto: limite portas a `127.0.0.1`, revise telemetria, logs, ferramentas e permissões. Desconectar a rede é uma opção operacional, não uma propriedade automática de qualquer stack local.
 
 Quarto, a versão do modelo fica congelada. APIs comerciais sofrem atualizações frequentes de pesos e prompts de alinhamento internos que mudam sutilmente o comportamento das respostas ao longo do tempo. No container Docker, os pesos do modelo ficam salvos em um arquivo imutável dentro de um volume dedicado. O teste executado hoje produzirá exatamente o mesmo resultado no próximo ano.
 
@@ -65,11 +65,11 @@ No padrão Q4_K_M adotado pelo Ollama, os pesos são agrupados em blocos e mapea
 
 ### O gargalo real na largura de banda da memória
 
-Em modelos autoregressivos, o cálculo de cada novo token exige ler todos os pesos do modelo na memória principal uma vez. Isso significa que a taxa máxima de tokens por segundo em CPU é limitada pela largura de banda da memória RAM.
+Em decodificação de lote pequeno, ler pesos e cache costuma tornar a inferência limitada por largura de banda. A razão abaixo é uma aproximação para modelos densos, sem incluir caches, compute, batching ou paralelismo; MoE não ativa todos os pesos a cada token.
 
 $$\text{Vazão Máxima (tokens/s)} \approx \frac{\text{Largura de Banda de Memória (GB/s)}}{\text{Tamanho dos Pesos do Modelo (GB)}}$$
 
-Se o computador possui memória DDR5 operando a 64 GB/s e o modelo ocupa 1.3 GB de RAM, a velocidade teórica máxima de geração sequencial em CPU será de aproximadamente 49 tokens por segundo. É por isso que placas de vídeo com memórias dedicadas ultrarrápidas ou processadores com arquitetura de memória unificada geram texto com tanta velocidade.
+Dividir 64 GB/s por 1,3 GB resulta em aproximadamente 49 tokens/s nesse modelo simplificado. Isso não é teto universal: cache, pesos ativos, quantização, batching e hardware alteram a relação. Confirme com as métricas de geração do runtime.
 
 ### A gestão do KV Cache
 
@@ -77,9 +77,9 @@ Durante a geração, a camada de atenção precisa consultar as chaves e valores
 
 O consumo de memória do KV Cache cresce linearmente conforme o histórico da conversa se expande.
 
-$$\text{Memória}_{\text{KV}} = 2 \times n_{\text{camadas}} \times n_{\text{heads}} \times d_{\text{head}} \times n_{\text{tokens\_contexto}} \times \text{bytes\_por\_elemento}$$
+$$\text{Memória}_{\text{KV}} = 2 \times n_{\text{camadas}} \times n_{\text{KV heads}} \times d_{\text{head}} \times n_{\text{tokens\_contexto}} \times \text{bytes\_por\_elemento}$$
 
-Por essa razão, definir o limite de contexto no Ollama pelo parâmetro `num_ctx` é fundamental para evitar que requisições longas consumam toda a RAM da máquina.
+Na fórmula, use o número de **heads KV**, que pode ser menor que o de query heads em GQA/MQA; multiplique também por sequências concorrentes. Definir o limite de contexto no Ollama pelo parâmetro `num_ctx` é fundamental para evitar que requisições longas consumam toda a RAM da máquina.
 
 ---
 
@@ -87,7 +87,7 @@ Por essa razão, definir o limite de contexto no Ollama pelo parâmetro `num_ctx
 
 Para garantir repetibilidade em qualquer ambiente de desenvolvimento, o servidor pode ser configurado em um arquivo docker-compose simples.
 
-![Stack Ollama no Docker](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0008_llms_locais_ollama/assets/02.png)
+![Stack Ollama no Docker](../assets/02.png)
 
 > Figura 2. Container, volume persistente nomeado e porta HTTP local compõem toda a infraestrutura necessária.
 
@@ -131,7 +131,7 @@ docker exec pathbit-ollama ollama pull nomic-embed-text
 
 A API do Ollama oferece duas formas de entrega da resposta. O modo simples aguarda o texto completo ser gerado para devolver um único JSON. O modo em streaming devolve uma linha JSON para cada novo token gerado.
 
-![Anatomia da requisição](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0008_llms_locais_ollama/assets/03.png)
+![Anatomia da requisição](../assets/03.png)
 
 > Figura 3. TTFT, tempo de avaliação de prompt e vazão de geração decompõem o tempo que a nuvem costuma esconder em uma única métrica opaca.
 
@@ -205,25 +205,27 @@ Essa decomposição isola três momentos distintos da execução. O TTFT mede o 
 
 Submetemos três modelos locais a uma série de testes cobrindo geração livre, classificação zero-shot de chamados, extração de entidades e planejamento de ferramentas com saída estruturada.
 
-![Benchmark comparativo](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0008_llms_locais_ollama/assets/04.png)
+![Benchmark comparativo](../assets/04.png)
 
 > Figura 4. Três modelos compactos, mesmos prompts e mesma máquina, transformando a comparação em uma decisão objetiva de engenharia.
 
 Os resultados foram coletados na mesma máquina em processamento puramente em CPU.
 
-| Modelo | Parâmetros | Tamanho em RAM | TTFT Médio | Latência Total Média | Vazão de Geração | Validade do JSON | Acurácia de Tool Calling |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| `qwen2.5:0.5b` | 494M | ~398 MB | 559 ms | 5.49 s | 79.8 tokens/s | 100% | 100% |
-| `llama3.2:1b` | 1.2B | ~1.3 GB | 256 ms | 4.33 s | 25.3 tokens/s | 0% (vazio) | 0% |
-| `qwen2.5:1.5b` | 1.5B | ~986 MB | 1.022 ms | 6.33 s | 19.4 tokens/s | 100% | 100% |
+| Modelo | TTFT médio (ms) | Total médio (ms) | Tokens/s | Tokens gerados médios | Chamadas |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| `qwen2.5:0.5b` | 62,4 | 592,7 | 187,8 | 73,7 | 12 |
+| `qwen2.5:1.5b` | 81,3 | 320,0 | 106,1 | 21,2 | 12 |
+| `llama3.2:1b` | 47,5 | 436,1 | 89,0 | 33,3 | 12 |
 
-Os dados revelam três padrões que contrariam intuições comuns.
+Fonte: `data/benchmark_resumo.csv`. Vazão usa a fase de geração; total inclui
+outras etapas. Respostas têm comprimentos diferentes, então comparar somente
+latência total não isola velocidade do modelo. Tamanho em disco não é RAM.
 
-O primeiro ponto é que tamanho não dita velocidade nem utilidade prática. O Qwen 2.5 0.5B, consumindo menos de 400 MB de RAM, atingiu quase 80 tokens por segundo em CPU e foi quatro vezes mais rápido que o modelo 1.5B. Quando o formato foi amarrado na saída, ele acertou todas as ferramentas solicitadas pelo planner.
-
-O segundo ponto é que rapidez no primeiro token pode esconder respostas inúteis. O Llama 3.2 1B entregou o menor tempo até o primeiro caractere (256 ms). No entanto, sob a opção genérica `format: "json"`, ele devolveu um objeto vazio nas cinco tentativas de extração. O modelo produziu um JSON sintaticamente perfeito que não continha dado algum. Decodificação sintática garante a abertura e fechamento das chaves, mas não garante a presença das propriedades exigidas pelo negócio.
-
-O terceiro ponto é que modelos pequenos sofrem em tarefas abertas sem restrições. Sem forçar o formato da resposta, o modelo 0.5B falhou em todas as tentativas de classificação direta, incluindo justificativas desnecessárias e ignorando a regra de emitir apenas o rótulo da classe. Modelos compactos exigem que o contrato seja imposto pela camada de inferência, e não apenas pedido no texto do prompt.
+O Qwen 0.5B teve maior vazão média, mas não menor latência total. O Llama teve
+menor TTFT. Em `structured_output.csv`, os dois Qwen acertaram 5/5 seleções;
+o Llama teve 0/5 no validador do payload. Esse teste exige campos e decisão:
+a coluna histórica `json_valido` não mede apenas sintaxe JSON. Cinco tentativas
+não permitem concluir confiabilidade geral de nenhum modelo.
 
 ---
 
@@ -231,11 +233,11 @@ O terceiro ponto é que modelos pequenos sofrem em tarefas abertas sem restriç�
 
 Aplicações corporativas frequentemente dependem de busca semântica para encontrar políticas ou artigos de suporte antes de responder ao cliente. No Ollama, o mesmo servidor que processa o chat também disponibiliza o endpoint `/api/embed`, permitindo rodar o modelo nomic-embed-text lado a lado.
 
-![Matriz de decisão](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0008_llms_locais_ollama/assets/05.png)
+![Matriz de decisão](../assets/05.png)
 
 > Figura 5. Matriz de decisão objetiva para saber o momento exato de migrar do modelo de nuvem para o modelo local.
 
-O nomic-embed-text possui 137 milhões de parâmetros, gera vetores de 768 dimensões, suporta janelas de até 8.192 tokens e consome cerca de 274 MB de memória RAM.
+O nomic-embed-text gera vetores de 768 dimensões. A model card v1.5 informa até 8.192 tokens, mas o artefato/runtime deste ambiente anuncia 2.048 em `/api/tags`. Cerca de 274 MB é o tamanho baixado, não o pico de RAM. É orientado a inglês; valide português e use prefixos de tarefa quando recomendados pelo modelo.
 
 ```python
 def gerar_embedding(base_url: str, text: str, model: str = "nomic-embed-text") -> list[float]:
@@ -256,7 +258,7 @@ def similaridade_cosseno(v1: list[float], v2: list[float]) -> float:
     return dot / (norm_a * norm_b) if norm_a and norm_b else 0.0
 ```
 
-No laboratório, indexamos oito documentos internos de suporte e testamos quatro perguntas reais de clientes. O sistema local alcançou 100% de acerto na seleção do documento correto, com pontuação de similaridade acima de 0.78 nas rotas corretas. Isso comprova que um único container de cerca de 3 GB de RAM atende busca vetorial e chat conversacional sem depender de serviços externos.
+Em `data/embedding_summary.csv`, o recorte com oito documentos registra top-1 de 100%, batch de documentos em **1.278,4 ms** e batch de consultas em **43,7 ms**. Isso demonstra o funcionamento neste conjunto pequeno, não a capacidade de um container de 3 GB nem qualidade geral de busca. O laboratório não mede pico de RAM.
 
 ---
 
@@ -306,7 +308,7 @@ python src/main.py
 
 A captura abaixo documenta a execução real do notebook com todas as métricas apuradas no terminal.
 
-![Evidência de Execução do Notebook 0008](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0008_llms_locais_ollama/assets/evidence_notebook.png)
+![Evidência de Execução do Notebook 0008](../../tmp/evidencias_notebooks/0008_llms_locais_ollama/evidence_notebook.png)
 
 ---
 
@@ -314,9 +316,9 @@ A captura abaixo documenta a execução real do notebook com todas as métricas 
 
 Com o servidor de inferência local estabelecido e auditado, os módulos seguintes resolvem os desafios de confiabilidade e integração com sistemas corporativos.
 
-No [Artigo 0009 (Saída Estruturada e Modelos System 1)](https://github.com/pathbit/pathbit-academy-ai/blob/master/0009_saida_estruturada/article/ARTICLE.md), exploramos como sair do JSON genérico para impor contratos formais com JSON Schema e Grammar-Guided Sampling, além de apresentar modelos System 1 como Laya e Jev que executam decisões tipadas em cerca de 13 milissegundos.
+No [Artigo 0009 (Saída Estruturada)](../../0009_saida_estruturada/article/ARTICLE.md), distinguimos JSON válido, conformidade com schema e acerto de negócio. Também medimos uma baseline de roteamento por embeddings, sem atribuir seus resultados a modelos comerciais.
 
-No [Artigo 0010 (MCP Local via Stdio)](https://github.com/pathbit/pathbit-academy-ai/blob/master/0010_mcp_local/article/ARTICLE.md), mostramos como conectar o modelo a ferramentas corporativas reais utilizando o Model Context Protocol da Anthropic por canais seguros do sistema operacional com menos de 1 milissegundo de sobrecarga de comunicação.
+No [Artigo 0010 (MCP Local via Stdio)](../../0010_mcp_local/article/ARTICLE.md), conectamos o planner a ferramentas e medimos chamadas MCP por pipes, com mediana histórica de 0,99 ms e p95 de 1,53 ms. Esses tempos não são garantias do protocolo.
 
 ---
 
@@ -327,7 +329,7 @@ No [Artigo 0010 (MCP Local via Stdio)](https://github.com/pathbit/pathbit-academ
 - [Especificação técnica do formato GGUF para modelos quantizados](https://github.com/ggerganov/ggml/blob/master/docs/gguf.md)
 - [Documentação da família de modelos abertos Qwen 2.5](https://qwenlm.github.io/)
 - [Documentação dos modelos abertos Llama 3.2 da Meta](https://www.llama.com/)
-- [Artigo técnico sobre embeddings abertos Nomic Embed Text](https://www.nomic.ai/blog/posts/nomic-embed-text-v1)
+- [Artigo técnico sobre embeddings abertos Nomic Embed Text](https://huggingface.co/nomic-ai/nomic-embed-text-v1.5)
 
 ---
 

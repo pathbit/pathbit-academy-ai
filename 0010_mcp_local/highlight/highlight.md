@@ -50,9 +50,9 @@ A pergunta do usuário é processada pelo Ollama com schema rígido (artigo 0009
 [image: ../assets/04.png]
 [caption: 50 chamadas de protocolo: p50 de 0.99 ms vs 1.700 ms do modelo.]
 
-Overhead do protocolo é inferior a 0.25%
+Meça protocolo isolado e chamada completa separadamente
 
-Medimos 50 chamadas de protocolo isoladas: mediana de 0.99 ms. Comparado ao tempo de geração do modelo, o custo de adotar MCP é imperceptível.
+50 chamadas isoladas: p50 0,99 ms, p95 1,53 ms. No ciclo do planner, call_tool teve médias de 4,7 a 7,5 ms; não são a mesma medição nem garantia de menos de 1 ms.
 
 > Padronização com MCP não compromete a performance da sua arquitetura agêntica.
 

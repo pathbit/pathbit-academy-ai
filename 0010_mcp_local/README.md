@@ -16,7 +16,7 @@ Este módulo demonstra a implementação prática e isolada do **Model Context P
 - **Transporte Stdio Seguro:** Comunicação IPC via `stdin`/`stdout` sem abrir portas de rede locais nem depender de tráfego externo.
 - **Descoberta Dinâmica de Ferramentas:** Uso de `session.list_tools()` para desacoplar o agente do catálogo de funções corporativas.
 - **Loop Agêntico Completo:** O Ollama atua como planner sob JSON Schema constrangido (módulo 0009), chamando a ferramenta MCP correspondente via `session.call_tool()`.
-- **Medição Cirúrgica de Overhead:** 50 chamadas de protocolo isoladas provam que a camada MCP adiciona apenas ~0.99 ms de mediana (< 0.25% do tempo total).
+- **Medição Cirúrgica de Overhead:** 50 chamadas históricas registram p50 de 0,99 ms e p95 de 1,53 ms; a execução do planner registra médias de chamada de 4,7 a 7,5 ms. Não é um SLA.
 - **Trilha de Auditoria Forense:** Registro estruturado de decisões em CSV/JSONL para governança em ambientes regulados.
 
 ---
@@ -28,7 +28,7 @@ Este módulo demonstra a implementação prática e isolada do **Model Context P
 - **Modelos de linguagem:** `qwen2.5:0.5b`, `qwen2.5:1.5b`, `llama3.2:1b`
 - **Validação de contratos:** `jsonschema`
 - **Análise e visualização:** `pandas`, `matplotlib`
-- **Ambiente:** Python 3.10+
+- **Ambiente:** Python 3.14+ (compatível com 3.10+) em ambiente virtual isolado (.venv)
 
 ---
 
@@ -106,7 +106,7 @@ Ao executar o laboratório, você terá:
 - `data/mcp_resumo.csv` - consolidação de conformidade, acerto de ferramenta e latência por modelo
 - `data/mcp_relatorio.md` - relatório técnico executivo consolidado
 - `data/mcp_comparativo.png` - gráfico comparativo de latência do planner vs overhead do protocolo MCP
-- `assets/evidence_notebook.png` - comprovação visual de execução do notebook interativo
+- `../tmp/evidencias_notebooks/0010_mcp_local/evidence_notebook.png` - comprovação visual de execução do notebook interativo
 
 ---
 

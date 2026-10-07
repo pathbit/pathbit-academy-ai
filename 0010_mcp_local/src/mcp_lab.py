@@ -26,7 +26,6 @@ import jsonschema
 import pandas as pd
 import matplotlib
 
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
@@ -96,7 +95,7 @@ async def plano_do_modelo(base_url: str, model: str, prompt: str) -> tuple[dict 
             "prompt": prompt,
             "stream": False,
             "format": PLANNER_SCHEMA,
-            "options": {"temperature": 0},
+            "options": {"temperature": 0, "num_predict": 128, "num_thread": 4},
         }
     ).encode("utf-8")
     request = urllib.request.Request(
@@ -185,16 +184,23 @@ async def run_lab(base_url: str, models: list[str], repeat: int, skip_plots: boo
                         except jsonschema.ValidationError:
                             schema_ok = False
 
+                        matching_tool = next((t for t in catalogo if t["nome"] == tool_escolhida), None)
+                        if schema_ok and matching_tool:
+                            try:
+                                jsonschema.validate(instance=argumentos, schema=matching_tool["input_schema"])
+                            except jsonschema.ValidationError:
+                                schema_ok = False
+
                         mcp_ms = 0.0
                         resposta_mcp = ""
                         if schema_ok and tool_escolhida in {t["nome"] for t in catalogo}:
                             start = time.perf_counter()
                             result = await session.call_tool(tool_escolhida, argumentos)
                             mcp_ms = round((time.perf_counter() - start) * 1000, 2)
-                            resposta_mcp = result.content[0].text[:200]
+                            resposta_mcp = result.content[0].text[:200] if result.content else ""
 
                         chave = ARGUMENTO_CHAVE.get(tool_escolhida)
-                        argumento_ok = bool(chave is None or str(argumentos.get(chave, "")))
+                        argumento_ok = bool(schema_ok and (chave is None or str(argumentos.get(chave, ""))))
                         rows.append(
                             {
                                 "modelo": model,
@@ -288,6 +294,7 @@ def plot_lab(results: pd.DataFrame, resumo: pd.DataFrame, protocolo: dict, outpu
 
 
 def main() -> None:
+    matplotlib.use("Agg")
     parser = argparse.ArgumentParser(description="Laboratorio MCP local com Ollama")
     parser.add_argument("--base-url", default=DEFAULT_BASE_URL)
     parser.add_argument("--models", default=DEFAULT_CHAT_MODELS)

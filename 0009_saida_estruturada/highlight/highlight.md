@@ -6,7 +6,7 @@
 
 Saída Estruturada com LLMs: Do Prompt ao Schema Validado
 
-Este módulo prova, com dados medidos em modelos locais, como sair do prompt ingênuo e garantir 100% de conformidade de schema sem quebra de parse no backend.
+Este módulo prova, com dados medidos em modelos locais, como distinguir parse, schema e decisão correta. O consumidor continua validando timeout, truncamento e contrato.
 
 **Slide 2**
 [layout: split]
@@ -28,7 +28,7 @@ Pedir JSON no texto livre resulta em markdown fences, preâmbulos e chaves aluci
 
 Grammar-Guided Sampling: máscara de logits em tempo real
 
-O schema é compilado em uma máquina de estados finitos. A cada token gerado pelo modelo, tokens inválidos recebem probabilidade zero.
+O runtime usa o subconjunto de schema suportado para guiar a gramática. JSON aninhado não se reduz a uma FSM simples; valide a saída no consumidor.
 
 > O modelo não tem como errar a sintaxe: a máscara física impede qualquer token ilegal.
 
@@ -38,9 +38,9 @@ O schema é compilado em uma máquina de estados finitos. A cada token gerado pe
 [image: ../assets/03.png]
 [caption: Comparativo medido: conformidade e assertividade nos 3 modos.]
 
-Números medidos: de 55% a 100% de conformidade
+Dados preservados: forma válida não significa decisão correta
 
-No modo livre, quase 30% das chamadas sequer parseiam. Com `format: <schema>`, a conformidade salta para 100% e a assertividade de negócio atinge o teto.
+Livre: 0% parse. JSON: 88,9% parse e 0% schema. Schema: 100% conformidade e 44,4% acerto semântico. São 18 linhas consolidadas por modo, com até um retry.
 
 > Schema estrito não engessa o modelo: ele concentra a probabilidade na semântica correta.
 
@@ -48,11 +48,11 @@ No modo livre, quase 30% das chamadas sequer parseiam. Com `format: <schema>`, a
 [layout: split]
 [eyebrow: O custo do retry]
 [image: ../assets/04.png]
-[caption: Trade-off de latência: 200ms de schema vs 2x latência no retry.]
+[caption: Tempos consolidados e custo acumulado de retry.]
 
 O mito do retry compensatório
 
-Tentar consertar saída livre com novo prompt custa o dobro da latência. A imposição de schema adiciona overhead desprezível e resolve na 1ª tentativa.
+Retries aumentam o custo de forma variável. Neste recorte, schema teve média de 400,5 ms e livre 3.007,7 ms; não é medição isolada de overhead nem SLA.
 
 > Retries devem tratar regras de negócio semânticas, nunca sintaxe quebrada.
 
@@ -64,34 +64,34 @@ Tentar consertar saída livre com novo prompt custa o dobro da latência. A impo
 
 Contrato desacoplado e tipagem estrita
 
-O contrato em Pydantic/JSON Schema vira especificação única. O backend deserializa com garantia total e audita cada decisão em CSV/JSONL.
+O contrato em Pydantic/JSON Schema vira especificação única. O backend valida ou rejeita a saída; isso não prova correção semântica ou conformidade regulatória.
 
 > A saída estruturada transforma um gerador probabilístico de texto em uma API determinística.
 
 **Slide 7**
 [layout: split]
-[eyebrow: A fronteira System 1]
+[eyebrow: A fronteira roteamento não generativo]
 [image: ../assets/06.png]
-[caption: Modelos de decisão rápida: Laya (Open-Source) e Jev (TypeSafe).]
+O benchmark local mede embeddings e três rótulos; não executa modelos comerciais de decisão.
 
-Modelos System 1: Decisão Direta em ~30 ms
+Modelos roteamento não generativo: Decisão Direta em ~30 ms
 
-Por que gerar 40 tokens sequenciais se o sistema precisa apenas de uma decisão tipada? Modelos System 1 usam passada única (O(1)) para Choice, Score e Bool com mais de 50x de redução de latência.
+O benchmark local mede embeddings e três rótulos; não executa modelos comerciais de decisão.
 
-> A separação moderna: decisões em System 1 (< 40ms) e redação rica em System 2.
+> A separação moderna: decisões em roteamento não generativo (< 40ms) e redação rica em System 2.
 
 **Slide 8**
 [layout: cta]
 [eyebrow: O que este módulo entrega]
 [gallery: ../assets/02.png, ../assets/03.png, ../assets/06.png]
 
-Saída Estruturada + Modelos System 1
+Saída Estruturada + Modelos roteamento não generativo
 
 Do prompt otimista à garantia formal via Grammar-Guided Sampling, com benchmarks empíricos em modelos locais.
 
-- 100% de conformidade de schema sem quebra de parse
+- 100% de conformidade no recorte, com validação no consumidor
 - Desacoplamento com Pydantic e JSON Schema estrito
-- Avaliação empírica de decisores System 1 vs autoregressão
+- Avaliação empírica de decisores roteamento não generativo vs autoregressão
 
 > github.com/pathbit/pathbit-academy-ai
 

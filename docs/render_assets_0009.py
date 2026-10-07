@@ -535,6 +535,8 @@ Retorno Direto de Primitivas Tipadas:
 
 
 def render_all() -> None:
+    from measured_assets import overrides
+    TEMPLATES.update({key: value for key, value in overrides().items() if key in TEMPLATES})
     print(f"Renderizando {len(TEMPLATES)} ativos visuais para 0009_saida_estruturada...")
     for rel_path, html in TEMPLATES.items():
         output_png = ROOT / rel_path

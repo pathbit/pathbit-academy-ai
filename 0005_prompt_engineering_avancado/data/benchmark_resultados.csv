@@ -14,7 +14,26 @@ suporte_estorno,checklist,Qwen/Qwen2.5-0.5B-Instruct,sentence-transformers/parap
 Prioridade: Alta
 
 Proxima Ação: Estorno imediato e resolver o pedido imediatamente.",1.0,0.3333333333333333,1.0,0.26421821117401123,0.6493878861268361
+fatura_janeiro,base,Qwen/Qwen2.5-0.5B-Instruct,sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2,Usuario pediu segunda via da fatura de janeiro e nao encontrou a aba financeira no portal.,"O usuário solicitou segunda via da fatura de janeiro, mas não encontrou a aba Financeira no portal.",0.0,1.0,0.0,0.7513607740402222,0.43784019351005554
+fatura_janeiro,estruturado,Qwen/Qwen2.5-0.5B-Instruct,sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2,Usuario pediu segunda via da fatura de janeiro e nao encontrou a aba financeira no portal.,"Resumo: Uma solicitação para segunda via da fatura de janeiro, mas sem acesso à aba financeira no portal.
+
+Prioridade: Alta
+
+Proxima acção: Solicitar assistência técnica ao usuário para encontrar a aba financeira na interface do portal.",0.6666666666666666,1.0,0.0,0.7280949354171753,0.5986904005209605
+fatura_janeiro,few_shot,Qwen/Qwen2.5-0.5B-Instruct,sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2,Usuario pediu segunda via da fatura de janeiro e nao encontrou a aba financeira no portal.,"Resumo: Usuário solicitou segunda via da fatura de janeiro, mas não encontrou a aba financeira no portal.
+Prioridade: Alta
+Proxima acção: Solicitar assistência técnica para identificar a aba financeira e fornecer segunda via necessária.
+Mensagem: O cliente solicitou segunda via da fatura de janeiro, mas não encontrou a aba financeira no portal.",0.6666666666666666,1.0,0.0,0.7562353610992432,0.6057255069414774
+fatura_janeiro,checklist,Qwen/Qwen2.5-0.5B-Instruct,sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2,Usuario pediu segunda via da fatura de janeiro e nao encontrou a aba financeira no portal.,"Resumo: Identificando o problema central, identificando prioridade, sugerindo a próxima ação mais segura.
+
+Prioridade: Media
+
+Proxima Ação: Solicitar auxílio técnico para encontrar a aba financeira na primeira vez.",1.0,0.0,1.0,0.24326610565185547,0.5608165264129639
 suporte_estorno,base,google/flan-t5-small,sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2,"Cliente reclamou de atraso na entrega, quer estorno imediato e diz que o pedido ainda nao chegou.","Cliente reclamou de atraso na entrega, quer estorno imediato e diz que o pedido ainda nao chegou.",0.0,1.0,0.0,0.8795350790023804,0.4698837697505951
 suporte_estorno,estruturado,google/flan-t5-small,sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2,"Cliente reclamou de atraso na entrega, quer estorno imediato e diz que o pedido ainda nao chegou.","Cliente reclamou de atraso na entrega, quer estorno imediato e diz que o pedido ainda nao chegou.",0.0,1.0,0.0,0.8795350790023804,0.4698837697505951
 suporte_estorno,few_shot,google/flan-t5-small,sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2,"Cliente reclamou de atraso na entrega, quer estorno imediato e diz que o pedido ainda nao chegou.","Client reclamou de atraso na entrega, quer estorno imediato e diz que o pedido ainda nao chegou.",0.0,1.0,0.0,0.8788732290267944,0.4697183072566986
 suporte_estorno,checklist,google/flan-t5-small,sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2,"Cliente reclamou de atraso na entrega, quer estorno imediato e diz que o pedido ainda nao chegou.","Mensagem: Client reclamou de atraso na entrega, quer estorno imediato e diz que o pedido ainda nao chegou.",0.0,1.0,0.0,0.8785597085952759,0.46963992714881897
+fatura_janeiro,base,google/flan-t5-small,sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2,Usuario pediu segunda via da fatura de janeiro e nao encontrou a aba financeira no portal.,SYSTEM: Voce e um analista de atendimento da Pathbit. Responda em portugues. USER: Leia a mensagem abaixo e devolva um resumo curto em portugues.,0.0,0.0,0.0,0.25193583965301514,0.06298395991325378
+fatura_janeiro,estruturado,google/flan-t5-small,sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2,Usuario pediu segunda via da fatura de janeiro e nao encontrou a aba financeira no portal.,SYSTEM: Voce e um analista de atendimento da Pathbit. Responda sempre em portugues. resumo: uma frase> prioridade: alta |media|baixa> proxima_acao: uma frase objetiva> Mensagem: Usuario pediu se,0.0,0.0,0.0,0.28404220938682556,0.07101055234670639
+fatura_janeiro,few_shot,google/flan-t5-small,sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2,Usuario pediu segunda via da fatura de janeiro e nao encontrou a aba financeira no portal.,SYSTEM: Voce e um analista de atendimento da Pathbit. Responda sempre em portugues. USER: Aprenda com o exemplo abaixo e use o mesmo formato. Exemplo 1 Mensagem: Cliente reportou erro 500 e pede retorno urgente,0.0,0.0,0.0,0.34389474987983704,0.08597368746995926
+fatura_janeiro,checklist,google/flan-t5-small,sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2,Usuario pediu segunda via da fatura de janeiro e nao encontrou a aba financeira no portal.,Mensagem: Usuario pediu segunda via da fatura de janeiro e no encontrou a aba financeira no portal.,0.0,1.0,0.0,0.7996690273284912,0.4499172568321228

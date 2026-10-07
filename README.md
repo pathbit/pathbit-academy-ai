@@ -209,13 +209,13 @@ pathbit-academy-ai/
 
 Para executar os artigos e notebooks da **Pathbit Academy AI**, recomendamos a seguinte configuração de ambiente:
 
-1. **Python 3.10 ou superior:**
-   - O projeto é compatível com Python 3.10 até Python 3.14.
-   - Caso precise instalar o Python:
-     - **macOS:** Instale via Homebrew com `brew install python` ou pyenv com `pyenv install 3.12`.
+1. **Python 3.14+ (Compatível com 3.10+):**
+   - Os exemplos foram validados e homologados em Python 3.14+ (testados nativamente em Python 3.14.8), com suporte retrocompatível para Python 3.10 a 3.13.
+   - Caso precise instalar o Python 3.14+:
+     - **macOS:** Instale via Homebrew com `brew install python` ou pyenv com `pyenv install 3.14.8`.
      - **Linux (Ubuntu/Debian):** `sudo apt update && sudo apt install -y python3 python3-venv python3-pip`.
-     - **Windows:** Instale via terminal com `winget install Python.Python.3.12` ou baixe pelo instalador oficial em [python.org](https://www.python.org/downloads/).
-   - Sempre utilize um ambiente virtual isolado por artigo:
+     - **Windows:** Instale via terminal com `winget install Python.Python.3.14` ou baixe pelo instalador oficial em [python.org](https://www.python.org/downloads/).
+   - **Isolamento Obrigatório com Virtualenv (`.venv`):** Nunca instale pacotes no Python global. Sempre utilize um ambiente virtual isolado local em cada módulo:
      ```bash
      python3 -m venv .venv
      source .venv/bin/activate  # No Windows: .venv\Scripts\Activate.ps1

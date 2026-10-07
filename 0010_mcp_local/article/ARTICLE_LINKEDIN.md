@@ -8,7 +8,7 @@ A indústria de software já resolveu esse mesmo dilema no passado. Nos anos 201
 
 A Anthropic propôs a mesma lógica para o ecossistema de inteligência artificial ao publicar a especificação aberta do Model Context Protocol (MCP). A proposta é atuar como o protocolo universal dos agentes, padronizando a forma como modelos de linguagem descobrem e interagem com ferramentas executáveis, fontes de dados e instruções de contexto.
 
-Nos artigos anteriores da trilogia, provamos a inferência de modelos locais em Docker e a garantia matemática de contratos formais de saída com JSON Schema. Neste artigo, conectamos um servidor MCP local via transporte stdio a modelos locais no Ollama, viabilizando agentes autônomos e auditáveis sem abrir portas de rede, sem tráfego de dados externo e sem custos de API por requisição.
+Nos artigos anteriores da trilogia, provamos a inferência de modelos locais em Docker e a validação de contratos de saída com JSON Schema. Neste artigo, conectamos um servidor MCP local via transporte stdio a modelos locais no Ollama, viabilizando agentes autônomos e auditáveis sem abrir uma porta para o servidor MCP, sem tráfego de dados externo e sem custos de API por requisição.
 
 ---
 
@@ -16,7 +16,7 @@ Nos artigos anteriores da trilogia, provamos a inferência de modelos locais em 
 
 O Model Context Protocol é construído sobre a especificação JSON-RPC 2.0, estruturando a comunicação entre o cliente coordenador e os servidores de contexto por meio de três primitivas fundamentais.
 
-![Arquitetura MCP Local](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0010_mcp_local/assets/01.png)
+![Arquitetura MCP Local](../assets/01.png)
 
 > Figura 1. O cliente inicia o servidor MCP como subprocesso direto, trocando mensagens JSON-RPC 2.0 por pipes do sistema operacional.
 
@@ -28,9 +28,9 @@ O terceiro pilar são os prompts. Eles funcionam como modelos pré-formatados de
 
 ---
 
-## Por que o transporte stdio é o padrão ouro de segurança corporativa
+## Stdio reduz a exposição de rede, mas não substitui isolamento
 
-A especificação do protocolo suporta diferentes formas de conexão. Em arquiteturas distribuídas na nuvem, o transporte mais comum utiliza Server-Sent Events (SSE) sobre conexões HTTP. Contudo, em computadores corporativos, servidores locais e ambientes regulados, o transporte padrão é a comunicação por descritores padrão do sistema operacional (stdio).
+Os transportes padrão atuais são **stdio** e **Streamable HTTP**. Este último substituiu o antigo HTTP+SSE e pode usar SSE para streaming. Neste laboratório, o cliente lança o servidor de ferramentas como subprocesso e troca JSON-RPC por stdin/stdout; o Ollama continua atendendo por HTTP local.
 
 | Critério de Engenharia | Transporte stdio por Pipes | Transporte SSE por HTTP |
 | :--- | :--- | :--- |
@@ -38,11 +38,11 @@ A especificação do protocolo suporta diferentes formas de conexão. Em arquite
 | Varredura de Portas | Totalmente imune a scans locais | Visível para outros processos locais |
 | Gestão de Credenciais | O servidor guarda segredos isolados | Credenciais trafegam em cabeçalhos |
 | Ciclo de Vida do Processo | Encerra junto com o processo pai | Risco de processos órfãos em background |
-| Sobrecarga de Comunicação | Inferior a 1 milissegundo | Entre 5 e 25 milissegundos por rede |
+| Sobrecarga de comunicação | Medir pipes e serialização | Medir HTTP, streaming e rede |
 
 No transporte stdio, o cliente instancia o servidor MCP como um subprocesso filho por meio de chamadas de sistema no kernel. O descritor de entrada padrão (stdin) do filho é conectado ao canal de escrita do pai, e o descritor de saída padrão (stdout) é conectado ao canal de leitura.
 
-Essa abordagem oferece duas garantias de segurança determinísticas. A primeira é a inexistência de superfície de rede, já que nenhum socket TCP é aberto nem mesmo em localhost, impedindo que outros processos na máquina sondem as ferramentas disponíveis. A segunda reside no encerramento automático do ciclo de vida, pois se o processo do agente falhar ou for finalizado, o kernel fecha os canais de comunicação imediatamente e encerra o subprocesso sem deixar tarefas órfãs consumindo memória.
+Stdio evita abrir uma porta HTTP para o servidor de ferramentas, mas o subprocesso herda permissões do usuário e pode acessar arquivos ou rede. Não é um sandbox. O fechamento dos pipes também não garante que qualquer filho termine automaticamente: o cliente precisa gerenciar encerramento e timeouts. Restrinja privilégios e valide parâmetros antes de executar ações.
 
 ---
 
@@ -52,7 +52,7 @@ Em abordagens agênticas tradicionais, adicionar uma nova funcionalidade exige a
 
 Com o MCP, o catálogo de capacidades é descoberto durante a inicialização da sessão.
 
-![Descoberta Dinâmica de Ferramentas](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0010_mcp_local/assets/02.png)
+![Descoberta Dinâmica de Ferramentas](../assets/02.png)
 
 > Figura 2. O cliente descobre o catálogo e os esquemas das ferramentas no início da sessão sem alterações no código principal.
 
@@ -95,13 +95,13 @@ Se a equipe de desenvolvimento adicionar novas funções de suporte nesse servid
 
 Combinando o servidor MCP com a saída estruturada do módulo 0009 e os modelos locais do módulo 0008, o fluxo de execução se organiza em quatro etapas coordenadas.
 
-![Loop Fechado do Agente Local](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0010_mcp_local/assets/03.png)
+![Loop Fechado do Agente Local](../assets/03.png)
 
 > Figura 3. As quatro etapas do ciclo agêntico, com leitura da pergunta, planejamento constrangido, invocação segura por stdio e registro de auditoria.
 
 Na primeira etapa, o catálogo descoberto dinamicamente é injetado no prompt de planejamento do modelo. 
 
-Na segunda etapa, para impedir que o modelo invente nomes de ferramentas inexistentes ou emita argumentos fora dos tipos permitidos, compilamos as ferramentas em um JSON Schema formal. O Ollama recebe esse contrato no parâmetro de formato e executa a geração constrangida, garantindo que o plano retornado seja válido.
+O planner recebe um schema de envelope com nomes de ferramentas e campos possíveis. Isso não substitui o `inputSchema` de cada ferramenta: valide o nome no catálogo descoberto e os argumentos no schema correspondente antes de `call_tool`. A escolha semanticamente correta continua dependendo do modelo.
 
 Na terceira etapa, o cliente despacha a chamada diretamente para a sessão do MCP.
 
@@ -115,7 +115,7 @@ conteudo_retorno = resultado.content[0].text
 
 Na quarta etapa, o resultado retornado pela ferramenta é incorporado ao contexto do modelo para gerar a conclusão ao usuário ou acionar novas decisões.
 
-Quando a seleção de ferramentas não demanda a redação de textos longos ou argumentos livres complexos, essa etapa de planejamento pode ser delegada diretamente a um modelo System 1, como Laya ou Jev. O catálogo descoberto alimenta a primitiva de escolha rápida, reduzindo a deliberação de dois segundos para apenas 13 milissegundos e permitindo loops agênticos locais com menos de 20 milissegundos de latência total.
+Um roteador não generativo pode atender catálogos pequenos, como a baseline por embeddings do artigo 0009. Não medimos Jev nem Laya e não demonstramos um agente completo abaixo de 20 ms. Decisão, validação e execução precisam ser avaliadas separadamente.
 
 ---
 
@@ -123,7 +123,7 @@ Quando a seleção de ferramentas não demanda a redação de textos longos ou a
 
 Uma preocupação natural de engenharia ao adotar uma nova camada de abstração é o custo de desempenho que ela adiciona. Para responder a essa questão com dados concretos, executamos 50 chamadas sucessivas de protocolo MCP isoladas, medindo estritamente a comunicação por stdio sem processamento de modelo no meio do caminho.
 
-![Decomposição de Latência](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0010_mcp_local/assets/04.png)
+![Decomposição de Latência](../assets/04.png)
 
 > Figura 4. Medição de 50 chamadas de protocolo isoladas no loopback, comprovando mediana de 0.99 milissegundo de sobrecarga.
 
@@ -137,7 +137,7 @@ Quando comparamos esse overhead com o tempo de planejamento dos modelos compacto
 | `qwen2.5:1.5b` | 100% | 50.0% | 100% | 2.213 ms | 6.5 ms |
 | `qwen2.5:0.5b` | 100% | 33.3% | 100% | 1.764 ms | 7.5 ms |
 
-Enquanto o modelo de linguagem consome cerca de 2 segundos para deliberar sobre a pergunta do cliente em CPU, a serialização JSON-RPC, a transmissão pelos pipes e o retorno da função em Python consomem menos de 5 milissegundos no ciclo completo. O protocolo MCP responde por menos de 0.25% do tempo total da requisição.
+Em `mcp_resumo.csv`, as médias de chamada MCP variam de **4,7 a 7,5 ms**, enquanto o planner leva **1.764,4 a 2.213,3 ms**. A medição isolada de 50 chamadas registra p50 0,99 ms e p95 1,53 ms. São recortes diferentes; não conclua que toda chamada custa menos de 1 ms nem que o protocolo representa sempre menos de 0,25% da latência.
 
 ---
 
@@ -145,7 +145,7 @@ Enquanto o modelo de linguagem consome cerca de 2 segundos para deliberar sobre 
 
 Em operações corporativas em áreas como bancos ou seguros, agentes autônomos não podem atuar sem rastreabilidade. Cada ação executada, seja uma consulta cadastral ou a abertura de um ticket, precisa deixar um registro transparente e revisável.
 
-![Governança Corporativa e Auditoria](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0010_mcp_local/assets/05.png)
+![Governança Corporativa e Auditoria](../assets/05.png)
 
 > Figura 5. Menor privilégio, validação estrita e auditoria estruturada linha a linha.
 
@@ -153,12 +153,12 @@ No laboratório, cada decisão tomada pelo agente é salva em formato estruturad
 
 ```csv
 modelo,consulta_id,repeticao,tool_escolhida,tool_esperada,acertou,argumento_ok,schema_ok,plan_ms,mcp_ms,tokens
-llama3.2:1b,q_fatura,0,buscar_politica,buscar_politica,True,True,True,1842.1,1.15,48
-llama3.2:1b,q_incidente,0,criar_ticket,criar_ticket,True,True,True,2104.5,1.22,54
-qwen2.5:1.5b,q_cancelamento,0,buscar_politica,buscar_politica,True,True,True,2250.2,1.08,39
+qwen2.5:0.5b,q_fatura,0,buscar_politica,buscar_politica,True,True,True,1002.7,9.06,23
+qwen2.5:0.5b,q_devolucao,0,buscar_politica,buscar_politica,True,True,True,1157.6,7.27,23
+qwen2.5:0.5b,q_incidente,0,buscar_politica,criar_ticket,False,True,True,1334.8,6.85,28
 ```
 
-Se um cliente questionar por que uma solicitação foi tratada como cancelamento em vez de dúvida simples, o registro permite identificar com clareza qual versão de modelo tomou a decisão, qual prompt original foi submetido, quanto tempo o modelo levou planejando e quais parâmetros foram repassados para a função corporativa.
+Se um cliente questionar por que uma solicitação foi tratada como cancelamento em vez de dúvida simples, o registro permite identificar com clareza qual ID de modelo e consulta foram registrados, quanto tempo levou o plano e qual ferramenta foi selecionada. O CSV não armazena digest dos pesos, prompt completo ou todos os argumentos; registre esses dados com política de privacidade se precisar reproduzir uma decisão em produção.
 
 ---
 
@@ -200,7 +200,7 @@ python src/main.py
 
 Abaixo está o registro da execução com a inicialização do servidor e as chamadas reais via stdio.
 
-![Evidência de Execução do Notebook 0010](https://raw.githubusercontent.com/pathbit/pathbit-academy-ai/refs/heads/master/0010_mcp_local/assets/evidence_notebook.png)
+![Evidência de Execução do Notebook 0010](../../tmp/evidencias_notebooks/0010_mcp_local/evidence_notebook.png)
 
 ---
 
@@ -208,11 +208,11 @@ Abaixo está o registro da execução com a inicialização do servidor e as cha
 
 Com este artigo, a Pathbit Academy conclui a trilogia fundamental para quem precisa operar sistemas de inteligência artificial de forma independente, controlada e orientada à engenharia de software.
 
-No [Artigo 0008 (LLMs Locais com Ollama)](https://github.com/pathbit/pathbit-academy-ai/blob/master/0008_llms_locais_ollama/article/ARTICLE.md), mostramos a infraestrutura para servir modelos e embeddings localmente em Docker com custo marginal zero.
+No [Artigo 0008 (LLMs Locais com Ollama)](https://github.com/pathbit/pathbit-academy-ai/blob/master/0008_llms_locais_ollama/article/ARTICLE.md), mostramos a infraestrutura para servir modelos e embeddings localmente em Docker sem cobrança de API por token.
 
 No [Artigo 0009 (Saída Estruturada e Modelos System 1)](https://github.com/pathbit/pathbit-academy-ai/blob/master/0009_saida_estruturada/article/ARTICLE.md), eliminamos a fragilidade de formato por meio de Grammar-Guided Sampling com JSON Schema e exploramos a fronteira de modelos de decisão rápida em passada única.
 
-No [Artigo 0010 (MCP Local via Stdio)](https://github.com/pathbit/pathbit-academy-ai/blob/master/0010_mcp_local/article/ARTICLE.md), unificamos tudo sob um protocolo aberto da indústria, permitindo que agentes acionem ferramentas corporativas reais com isolamento de processos e menos de 1 milissegundo de sobrecarga.
+No [Artigo 0010 (MCP Local via Stdio)](https://github.com/pathbit/pathbit-academy-ai/blob/master/0010_mcp_local/article/ARTICLE.md), unificamos tudo sob um protocolo aberto da indústria, permitindo que agentes acionem ferramentas corporativas reais por subprocessos gerenciados e latência medida, sem garantia de sandbox.
 
 Essa base oferece o caminho técnico necessário para levar agentes de IA para produção em escala com previsibilidade, segurança de dados e governança completa.
 

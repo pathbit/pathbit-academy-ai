@@ -1,1 +1,8 @@
 candidate,modelo_geracao,pergunta,categoria,criticidade,gold,resposta,similaridade_semantica,keyword_recall,faithfulness,score_final,score_ponderado,baseline_score,delta_vs_baseline
+qwen_estruturado,Qwen/Qwen2.5-0.5B-Instruct,Como emitir segunda via da fatura?,financeiro,alta,"Para emitir a segunda via, acesse o portal do cliente, abra Financeiro e clique em Segunda Via.","Para emitir a segunda via da fatura, siga os seguintes passos:
+
+1. **Acesse o Portal do Cliente**: Abra o site oficial da sua empresa ou a página de confirmação de pagamento.
+
+2. **Abra a Acessibilidade Financeira**: Navegue até a aba ""Segunda Via"" na página financeira.
+
+3. **Clique Em Segunda Via**: Clique no botão que indica a emissão da",0.7501011490821838,0.6666666666666666,0.3888888888888889,0.6018855682125798,0.9028283523188696,1.1010217189788818,-0.1981933666600122
