@@ -259,4 +259,10 @@ XXXX_titulo_do_artigo/
 
 ---
 
-**Desenvolvido com ❤️ pela [Pathbit](https://pathbit.com)**
+## 📄 Licença
+
+Distribuído sob a **Licença MIT**. O texto completo está em [LICENSE](./LICENSE).
+
+---
+
+**Desenvolvido com ❤️ pela [Pathbit](https://pathbit.co)**
