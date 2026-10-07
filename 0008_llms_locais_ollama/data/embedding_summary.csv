@@ -1,2 +1,2 @@
 modelo_embedding,dimensao,documentos,latencia_batch_docs_ms,latencia_batch_queries_ms,taxa_acerto_top1
-nomic-embed-text,768,8,1278.4,43.7,1.0
+nomic-embed-text,768,8,1911.6,39.0,1.0
