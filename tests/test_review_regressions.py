@@ -59,6 +59,15 @@ class ReviewRegressions(unittest.TestCase):
         self.assertIsNone(runner.parse_plan('{"tool":"x","argument":{},"reason":"x"}'))
         self.assertEqual(runner.parse_plan('{"tool":"x","argument":"ok","reason":"x"}')["argument"], "ok")
 
+    def test_mcp_tools_and_validation(self):
+        mcp_module = load("mcp_server_review", "0010_mcp_local/src/mcp_server.py")
+        self.assertIn("devolucao", mcp_module.POLITICAS)
+        self.assertIn("Devolucao permitida", mcp_module.buscar_politica("devolucao"))
+        self.assertIn("nao encontrada", mcp_module.buscar_politica("inexistente"))
+        self.assertIn("prioridade invalida", mcp_module.criar_ticket("Ajuda", prioridade="urgente"))
+        self.assertIn("ticket#2041 criado", mcp_module.criar_ticket("Problema no login", prioridade="alta"))
+        self.assertIn("Cliente Maria", mcp_module.resumo_atendimento("Maria"))
+
 
 if __name__ == "__main__":
     unittest.main()
