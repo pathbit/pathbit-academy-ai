@@ -9,10 +9,16 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 
 
+_MODULE_CACHE = {}
+
+
 def load(module, path):
+    if path in _MODULE_CACHE:
+        return _MODULE_CACHE[path]
     spec = importlib.util.spec_from_file_location(module, ROOT / path)
     result = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(result)
+    _MODULE_CACHE[path] = result
     return result
 
 
@@ -67,6 +73,39 @@ class ReviewRegressions(unittest.TestCase):
         self.assertIn("prioridade invalida", mcp_module.criar_ticket("Ajuda", prioridade="urgente"))
         self.assertIn("ticket#2041 criado", mcp_module.criar_ticket("Problema no login", prioridade="alta"))
         self.assertIn("Cliente Maria", mcp_module.resumo_atendimento("Maria"))
+
+    def test_agent_guardrail_blocking_sensitive_patterns(self):
+        agent = load("agent_guardrail_review", "0007_agentes_tool_calling/src/agent_runner.py")
+        ok, msg = agent.guardrail("minha senha de acesso é secreta")
+        self.assertFalse(ok)
+        self.assertIn("senha", msg)
+
+        ok, msg = agent.guardrail("informe o token da api")
+        self.assertFalse(ok)
+        self.assertIn("token", msg)
+
+        ok, msg = agent.guardrail("como consultar o status do meu servico?")
+        self.assertTrue(ok)
+        self.assertEqual(msg, "ok")
+
+    def test_agent_business_rule_router_and_ticket_creation(self):
+        agent = load("agent_router_review", "0007_agentes_tool_calling/src/agent_runner.py")
+        route, reason = agent.business_rule_router("Gostaria de solicitar a segunda via do boleto")
+        self.assertEqual(route, "buscar_politica")
+
+        route, reason = agent.business_rule_router("Sistema apresentando erro 500 no checkout")
+        self.assertEqual(route, "criar_ticket")
+
+        route, reason = agent.business_rule_router("Qual a distancia entre a Terra e Marte?")
+        self.assertIsNone(route)
+
+        ticket_critico = agent.tool_criar_ticket("Erro 500 fatal")
+        self.assertEqual(ticket_critico["prioridade"], "alta")
+        self.assertIn("TCK-", ticket_critico["ticket_id"])
+        self.assertEqual(ticket_critico["assunto"], "Erro 500 fatal")
+
+        ticket_normal = agent.tool_criar_ticket("Duvida comercial")
+        self.assertEqual(ticket_normal["prioridade"], "media")
 
 
 if __name__ == "__main__":
