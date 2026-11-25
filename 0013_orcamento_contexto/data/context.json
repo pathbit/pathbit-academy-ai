@@ -1,0 +1,6 @@
+[
+  {"id": "refund-summary", "source": "returns", "score": 0.96, "text": "O estorno é solicitado pelo painel do pedido."},
+  {"id": "refund-history", "source": "returns", "score": 0.94, "text": "Veja cada mudança no histórico do estorno."},
+  {"id": "policy-appendix", "source": "handbook", "score": 0.90, "text": "O apêndice lista as categorias de devolução e exceções aplicáveis a compras presenciais, pagamentos com cartão de loja, itens personalizados, compras corporativas, pagamentos divididos e pedidos enviados com múltiplos volumes."},
+  {"id": "refund-window", "source": "billing", "score": 0.85, "text": "Confira o prazo exibido na página de cobrança."}
+]

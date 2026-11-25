@@ -116,6 +116,36 @@ Segue o laboratório de MCP com um fluxo local que separa proposta, decisão hum
 
 ---
 
+### [0012 - Busca híbrida em RAG](./0012_busca_hibrida/)
+
+**Ano:** 2026 | **Categoria:** Inteligência Artificial / Recuperação de informação
+
+Compare busca lexical, similaridade de cosseno e Reciprocal Rank Fusion. O laboratório mede recall e mostra um caso em que a fusão piora a cobertura apesar de manter a primeira posição correta.
+
+[📖 Ler artigo](./0012_busca_hibrida/article/ARTICLE.md) | [🔧 Executar localmente](./0012_busca_hibrida/README.md) | [English](./0012_busca_hibrida/README.en.md) | [Español](./0012_busca_hibrida/README.es.md)
+
+---
+
+### [0013 - Orçamento de contexto para RAG](./0013_orcamento_contexto/)
+
+**Ano:** 2026 | **Categoria:** Inteligência Artificial / Engenharia de contexto
+
+Organize trechos por relevância, aplique cotas por fonte e meça em bytes UTF-8 o JSON que será entregue. A saída identifica cada trecho excluído e o motivo.
+
+[📖 Ler artigo](./0013_orcamento_contexto/article/ARTICLE.md) | [🔧 Executar localmente](./0013_orcamento_contexto/README.md) | [English](./0013_orcamento_contexto/README.en.md) | [Español](./0013_orcamento_contexto/README.es.md)
+
+---
+
+### [0014 - Citações verificáveis em RAG](./0014_citacoes_verificaveis/)
+
+**Ano:** 2026 | **Categoria:** Inteligência Artificial / Validação de evidências
+
+Confira IDs de fonte e citações literais contra o contexto realmente entregue, trate a abstenção e reproduza um caso em que a origem é válida embora a afirmação ainda precise de evidências.
+
+[📖 Ler artigo](./0014_citacoes_verificaveis/article/ARTICLE.md) | [🔧 Executar localmente](./0014_citacoes_verificaveis/README.md) | [English](./0014_citacoes_verificaveis/README.en.md) | [Español](./0014_citacoes_verificaveis/README.es.md)
+
+---
+
 ## 📖 Documentação
 
 ### 🔧 Soluções para Problemas Comuns
@@ -210,17 +240,22 @@ pathbit-academy-ai/
 │   ├── highlight/
 │   ├── notebooks/
 │   └── src/
-└── 0011_aprovacao_idempotencia/       # Artigo 0011
-    ├── README.md
-    ├── requirements.txt
-    ├── article/
-    ├── notebooks/
-    └── src/
+├── 0011_aprovacao_idempotencia/       # Artigo 0011
+│   ├── README.md
+│   ├── requirements.txt
+│   ├── article/
+│   ├── notebooks/
+│   └── src/
+├── 0012_busca_hibrida/                # Artigo 0012
+├── 0013_orcamento_contexto/           # Artigo 0013
+└── 0014_citacoes_verificaveis/        # Artigo 0014
 ```
 
 ---
 
-## 📋 Pré-requisitos Gerais do Ambiente
+## 📋 Pré-requisitos obrigatórios
+
+Os laboratórios 0012 a 0014 precisam apenas de [Python 3.10+](https://www.python.org/downloads/) para rodar pela linha de comando, inclusive sem conexão. Para os demais artigos, confira as dependências no README de cada laboratório.
 
 Para executar os artigos e notebooks da **Pathbit Academy AI**, recomendamos a seguinte configuração de ambiente:
 
@@ -251,6 +286,7 @@ Para executar os artigos e notebooks da **Pathbit Academy AI**, recomendamos a s
      - Depois de baixar os modelos, a inferência roda localmente. Os notebooks aceitam
        `OLLAMA_BASE_URL` para apontar a outro endpoint.
    - **Laboratório 0011:** Python e SQLite, sem inferência nem credenciais.
+   - **Laboratórios 0012 a 0014:** biblioteca padrão do Python, sem inferência nem credenciais.
 
 ---
 
@@ -283,21 +319,23 @@ XXXX_titulo_do_artigo/
 
 ---
 
-## Contribuições e proteção de branches
+## Contributing and Branch Protection
 
-Envie mudanças para `master` por pull request. Execute as verificações aplicáveis ao conteúdo ou ao laboratório antes de pedir revisão. Para dúvidas, correções ou sugestões, abra uma [issue](https://github.com/pathbit/pathbit-academy-ai/issues).
+1. Crie um fork e clone-o.
+2. Crie uma pasta `XXXX_titulo_do_artigo` seguindo a estrutura acima.
+3. Adicione o artigo à lista deste README.
+4. Abra um pull request do seu fork para `master` e aguarde a revisão.
 
-1. Clone o repositório
-2. Crie uma nova pasta para seu artigo seguindo o padrão `XXXX_titulo_do_artigo`
-3. Siga a estrutura de pastas estabelecida
-4. Adicione seu artigo à lista acima
+Execute as verificações aplicáveis ao conteúdo ou ao laboratório antes de pedir revisão.
+
+Para informar um erro ou sugerir um artigo, [abra uma issue](https://github.com/pathbit/pathbit-academy-ai/issues).
 
 ---
 
-## 📄 Licença
+## 📄 License
 
 Distribuído sob a **Licença MIT**. O texto completo está em [LICENSE](./LICENSE).
 
 ---
 
-Developed with ❤️ by [Pathbit](https://pathbit.co/)
+Developed with ❤️ by [Pathbit](https://www.pathbit.com.br/)

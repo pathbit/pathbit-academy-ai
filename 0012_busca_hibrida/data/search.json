@@ -1,0 +1,15 @@
+{
+  "candidate_depth": 3,
+  "documents": [
+    {"id": "access-code", "text": "Gere um código temporário e recupere o acesso à conta.", "vector": [1, 0, 0]},
+    {"id": "rain-policy", "text": "Protocolo RE42 para cancelar uma reserva em caso de chuva.", "vector": [0, 1, 0]},
+    {"id": "refund", "text": "Para estorno, confira o prazo e as evidências do pedido.", "vector": [0, 0, 1]},
+    {"id": "reset-password", "text": "Redefinir senha após uma tentativa de acesso inválida.", "vector": [0.8, 0, 0.6]},
+    {"id": "weather-alert", "text": "Condições meteorológicas impeditivas permitem remarcar a visita.", "vector": [0.2, 0.98, 0]},
+    {"id": "notification", "text": "Ative notificações para receber o status do seu pedido.", "vector": [0.5, 0.4, 0.7]}
+  ],
+  "queries": [
+    {"text": "redefinir senha", "vector": [1, 0, 0], "relevant": ["access-code", "reset-password"]},
+    {"text": "protocolo RE42 para cancelar reserva", "vector": [0, 1, 0], "relevant": ["rain-policy", "weather-alert"]}
+  ]
+}

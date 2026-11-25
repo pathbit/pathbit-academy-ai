@@ -1,0 +1,30 @@
+{
+  "context": {
+    "documents": [
+      {"id": "refund-summary", "source": "returns", "text": "O estorno é solicitado pelo painel do pedido."},
+      {"id": "refund-window", "source": "billing", "text": "Confira o prazo exibido na página de cobrança."}
+    ]
+  },
+  "cases": {
+    "valid": [
+      {"text": "Solicite o estorno no painel do pedido.", "citations": [
+        {"source_id": "refund-summary", "quote": "O estorno é solicitado pelo painel do pedido."}
+      ]}
+    ],
+    "altered-quote": [
+      {"text": "O estorno é imediato.", "citations": [
+        {"source_id": "refund-summary", "quote": "O estorno é imediato."}
+      ]}
+    ],
+    "unknown-source": [
+      {"text": "Consulte a cobrança para conferir o prazo.", "citations": [
+        {"source_id": "missing", "quote": "Confira o prazo exibido na página de cobrança."}
+      ]}
+    ],
+    "unsupported-claim": [
+      {"text": "Todo estorno é concluído em cinco minutos.", "citations": [
+        {"source_id": "refund-summary", "quote": "O estorno é solicitado pelo painel do pedido."}
+      ]}
+    ]
+  }
+}

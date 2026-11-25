@@ -1,0 +1,2 @@
+# Optional dependency for opening the notebooks.
+jupyterlab>=4,<5
