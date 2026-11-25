@@ -13,11 +13,13 @@ from __future__ import annotations
 import argparse
 import re
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
 import pandas as pd
-from sentence_transformers import SentenceTransformer
-from transformers import AutoModelForCausalLM, AutoModelForSeq2SeqLM, AutoTokenizer
+
+if TYPE_CHECKING:
+    from sentence_transformers import SentenceTransformer
 
 DEFAULT_EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 DEFAULT_CANDIDATES = [
@@ -34,6 +36,8 @@ def normalize_tokens(text: str) -> set[str]:
 
 def build_generator(model_name: str):
     """Cria o gerador compatível com o tipo do modelo."""
+    from transformers import AutoModelForCausalLM, AutoModelForSeq2SeqLM, AutoTokenizer
+
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     if "t5" in model_name.lower():
         model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
@@ -46,6 +50,8 @@ def build_generator(model_name: str):
 
 def build_embedder(model_name: str) -> SentenceTransformer:
     """Cria o modelo de embeddings usado no julgamento semântico."""
+    from sentence_transformers import SentenceTransformer
+
     return SentenceTransformer(model_name)
 
 

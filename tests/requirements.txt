@@ -1,0 +1,7 @@
+# Dependências da suíte de regressão executada por make test.
+jsonschema>=4.20.0
+matplotlib>=3.8.0
+matplotlib-inline
+mcp>=2.0.0
+numpy
+pandas>=2.0.0

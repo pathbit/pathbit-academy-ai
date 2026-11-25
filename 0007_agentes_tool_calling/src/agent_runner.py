@@ -13,11 +13,13 @@ import argparse
 import json
 import re
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
 import pandas as pd
-from sentence_transformers import SentenceTransformer
-from transformers import AutoModelForCausalLM, AutoModelForSeq2SeqLM, AutoTokenizer
+
+if TYPE_CHECKING:
+    from sentence_transformers import SentenceTransformer
 
 DEFAULT_EMBEDDING_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 DEFAULT_GENERATION_MODEL = "Qwen/Qwen2.5-0.5B-Instruct"
@@ -43,11 +45,15 @@ def business_rule_router(texto: str) -> tuple[str | None, str]:
 
 def build_embedder(model_name: str) -> SentenceTransformer:
     """Cria o modelo de embeddings usado para retrieval e fallback."""
+    from sentence_transformers import SentenceTransformer
+
     return SentenceTransformer(model_name)
 
 
 def build_generator(model_name: str):
     """Cria o modelo gerador/planner compatível com o backend atual."""
+    from transformers import AutoModelForCausalLM, AutoModelForSeq2SeqLM, AutoTokenizer
+
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     if "t5" in model_name.lower():
         model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
