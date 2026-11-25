@@ -236,6 +236,19 @@ Para executar os artigos e notebooks da **Pathbit Academy AI**, recomendamos a s
 
 ---
 
+## Testes de regressão
+
+Na raiz do repositório, prepare o ambiente da suíte e execute os testes.
+Os testes rodam sem baixar modelos nem acessar APIs de inferência.
+
+```bash
+python3 -m venv .venv
+.venv/bin/python -m pip install -r tests/requirements.txt
+make test
+```
+
+---
+
 ## 🛠️ Como Contribuir
 
 1. Clone o repositório
