@@ -154,7 +154,7 @@ Na geração, **faithfulness** estima se as afirmações são sustentadas pelo c
 
 ## Execução prática do laboratório passo a passo
 
-O repositório disponibiliza uma esteira completa de testes implementando ChromaDB em memória, geração de embeddings locais com Sentence-BERT e chamadas estruturadas de inferência via Groq Cloud.
+O laboratório usa ChromaDB em memória e embeddings locais com Sentence-BERT. A seção de geração aceita Groq Cloud com `GROQ_API_KEY` ou [Ollama local](../../0008_llms_locais_ollama/README.md), com `LAB_PROVIDER=ollama` no ambiente do Jupyter.
 
 A inicialização do ambiente local requer apenas os comandos usuais de terminal:
 

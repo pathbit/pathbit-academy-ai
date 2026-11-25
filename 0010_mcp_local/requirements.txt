@@ -2,6 +2,7 @@
 mcp>=2.0.0
 jsonschema>=4.20.0
 pandas>=2.0.0
+tabulate
 matplotlib>=3.8.0
 jupyter>=1.0.0
 notebook>=7.0.0

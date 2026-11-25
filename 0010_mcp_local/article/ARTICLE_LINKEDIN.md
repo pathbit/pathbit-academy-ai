@@ -198,9 +198,7 @@ O experimento completo também pode ser acompanhado de forma interativa no Jupyt
 python src/main.py
 ```
 
-Abaixo está o registro da execução com a inicialização do servidor e as chamadas reais via stdio.
-
-![Evidência de Execução do Notebook 0010](../../tmp/evidencias_notebooks/0010_mcp_local/evidence_notebook.png)
+O [relatório versionado](../data/mcp_relatorio.md) registra os resultados da execução de referência.
 
 ---
 

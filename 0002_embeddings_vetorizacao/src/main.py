@@ -10,7 +10,6 @@ NOTA: Este notebook foi otimizado para Google Colab e contém
 tudo que você precisa - sem arquivos externos!
 
 Requisitos:
-- GROQ_API_KEY definida como variável de ambiente (opcional)
 - Dependências instaladas via requirements.txt
 
 Uso:
@@ -22,7 +21,6 @@ DICA: Para usar no Google Colab, acesse:
 
 import subprocess
 import sys
-import os
 
 from pathlib import Path
 
@@ -73,21 +71,6 @@ def verificar_dependencias():
         return False
 
 
-def verificar_api_keys():
-    """
-    Verifica se as API Keys estão configuradas.
-    """
-    groq_key = os.getenv("GROQ_API_KEY")
-
-    if not groq_key:
-        print("⚠️  GROQ_API_KEY não definida (opcional - exemplos funcionam sem ela)")
-    else:
-        print("✅ GROQ_API_KEY configurada")
-
-    print("✅ Hugging Face funciona sem API Key para modelos públicos")
-    return True
-
-
 def iniciar_notebook():
     """
     Inicia o Jupyter Notebook com o arquivo de embeddings.
@@ -126,8 +109,6 @@ def main():
     # Verificações iniciais
     if not verificar_dependencias():
         sys.exit(1)
-
-    verificar_api_keys()
 
     if check_only:
         notebook_path = (

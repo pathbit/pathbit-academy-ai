@@ -104,6 +104,15 @@ Implementa o Model Context Protocol (MCP) da Anthropic 100% offline via transpor
 
 [📖 Ler Artigo](./0010_mcp_local/) | [🔧 Executar Localmente](./0010_mcp_local/README.md)
 
+---
+
+### [0011 - Aprovação humana e idempotência em agentes](./0011_aprovacao_idempotencia/)
+
+**Ano:** 2026 | **Categoria:** Inteligência Artificial / Agentes e operações
+
+Segue o laboratório de MCP com um fluxo local que separa proposta, decisão humana e execução. O exemplo usa SQLite para registrar a aprovação e garantir que novas tentativas devolvam o mesmo chamado.
+
+[📖 Ler Artigo](./0011_aprovacao_idempotencia/article/ARTICLE.md) | [🔧 Executar Localmente](./0011_aprovacao_idempotencia/README.md)
 
 ---
 
@@ -192,13 +201,19 @@ pathbit-academy-ai/
 │   ├── highlight/
 │   ├── notebooks/
 │   └── src/
-└── 0010_mcp_local/                    # Artigo 0010
+├── 0010_mcp_local/                    # Artigo 0010
+│   ├── README.md
+│   ├── requirements.txt
+│   ├── article/
+│   ├── assets/
+│   ├── data/
+│   ├── highlight/
+│   ├── notebooks/
+│   └── src/
+└── 0011_aprovacao_idempotencia/       # Artigo 0011
     ├── README.md
     ├── requirements.txt
     ├── article/
-    ├── assets/
-    ├── data/
-    ├── highlight/
     ├── notebooks/
     └── src/
 ```
@@ -209,8 +224,9 @@ pathbit-academy-ai/
 
 Para executar os artigos e notebooks da **Pathbit Academy AI**, recomendamos a seguinte configuração de ambiente:
 
-1. **Python 3.14+ (Compatível com 3.10+):**
-   - Os exemplos foram validados e homologados em Python 3.14+ (testados nativamente em Python 3.14.8), com suporte retrocompatível para Python 3.10 a 3.13.
+1. **Python 3.14 em ambiente virtual:**
+   - Os notebooks foram executados em Python 3.14 e 3.13. Para outras versões,
+     confira a disponibilidade dos pacotes do `requirements.txt` de cada módulo.
    - Caso precise instalar o Python 3.14+:
      - **macOS:** Instale via Homebrew com `brew install python` ou pyenv com `pyenv install 3.14.8`.
      - **Linux (Ubuntu/Debian):** `sudo apt update && sudo apt install -y python3 python3-venv python3-pip`.
@@ -224,15 +240,17 @@ Para executar os artigos e notebooks da **Pathbit Academy AI**, recomendamos a s
      ```
 
 2. **Contas e Chaves de API Gratuitas:**
-   - **Groq Cloud (Artigos 0001 a 0004):**
+   - **Groq Cloud (modos cloud dos artigos 0001, 0003 e 0004):**
      - Crie uma conta gratuita em [console.groq.com/keys](https://console.groq.com/keys).
      - Gere uma chave de API com prefixo `gsk_...`.
      - Defina no terminal com `export GROQ_API_KEY="gsk_..."` (ou `$env:GROQ_API_KEY="gsk_..."` no PowerShell).
    - **Hugging Face (Artigos 0002 a 0007):**
      - Acesso a modelos públicos e abertos baixados automaticamente pela biblioteca `transformers` ou `sentence-transformers`, sem necessidade de chave de API ou cobranças.
-   - **Sem conta e sem chave (Artigo 0008 em diante):**
+   - **Ollama (modos locais dos artigos 0001, 0003, 0004, 0008, 0009 e 0010):**
      - O Ollama em Docker baixa modelos abertos direto do registry público, sem cadastro.
-     - Basta Docker e Python: nenhuma chave de API é necessária para os artigos que rodam 100% local.
+     - Depois de baixar os modelos, a inferência roda localmente. Os notebooks aceitam
+       `OLLAMA_BASE_URL` para apontar a outro endpoint.
+   - **Laboratório 0011:** Python e SQLite, sem inferência nem credenciais.
 
 ---
 

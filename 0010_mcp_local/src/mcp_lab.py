@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
 import statistics
 import sys
 import time
@@ -30,7 +31,7 @@ import matplotlib.pyplot as plt
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
-DEFAULT_BASE_URL = "http://localhost:11434"
+DEFAULT_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/")
 DEFAULT_CHAT_MODELS = "qwen2.5:0.5b,qwen2.5:1.5b,llama3.2:1b"
 PROTOCOL_CALLS = 50
 
@@ -112,7 +113,11 @@ async def plano_do_modelo(base_url: str, model: str, prompt: str) -> tuple[dict 
         plano = json.loads(out.get("response", ""))
     except json.JSONDecodeError:
         plano = None
-    return plano, round(total_ms, 1), int(out.get("eval_count", 0))
+    return (
+        plano if isinstance(plano, dict) else None,
+        round(total_ms, 1),
+        int(out.get("eval_count", 0)),
+    )
 
 
 async def run_lab(base_url: str, models: list[str], repeat: int, skip_plots: bool = False):
@@ -177,7 +182,7 @@ async def run_lab(base_url: str, models: list[str], repeat: int, skip_plots: boo
                         plano, plan_ms, tokens = await plano_do_modelo(base_url, model, prompt)
 
                         tool_escolhida = (plano or {}).get("tool", "invalido")
-                        argumentos = (plano or {}).get("argumentos", {}) if isinstance(plano, dict) else {}
+                        argumentos = (plano or {}).get("argumentos", {})
                         try:
                             jsonschema.validate(instance=plano, schema=PLANNER_SCHEMA)
                             schema_ok = True

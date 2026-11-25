@@ -74,6 +74,10 @@ python src/main.py
 python src/agent_runner.py --limit 5
 ```
 
+O limite percorre os cinco primeiros cenários. Execute em uma cópia do
+módulo para preservar a trilha de referência em `data/`. Os chamados
+gerados são resultados do laboratório local.
+
 #### Executar notebook diretamente
 
 ```bash

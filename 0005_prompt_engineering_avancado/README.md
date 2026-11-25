@@ -79,6 +79,9 @@ python src/main.py
 python src/prompt_benchmark.py --limit 2
 ```
 
+O limite seleciona dois casos do conjunto de entrada. Execute em uma cópia
+do módulo para preservar os relatórios versionados em `data/`.
+
 #### Escolher modelos específicos
 
 ```bash

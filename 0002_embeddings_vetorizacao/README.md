@@ -35,33 +35,16 @@ Inclui exemplos práticos, código em Python e comparações de performance entr
 ### 📋 Pré-requisitos
 
 - Python 3.14+ (compatível com 3.10+) executando em ambiente virtual isolado (.venv)
-- Conta gratuita no [Groq Cloud](https://console.groq.com/keys) com API Key (opcional)
-- Modelos Hugging Face (gratuitos e baixados automaticamente)
+- Acesso ao Hugging Face na primeira execução para baixar o modelo público de embeddings
 
 ### 📦 Versões dos Pacotes
 
-- **groq:** 0.32.0 (versão histórica; consulte o ambiente instalado)
 - **sentence-transformers:** 3.1.1 (versão histórica; consulte o ambiente instalado)
 - **numpy:** 1.26.4 (versão histórica; consulte o ambiente instalado)
 - **scikit-learn:** 1.4.2 (versão histórica; consulte o ambiente instalado)
 - **matplotlib:** 3.9.0 (versão histórica; consulte o ambiente instalado)
 - **jupyter:** 1.1.1 (versão histórica; consulte o ambiente instalado)
 - **ipython:** 9.5.0 (versão histórica; consulte o ambiente instalado)
-
-### 🔧 Configuração das API Keys (Opcional)
-
-```bash
-# Definir as variáveis de ambiente (Linux/Mac)
-export GROQ_API_KEY='sua_chave_groq_aqui'
-
-# No Windows (PowerShell)
-$env:GROQ_API_KEY='sua_chave_groq_aqui'
-
-# No Windows (CMD)
-set GROQ_API_KEY=sua_chave_groq_aqui
-```
-
-**Nota:** O Hugging Face funciona sem API Key para modelos públicos. O Groq é opcional para alguns exemplos.
 
 ### 🚀 Execução Local
 
@@ -101,16 +84,13 @@ jupyter notebook notebooks/embeddings_vetorizacao.ipynb
 ### ⚠️ Importante para execução local
 
 - O notebook foi adaptado para funcionar tanto no Colab quanto localmente
-- **Funciona sem API Keys** - Todos os exemplos usam modelos gratuitos do Hugging Face
-- O Groq é opcional para exemplos avançados
-- O Hugging Face funciona sem API Key para modelos públicos
+- O notebook usa um modelo público do Hugging Face e roda sem chave de API.
 
 ### 🔧 Soluções para erros comuns
 
 Para problemas específicos, consulte a documentação na pasta `docs/`:
 
 - [Solução para erro do Google Colab](../docs/SOLUCAO_ERRO_COLAB.md)
-- [Solução para erro do Groq](../docs/SOLUCAO_ERRO_GROQ.md)
 - [Atualizações de versões](../docs/ATUALIZACOES_VERSOES.md)
 
 ### 🔍 Estrutura de Arquivos

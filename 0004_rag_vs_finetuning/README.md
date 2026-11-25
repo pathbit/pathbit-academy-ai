@@ -32,10 +32,11 @@ Inclui fine-tuning REAL com LoRA (demonstrativo), exemplos executáveis em Pytho
 
 ### Modo local explícito sem chave cloud
 
-`LAB_PROVIDER=ollama python src/main.py` abre o notebook usando Qwen local
-nas chamadas de comparação. É uma baseline para validar o fluxo: não mede
-Groq nem um modelo LRM. Sem essa variável, as etapas cloud exigem
-`GROQ_API_KEY`. O fine-tuning LoRA do artigo 0004 continua real e local.
+Com o [Ollama do módulo 0008](../0008_llms_locais_ollama/README.md) em execução
+e `qwen2.5:0.5b` baixado, `LAB_PROVIDER=ollama python src/main.py` usa
+Qwen nas etapas de geração e RAG. O treinamento LoRA usa o modelo do Hugging
+Face indicado no notebook. Para usar Groq nas etapas de comparação, configure
+`GROQ_API_KEY`.
 
 ## 🚀 Como Executar os Exemplos
 
@@ -340,13 +341,6 @@ Mas requer modelos especializados (não coberto neste artigo).
 **Objetivo:** Mostrar processo real em escala educacional.
 
 ---
-
-### Modo local explícito sem chave cloud
-
-`LAB_PROVIDER=ollama python src/main.py` abre o notebook usando Qwen local
-nas chamadas de comparação. É uma baseline para validar o fluxo: não mede
-Groq nem um modelo LRM. Sem essa variável, as etapas cloud exigem
-`GROQ_API_KEY`. O fine-tuning LoRA do artigo 0004 continua real e local.
 
 ## 🚀 Como Executar
 

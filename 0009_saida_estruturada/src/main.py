@@ -81,6 +81,10 @@ def main() -> None:
     print("  Pathbit Academy AI - Artigo 0009: Saida Estruturada")
     print("=" * 60)
 
+    if sys.argv[1:2] == ["--lab"]:
+        lab_script = Path(__file__).parent / "structured_lab.py"
+        raise SystemExit(subprocess.run([sys.executable, str(lab_script), *sys.argv[2:]]).returncode)
+
     if any(arg in sys.argv for arg in ("-h", "--help")):
         print("Uso:")
         print("  python src/main.py          # Abre o notebook interativo no Jupyter")
@@ -99,11 +103,6 @@ def main() -> None:
             return
         print(f"ERRO: notebook nao encontrado: {notebook_path}")
         sys.exit(1)
-
-    if len(sys.argv) > 1 and sys.argv[1] == "--lab":
-        lab_script = Path(__file__).parent / "structured_lab.py"
-        subprocess.run([sys.executable, str(lab_script)] + sys.argv[2:])
-        return
 
     if not verificar_dependencias():
         sys.exit(1)

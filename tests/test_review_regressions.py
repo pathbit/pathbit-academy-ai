@@ -1,6 +1,10 @@
 """Regressões do gate, recuperação de JSON e imports em notebook."""
+import asyncio
 import importlib.util
+import io
 from pathlib import Path
+import subprocess
+import sys
 import unittest
 from unittest.mock import patch
 
@@ -73,6 +77,29 @@ class ReviewRegressions(unittest.TestCase):
         self.assertIn("prioridade invalida", mcp_module.criar_ticket("Ajuda", prioridade="urgente"))
         self.assertIn("ticket#2041 criado", mcp_module.criar_ticket("Problema no login", prioridade="alta"))
         self.assertIn("Cliente Maria", mcp_module.resumo_atendimento("Maria"))
+
+    def test_mcp_planner_requires_a_json_object(self):
+        lab = load("mcp_planner_review", "0010_mcp_local/src/mcp_lab.py")
+        with patch.object(
+            lab.urllib.request,
+            "urlopen",
+            return_value=io.BytesIO(b'{"response":"[1]","eval_count":3}'),
+        ):
+            plano, _, tokens = asyncio.run(lab.plano_do_modelo("http://localhost", "test", "prompt"))
+        self.assertIsNone(plano)
+        self.assertEqual(tokens, 3)
+
+    def test_lab_launchers_propagate_argument_errors(self):
+        for module in ("0009_saida_estruturada", "0010_mcp_local"):
+            with self.subTest(module=module):
+                result = subprocess.run(
+                    [sys.executable, str(ROOT / module / "src/main.py"), "--lab", "--invalido"],
+                    capture_output=True,
+                    text=True,
+                    timeout=20,
+                )
+                self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+                self.assertIn("--invalido", result.stderr)
 
     def test_agent_guardrail_blocking_sensitive_patterns(self):
         agent = load("agent_guardrail_review", "0007_agentes_tool_calling/src/agent_runner.py")

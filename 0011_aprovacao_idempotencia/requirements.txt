@@ -1,0 +1,2 @@
+# O laboratório usa a biblioteca padrão. Instale o Jupyter para abrir o notebook.
+jupyter

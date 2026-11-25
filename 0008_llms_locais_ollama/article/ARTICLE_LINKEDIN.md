@@ -306,9 +306,7 @@ O laboratório também pode ser acompanhado passo a passo pelo Jupyter Notebook.
 python src/main.py
 ```
 
-A captura abaixo documenta a execução real do notebook com todas as métricas apuradas no terminal.
-
-![Evidência de Execução do Notebook 0008](../../tmp/evidencias_notebooks/0008_llms_locais_ollama/evidence_notebook.png)
+O [relatório versionado](../data/benchmark_relatorio.md) registra os resultados da execução de referência.
 
 ---
 

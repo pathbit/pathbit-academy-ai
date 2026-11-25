@@ -29,10 +29,11 @@ Inclui exemplos práticos, código em Python e comparações de desempenho.
 
 ### Modo local explícito sem chave cloud
 
-`LAB_PROVIDER=ollama python src/main.py` abre o notebook usando Qwen local
-nas chamadas de comparação. É uma baseline para validar o fluxo: não mede
-Groq nem um modelo LRM. Sem essa variável, as etapas cloud exigem
-`GROQ_API_KEY`. O fine-tuning LoRA do artigo 0004 continua real e local.
+Com o [Ollama do módulo 0008](../0008_llms_locais_ollama/README.md) em execução
+e os modelos `qwen2.5:0.5b` e `qwen2.5:1.5b` baixados,
+`LAB_PROVIDER=ollama python src/main.py` abre o notebook com uma baseline
+Qwen para validar o fluxo. As medições de Groq e de LRM dependem da execução
+cloud com `GROQ_API_KEY`.
 
 ## 🚀 Como Executar os Exemplos
 

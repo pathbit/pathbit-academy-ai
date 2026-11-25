@@ -73,6 +73,10 @@ python src/main.py
 python src/eval_runner.py --limit 3
 ```
 
+O limite seleciona três casos para conferir a esteira. Use o conjunto
+completo para interpretar o gate de liberação apresentado no artigo.
+Execute em uma cópia do módulo para preservar os relatórios em `data/`.
+
 #### Escolher candidatos específicos
 
 ```bash

@@ -97,6 +97,9 @@ python src/ollama_lab.py --models qwen2.5:0.5b
 python src/ollama_lab.py --base-url http://localhost:11434
 ```
 
+Defina `OLLAMA_BASE_URL` antes de iniciar o Jupyter para usar o mesmo
+endpoint alternativo no notebook.
+
 #### Abrir o notebook pelo launcher
 
 ```bash

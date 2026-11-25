@@ -63,7 +63,12 @@ $env:GROQ_API_KEY='sua_chave_groq_aqui'
 set GROQ_API_KEY=sua_chave_groq_aqui
 ```
 
-**Nota:** O Chroma funciona sem API Key. O Groq é opcional para exemplos avançados.
+A indexação, a consulta ao Chroma e as visualizações rodam sem chave. O
+notebook baixa o modelo público de embeddings na primeira execução.
+Para gerar respostas, configure `GROQ_API_KEY` ou inicie o
+[Ollama do módulo 0008](../0008_llms_locais_ollama/README.md), baixe
+`qwen2.5:0.5b` e abra o notebook com `LAB_PROVIDER=ollama python src/main.py`.
+Com Ollama em outra porta, defina `OLLAMA_BASE_URL` antes de abrir o Jupyter.
 
 ### 🚀 Execução Local
 
@@ -103,8 +108,7 @@ jupyter notebook notebooks/rag_vector_database.ipynb
 ### ⚠️ Importante para execução local
 
 - O notebook foi adaptado para funcionar tanto no Colab quanto localmente
-- **Funciona sem API Keys** - Todos os exemplos usam Chroma (gratuito)
-- O Groq é opcional para exemplos avançados
+- A etapa de busca usa Chroma e embeddings locais. A geração executa quando há um provedor configurado.
 
 ### 🔧 Soluções para erros comuns
 

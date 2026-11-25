@@ -1,4 +1,4 @@
-.PHONY: setup test clean
+.PHONY: setup test valida-consistencia clean
 
 VENV ?= .venv
 PYTHON ?= $(shell which $(VENV)/bin/python3 2>/dev/null || which python3 2>/dev/null)
@@ -12,6 +12,9 @@ setup:
 # Executa testes de regressao e suite automatizada
 test:
 	$(PYTHON) -m unittest discover -s tests
+
+valida-consistencia:
+	$(PYTHON) .githooks/commit-msg --check-history
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +

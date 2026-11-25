@@ -91,6 +91,9 @@ python src/structured_lab.py --models qwen2.5:0.5b
 python src/structured_lab.py --base-url http://localhost:11434
 ```
 
+Defina `OLLAMA_BASE_URL` antes de iniciar o Jupyter para usar o mesmo
+endpoint alternativo no notebook.
+
 #### Abrir o notebook interativo pelo launcher
 
 ```bash
@@ -109,7 +112,6 @@ Ao executar o laboratório, você terá:
 - `data/system_one_comparativo.json` - métricas do roteador por embeddings; nome histórico preservado
 - `data/structured_relatorio.md` - relatório técnico pronto para leitura
 - `data/structured_comparativo.png` - gráfico comparativo de conformidade e latência
-- `../tmp/evidencias_notebooks/0009_saida_estruturada/evidence_notebook.png` - comprovação visual de execução do notebook interativo
 
 ---
 

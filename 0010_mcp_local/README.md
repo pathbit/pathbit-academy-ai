@@ -88,6 +88,9 @@ python src/mcp_lab.py --models qwen2.5:0.5b
 python src/mcp_lab.py --base-url http://localhost:11434
 ```
 
+Defina `OLLAMA_BASE_URL` antes de iniciar o Jupyter para usar o mesmo
+endpoint alternativo no notebook.
+
 #### Abrir o notebook interativo pelo launcher
 
 ```bash
@@ -106,7 +109,6 @@ Ao executar o laboratório, você terá:
 - `data/mcp_resumo.csv` - consolidação de conformidade, acerto de ferramenta e latência por modelo
 - `data/mcp_relatorio.md` - relatório técnico executivo consolidado
 - `data/mcp_comparativo.png` - gráfico comparativo de latência do planner vs overhead do protocolo MCP
-- `../tmp/evidencias_notebooks/0010_mcp_local/evidence_notebook.png` - comprovação visual de execução do notebook interativo
 
 ---
 
@@ -123,6 +125,7 @@ Ao executar o laboratório, você terá:
 - Repositório: [pathbit-academy-ai](https://github.com/pathbit/pathbit-academy-ai)
 - Artigo anterior 1: [0008 - LLMs Locais com Ollama](https://github.com/pathbit/pathbit-academy-ai/blob/master/0008_llms_locais_ollama/article/ARTICLE.md)
 - Artigo anterior 2: [0009 - Saída Estruturada](https://github.com/pathbit/pathbit-academy-ai/blob/master/0009_saida_estruturada/article/ARTICLE.md)
+- Próximo laboratório: [0011 - Aprovação humana e idempotência](../0011_aprovacao_idempotencia/article/ARTICLE.md)
 
 ---
 

@@ -279,9 +279,7 @@ O fluxo também pode ser acompanhado passo a passo no notebook.
 python src/main.py
 ```
 
-A imagem abaixo ilustra a execução interativa do laboratório com a validação estrita dos contratos Pydantic e as respostas geradas pelo Ollama.
-
-![Evidência de Execução do Notebook 0009](../../tmp/evidencias_notebooks/0009_saida_estruturada/evidence_notebook.png)
+O [relatório versionado](../data/structured_relatorio.md) registra os resultados da execução de referência.
 
 ---
 
