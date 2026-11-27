@@ -1,92 +1,64 @@
 **Slide 1**
 [layout: cover]
-[eyebrow: Série 0008 · LLMs Locais]
+[eyebrow: Série 0008 · LLMs locais]
 [image: ../assets/02.png]
-[caption: Ollama em Docker com volume de modelos e API local.]
+[caption: Ollama em Docker, porta publicada em loopback e volume de modelos.]
 
-Stack de IA sem nuvem, sem chave e sem custo por token
+Do primeiro chat ao benchmark local
 
-Este módulo prova, com números medidos na própria máquina, que modelos pequenos em Docker atendem roteamento, extração e retrieval sem nenhuma chamada externa.
+Suba um modelo pequeno, leia os tempos da resposta e investigue o que muda da primeira chamada para a seguinte.
 
 **Slide 2**
 [layout: split]
-[eyebrow: Por que local]
-[image: ../assets/01.png]
-[caption: Comparativo entre caminho de chamada na nuvem e no local.]
+[eyebrow: Servidor local]
+[image: ../assets/02.png]
+[caption: O container pode ser recriado e reaproveitar os pesos no volume.]
 
-Local não é só economizar
+O que está instalado e o que está em memória
 
-A latência de rede vira loopback, o custo por token vira memória da máquina, o dado nunca sai do ambiente e a versão do modelo fica congelada no container.
-
-> Com modelo local, o benchmark compara alvos fixos.
-> Com API de nuvem, o alvo se move toda semana.
+- /api/version identifica a versão que responde.
+- /api/tags lista os modelos instalados.
+- /api/ps mostra os modelos carregados.
 
 **Slide 3**
 [layout: split]
-[eyebrow: Infraestrutura mínima]
-[image: ../assets/02.png]
-[caption: Container, volume nomeado e porta local.]
+[eyebrow: Duas chamadas ao mesmo modelo]
+[image: ../assets/06_streaming_terminal.png]
+[caption: Exemplo de execução com o mesmo prompt e dois estados do modelo.]
 
-Três blocos resolvem o infraestrutura
+A espera antes do primeiro fragmento
 
-Ollama em container, modelos abertos em volume persistente e um cliente HTTP em Python padrão. Sem SDK, sem conta, sem cartão.
+Rode o exemplo uma vez com o modelo fora de /api/ps e outra com o modelo carregado. Compare primeiro conteúdo e duração da carga.
 
 **Slide 4**
 [layout: split]
-[eyebrow: Medição honesta]
+[eyebrow: Como medir]
 [image: ../assets/03.png]
-[caption: TTFT, tokens de avaliação e vazão separados por camada.]
+[caption: O cliente cronometra a entrega e o servidor informa suas métricas na linha final.]
 
-A latência que a nuvem esconde, aqui fica decomposta
+Conte três medidas
 
-Streaming token a token expõe o tempo até o primeiro token, a geração em si e a carga do modelo. O CSV registra cada linha para responder por que uma resposta demorou.
-
-> Sem decomposição de latência, todo problema de performance vira opinião.
+- Primeiro conteúdo no cliente.
+- Tempo até a conclusão.
+- Taxa de geração calculada com eval_count e eval_duration.
 
 **Slide 5**
 [layout: split]
-[eyebrow: Benchmark medido]
+[eyebrow: Dados históricos • Ollama 0.35.1]
 [image: ../assets/04.png]
-[caption: Comparativo real de três modelos pequenos em CPU: vazão, TTFT, JSON e tool.]
+[caption: Benchmark de três modelos em CPU, com 12 chamadas por modelo.]
 
-Modelo escolhe-se por função, não por fama
+Maior vazão pode acompanhar uma resposta mais longa
 
-O 0.5B tem a maior vazão; os Qwen acertaram 5/5 no teste de planner. O Llama teve menor TTFT e 0/5 no validador do payload. Recorte pequeno, não confiabilidade geral.
-
-> Decodificação constrangida garante sintaxe, não conteúdo.
+O Qwen 0.5B produziu mais tokens por segundo em média. O Qwen 1.5B produziu menos tokens e apresentou menor tempo total médio naquele conjunto.
 
 **Slide 6**
-[layout: split]
-[eyebrow: Contrato de saída]
-[image: ../assets/04.png]
-[caption: JSON forçado no Ollama com taxa de acerto por modelo.]
-
-format: "json" tira o parsing da sorte
-
-O planner do artigo 0007 dependia de JSON utilizável. O Ollama restringe a decodificação, e o laboratório mede quantas tentativas produzem JSON válido e tool correta.
-
-**Slide 7**
-[layout: split]
-[eyebrow: Mesma instância, mais funções]
-[image: ../assets/05.png]
-[caption: Matriz de decisão de quando rodar local.]
-
-Embeddings locais fecham o stack
-
-O mesmo servidor entrega embeddings para o retrieval top-1. Um container cobre o que os artigos 0002, 0003 e 0007 usaram, sem chamada externa.
-
-> Quando o dado não sai do ambiente, piloto sensível destrava na hora.
-
-**Slide 8**
 [layout: cta]
-[eyebrow: O que este módulo entrega]
-[gallery: ../assets/03.png, ../assets/04.png, ../assets/05.png]
+[eyebrow: Experimento]
+[gallery: ../assets/06_streaming_terminal.png, ../assets/04.png]
 
-Artigo completo + laboratório local de benchmarks
+Repita o caso com seu próprio prompt
 
-O repositório entrega runner, notebook, CSVs e relatório para provar o stack na sua própria máquina.
-
-- Benchmark de chat, JSON e embeddings em um comando
-- Evidência em CSV, gráfico e relatório markdown
+Compare a primeira chamada e a chamada aquecida com a mesma versão, o mesmo modelo e as mesmas opções. Junto com os tempos, registre o número de tokens e confira se o resultado atende à tarefa.
 
 > github.com/pathbit/pathbit-academy-ai

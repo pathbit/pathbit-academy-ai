@@ -1,28 +1,32 @@
-# Uma citação verdadeira pode sustentar a afirmação errada
+# Uma citação verdadeira pode acompanhar uma promessa sem evidência
 
-O verificador confere o ID e a ocorrência literal de cada citação no contexto enviado. Se o trecho saiu do orçamento, o resultado é uma abstenção com `unknown_source`.
+“Todo estorno é concluído em cinco minutos.” A assistente cita uma passagem real: “O estorno é solicitado pelo painel do pedido.”
 
-## Valide contra o contexto enviado
+Você encontra exatamente essa passagem na fonte. O ID está correto. Mesmo assim, a frase ensina onde fazer a solicitação e não estabelece prazo. É o caso que faz valer separar duas tarefas ao avaliar respostas em RAG.
 
-A entrada do verificador é a lista de trechos dentro do envelope efetivamente enviado, junto com afirmações simuladas. Cada afirmação precisa ter uma citação com `source_id` e `quote`. O identificador deve corresponder ao campo `id` de um trecho. A citação deve ocorrer literalmente no texto daquela fonte. IDs repetidos tornam ambígua a origem do trecho e são recusados.
+## Primeiro: a referência pertence a esta requisição?
 
-| Caso | O que procurar no relatório |
-| --- | --- |
-| ID presente com texto literal | `citations_verified` |
-| Texto citado contém uma alteração | `quote_not_found` |
-| Fonte ficou fora do contexto | `unknown_source` |
-| Uma afirmação chegou sem citação | `missing_citation` |
+O verificador da Academy IA recebe a lista exata de trechos do contexto e uma resposta com afirmações. Cada citação aponta para um `source_id` e inclui o trecho literal em `quote`. A verificação localiza o ID e busca o texto que aparece entre aspas na fonte correspondente.
 
-Uma falha devolve `abstained` e lista vazia de afirmações. O consumidor pode apresentar ausência de evidência ao usuário e guardar os motivos para diagnóstico. Valide o esquema da resposta antes de enviá-la ao verificador.
+No laboratório, uma frase alterada gera `quote_not_found`. Uma citação que traz um ID ausente dá `unknown_source`. Nos dois casos a resposta sai como `abstained`, sem afirmações publicadas. Essa camada ajuda a encontrar um vínculo incorreto entre resposta e contexto.
 
-## Compare a origem com o significado
+## Depois: o trecho sustenta a afirmação?
 
-Rode `--case unsupported-claim`. O trecho «O estorno é solicitado pelo painel do pedido.» existe na fonte e a citação passa. A afirmação promete concluir a operação em cinco minutos. Onde pedir e quanto demorar são propriedades diferentes. Para verificar esse tipo de suporte, use um conjunto de afirmações avaliadas e uma etapa própria de avaliação ou revisão humana. No contrato da aplicação, nomeie o sucesso pela garantia observada: `citations_verified`.
+O caso dos cinco minutos retorna `citations_verified`. A verificação literal funcionou: a frase citada faz parte do documento. Falta um teste de suporte. Separe o que a resposta afirma em unidades revisáveis. “Inicie no painel” tem evidência. “Em cinco minutos” introduz duração. “Todo estorno” amplia o escopo para todos os casos. A política entregue não cobre os dois últimos pontos.
 
-## Faça o experimento no seu terminal
+![O caso sem suporte semântico passa na verificação literal](../assets/03.png)
 
-No laboratório, uma promessa de estorno em cinco minutos passa quando cita uma frase real sobre onde pedir. Execute `--case unsupported-claim` e veja por que procedência e suporte semântico precisam de verificações próprias.
+Essa diferença altera o que você apresenta para a pessoa. O status da CLI serve para dizer que a citação foi localizada. Uma interface que informe “resposta confirmada” estaria prometendo algo mais abrangente que o teste executado. Para validar suporte textual, anote casos apoiados, contraditos e insuficientes. Confira também se todas as afirmações factuais receberam evidência.
 
-[Artigo completo e notebook no GitHub](https://github.com/pathbit/pathbit-academy-ai/tree/master/0014_citacoes_verificaveis)
+## Reproduza com o contexto do módulo anterior
 
-Developed with ❤️ by [Pathbit](https://www.pathbit.com.br/)
+Na pasta do laboratório, rode os exemplos com Python 3.10 ou superior:
+
+```bash
+python3 src/main.py --case altered-quote
+python3 src/main.py --case unsupported-claim
+```
+
+Em seguida, grave um relatório de contexto com o script do módulo 0013. Com orçamento de 245 bytes, `refund-summary` chega ao verificador e a citação válida passa. Com 16 bytes, ele recebe uma lista vazia e devolve `unknown_source` para a mesma resposta candidata. A fonte ainda existe no fixture, mas já não pertence à requisição. A combinação demonstra a ligação entre seleção de contexto e verificação.
+
+O [módulo com os quatro casos, código e notebook](https://github.com/pathbit/pathbit-academy-ai/tree/master/0014_citacoes_verificaveis) integra a Academy IA da [Pathbit](https://www.pathbit.com.br/).

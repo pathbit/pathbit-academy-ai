@@ -29,8 +29,8 @@ TEMPLATES["0009_saida_estruturada/assets/01.png"] = f"""{BASE_HEAD}
     <div class="header">
         <div class="header-left">
             <div class="brand-pill"><span class="dot"></span> Artigo 0009 • Saída Estruturada</div>
-            <div class="title">Os Três Níveis de Contrato com LLMs</div>
-            <div class="subtitle">Do prompt otimista à garantia matemática em tempo de amostragem de tokens</div>
+            <div class="title">Três formas de pedir o mesmo objeto</div>
+            <div class="subtitle">O campo format muda a geração. O consumidor decide se o resultado pode seguir.</div>
         </div>
         <div class="figure-badge">Figura 1</div>
     </div>
@@ -67,9 +67,9 @@ Espero ter ajudado!
                     <span class="badge badge-amber">Nível 2 • Modo JSON</span>
                     <span style="font-size: 12px; color: #94a3b8; font-weight: 600;">format: "json"</span>
                 </div>
-                <div style="font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 8px;">Sintaxe Garantida</div>
+                <div style="font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 8px;">Restrição de sintaxe</div>
                 <div style="font-size: 13.5px; color: #94a3b8; line-height: 1.6; margin-bottom: 16px;">
-                    O motor obriga a saída a abrir e fechar chaves válidas. A sintaxe é 100% parseável, mas o schema interno permanece desgovernado.
+                    O motor tenta restringir a saída a JSON. Ainda pode haver uma resposta incompleta ou sem os campos esperados.
                 </div>
                 <div class="code-block" style="font-size: 12px; margin-bottom: 14px;">
 {{
@@ -92,27 +92,27 @@ Espero ter ajudado!
                     <span class="badge badge-emerald">Nível 3 • JSON Schema</span>
                     <span style="font-size: 12px; color: #94a3b8; font-weight: 600;">format: &lt;schema&gt;</span>
                 </div>
-                <div style="font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 8px;">Contrato Estrito</div>
+                <div style="font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 8px;">Esquema da tarefa</div>
                 <div style="font-size: 13.5px; color: #94a3b8; line-height: 1.6; margin-bottom: 16px;">
-                    Máscara de gramática em tempo de geração: campos exigidos, tipos primitivos estritos e enums finitos validados matematicamente.
+                    O runtime usa as regras de esquema que suporta para orientar a decodificação. O cliente aplica a validação ao objeto completo retornado.
                 </div>
                 <div class="code-block" style="font-size: 12px; margin-bottom: 14px;">
 {{
   "tool": "buscar_politica",
   "confianca": 0.95
 }}
-// Impossível violar enum ou tipo!
+// Objeto ilustrativo. Confira tipo e enum no cliente.
                 </div>
             </div>
             <div style="padding: 12px; background: rgba(16, 185, 129, 0.12); border-radius: 8px; font-size: 12.5px; color: #6ee7b7; line-height: 1.5;">
-                <strong>Garantia de Produção:</strong> Validação em tempo de amostragem. Zero falhas de validação no backend e interoperabilidade determinística.
+                <strong>Próxima pergunta:</strong> este objeto representa a decisão certa para a frase recebida?
             </div>
         </div>
     </div>
 
     <div class="footer">
         <div><strong>Pathbit Academy AI</strong> • Engenharia de IA para Produção</div>
-        <div>Figura 1: A evolução do acoplamento entre modelos de linguagem e sistemas corporativos tipados</div>
+        <div>Figura 1. Exemplos ilustrativos de saída para leitura, estrutura e decisão em etapas.</div>
     </div>
 </body>
 </html>"""
@@ -126,7 +126,7 @@ TEMPLATES["0009_saida_estruturada/assets/02.png"] = f"""{BASE_HEAD}
         <div class="header-left">
             <div class="brand-pill"><span class="dot"></span> Artigo 0009 • Saída Estruturada</div>
             <div class="title">Como Funciona a Decodificação Constrangida</div>
-            <div class="subtitle">Grammar-Guided Sampling: máscara de logits via Autômato de Estados Finitos (FSM)</div>
+            <div class="subtitle">O prefixo gerado e a gramática restringem os próximos tokens candidatos</div>
         </div>
         <div class="figure-badge">Figura 2</div>
     </div>
@@ -138,7 +138,7 @@ TEMPLATES["0009_saida_estruturada/assets/02.png"] = f"""{BASE_HEAD}
                 <span class="badge badge-blue">Passo 1 • Predição LLM</span>
                 <div style="font-size: 18px; font-weight: 800; margin: 12px 0 8px;">Cálculo dos Logits</div>
                 <div style="font-size: 13.5px; color: #94a3b8; line-height: 1.5;">
-                    A cada token gerado, a rede neural produz uma distribuição de probabilidades não normalizada (logits) sobre todo o vocabulário de ~150.000 tokens.
+                    A rede calcula uma pontuação para cada possível próximo token no vocabulário do modelo.
                 </div>
                 <div class="code-block" style="font-size: 11.5px; margin-top: 12px;">
 "tool": [9.8],
@@ -154,12 +154,12 @@ TEMPLATES["0009_saida_estruturada/assets/02.png"] = f"""{BASE_HEAD}
             <!-- Passo 2 -->
             <div class="card" style="padding: 24px; border-color: rgba(245, 158, 11, 0.4); background: rgba(245, 158, 11, 0.03);">
                 <span class="badge badge-amber">Passo 2 • Validador de Gramática</span>
-                <div style="font-size: 18px; font-weight: 800; margin: 12px 0 8px;">Máscara de Gramática (BNF / FSM)</div>
+                <div style="font-size: 18px; font-weight: 800; margin: 12px 0 8px;">Filtro de candidatos</div>
                 <div style="font-size: 13.5px; color: #94a3b8; line-height: 1.5;">
-                    O JSON Schema foi compilado em um Autômato de Estados Finitos. O autômato identifica o estado atual (ex: esperando o valor do enum <code>"tool"</code>).
+                    As regras suportadas pelo motor orientam o próximo token de acordo com o prefixo já escrito.
                 </div>
                 <div style="margin-top: 12px; padding: 10px; background: rgba(245, 158, 11, 0.1); border-radius: 8px; font-size: 12.5px; color: #fcd34d;">
-                    Tokens ilegais recebem <code>logit = -∞</code> (probabilidade 0). Apenas tokens que preservam o schema são mantidos.
+                    O filtro descarta candidatos incompatíveis com o próximo trecho da gramática.
                 </div>
             </div>
 
@@ -169,14 +169,13 @@ TEMPLATES["0009_saida_estruturada/assets/02.png"] = f"""{BASE_HEAD}
             <!-- Passo 3 -->
             <div class="card" style="padding: 24px; border-color: rgba(16, 185, 129, 0.4);">
                 <span class="badge badge-emerald">Passo 3 • Token Selecionado</span>
-                <div style="font-size: 18px; font-weight: 800; margin: 12px 0 8px;">Amostragem Válida</div>
+                <div style="font-size: 18px; font-weight: 800; margin: 12px 0 8px;">Continuação compatível</div>
                 <div style="font-size: 13.5px; color: #94a3b8; line-height: 1.5;">
-                    O token amostrado pertence obrigatoriamente à linguagem do schema. A sintaxe e os tipos são imunes a alucinação estrutural.
+                    O próximo token pode ser apenas a primeira parte de um valor. O servidor repete a etapa até concluir ou interromper a geração.
                 </div>
                 <div class="code-block" style="font-size: 11.5px; margin-top: 12px;">
-token_escolhido =
-  "\"buscar_politica\""
-status = 100% VÁLIDO
+prefixo: {{"tool":
+continuação: token compatível
                 </div>
             </div>
         </div>
@@ -184,14 +183,14 @@ status = 100% VÁLIDO
         <div style="display: flex; gap: 18px; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 18px 24px; align-items: center;">
             <div style="font-size: 32px;">💡</div>
             <div style="font-size: 14px; color: #cbd5e1; line-height: 1.6;">
-                <strong>Por que o modelo não fica mais "burro"?</strong> A máscara não altera o conhecimento do modelo; ela apenas proíbe que ele gaste probabilidade em formatos inúteis para o código. O modelo é forçado a alocar 100% de sua atenção nos dados reais da resposta.
+                <strong>No consumidor:</strong> valide o objeto completo e aplique as regras da decisão. O exemplo de pontuações acima é ilustrativo.
             </div>
         </div>
     </div>
 
     <div class="footer">
         <div><strong>Pathbit Academy AI</strong> • Engenharia de IA para Produção</div>
-        <div>Figura 2: O filtro opera camada a camada na inferência do Ollama/llama.cpp sem reprocessamento</div>
+        <div>Figura 2. A restrição opera na escolha do próximo token ao longo da geração.</div>
     </div>
 </body>
 </html>"""
@@ -375,7 +374,7 @@ TEMPLATES["0009_saida_estruturada/assets/05.png"] = f"""{BASE_HEAD}
         <div class="header-left">
             <div class="brand-pill"><span class="dot"></span> Artigo 0009 • Saída Estruturada</div>
             <div class="title">Arquitetura de Integração de Saída Estruturada</div>
-            <div class="subtitle">Pipeline desacoplado: do contrato Pydantic/JSON Schema ao barramento de microsserviços</div>
+            <div class="subtitle">Trate a saída do modelo como uma proposta a ser validada antes do efeito no sistema</div>
         </div>
         <div class="figure-badge">Figura 5</div>
     </div>
@@ -385,39 +384,39 @@ TEMPLATES["0009_saida_estruturada/assets/05.png"] = f"""{BASE_HEAD}
             <div class="card" style="padding: 22px; border-color: rgba(59, 130, 246, 0.4);">
                 <div style="font-size: 12px; font-weight: 700; color: #60a5fa; text-transform: uppercase;">1. Definição do Contrato</div>
                 <div style="font-size: 16px; font-weight: 800; margin: 8px 0;">Pydantic / JSON Schema</div>
-                <div style="font-size: 13px; color: #94a3b8; line-height: 1.5;">O contrato do domínio é a única fonte da verdade, tipando campos, limites e enums.</div>
+                <div style="font-size: 13px; color: #94a3b8; line-height: 1.5;">Defina os campos esperados, tipos, limites e enums da operação.</div>
             </div>
 
             <div class="card" style="padding: 22px; border-color: rgba(245, 158, 11, 0.4);">
                 <div style="font-size: 12px; font-weight: 700; color: #fbbf24; text-transform: uppercase;">2. Injeção no Motor</div>
                 <div style="font-size: 16px; font-weight: 800; margin: 8px 0;">Ollama format=&lt;schema&gt;</div>
-                <div style="font-size: 13px; color: #94a3b8; line-height: 1.5;">O motor compila a gramática e mascara os logits a cada token gerado.</div>
+                <div style="font-size: 13px; color: #94a3b8; line-height: 1.5;">O runtime restringe a geração segundo as regras que suporta.</div>
             </div>
 
             <div class="card" style="padding: 22px; border-color: rgba(16, 185, 129, 0.4);">
-                <div style="font-size: 12px; font-weight: 700; color: #34d399; text-transform: uppercase;">3. Parsing Determinístico</div>
-                <div style="font-size: 16px; font-weight: 800; margin: 8px 0;">Parse sem Try/Catch</div>
-                <div style="font-size: 13px; color: #94a3b8; line-height: 1.5;">O backend deserializa o payload diretamente para a classe de domínio sem medo de quebra.</div>
+                <div style="font-size: 12px; font-weight: 700; color: #34d399; text-transform: uppercase;">3. Validação no cliente</div>
+                <div style="font-size: 16px; font-weight: 800; margin: 8px 0;">Leitura, esquema e política</div>
+                <div style="font-size: 13px; color: #94a3b8; line-height: 1.5;">O consumidor verifica o envelope, o objeto e a escolha antes de enviar o pedido.</div>
             </div>
 
             <div class="card" style="padding: 22px; border-color: rgba(139, 92, 246, 0.4);">
                 <div style="font-size: 12px; font-weight: 700; color: #c084fc; text-transform: uppercase;">4. Trilha de Auditoria</div>
-                <div style="font-size: 16px; font-weight: 800; margin: 8px 0;">Registro em CSV/JSONL</div>
-                <div style="font-size: 13px; color: #94a3b8; line-height: 1.5;">Tempo, tokens, confianca e payload persistidos para governança e monitoramento contínuo.</div>
+                <div style="font-size: 16px; font-weight: 800; margin: 8px 0;">Decisão registrada</div>
+                <div style="font-size: 13px; color: #94a3b8; line-height: 1.5;">Registre o estágio, a versão do esquema e o identificador da operação.</div>
             </div>
         </div>
 
         <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 20px 28px;">
-            <div style="font-size: 15px; font-weight: 700; color: #f1f5f9; margin-bottom: 8px;">Benefício Corporativo: Eliminação de Fragilidade nos Agentes</div>
+            <div style="font-size: 15px; font-weight: 700; color: #f1f5f9; margin-bottom: 8px;">A operação tem sua própria fronteira</div>
             <div style="font-size: 13.5px; color: #94a3b8; line-height: 1.6;">
-                Em pipelines de agentes (como no módulo 0007 e no futuro 0010 com MCP), a saída do modelo alimenta chamadas de API reais. Usar decodificação constrangida elimina 100% dos erros de <em>KeyError</em>, <em>ValueError</em> e chamadas acidentais a endpoints inexistentes.
+                Uma escrita depende da política, das permissões do chamador e da idempotência. Trate formato incorreto, decisão inválida e timeout separadamente.
             </div>
         </div>
     </div>
 
     <div class="footer">
         <div><strong>Pathbit Academy AI</strong> • Engenharia de IA para Produção</div>
-        <div>Figura 5: O contrato rígido transforma inferência probabilística em chamada de função confiável</div>
+        <div>Figura 5. Caminho de uma proposta de decisão até o efeito no sistema.</div>
     </div>
 </body>
 </html>"""

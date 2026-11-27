@@ -60,7 +60,7 @@ Transforma prompt engineering em um laboratório comparativo entre `Qwen` e `FLA
 
 **Ano:** 2026 | **Categoria:** Inteligência Artificial / Avaliação de LLM
 
-Mostra uma esteira de evals que compara candidatos completos, pondera criticidade, detecta regressões por caso e explicita quando o melhor score ainda não é suficiente para liberar deploy.
+Compare combinações de modelo e prompt, decomponha o escore e investigue um caso em que a média melhora enquanto a instrução de fatura piora.
 
 [📖 Ler Artigo](./0006_llm_evals_regressao/article/ARTICLE.md) | [🔧 Executar Localmente](./0006_llm_evals_regressao/README.md)
 
@@ -70,7 +70,7 @@ Mostra uma esteira de evals que compara candidatos completos, pondera criticidad
 
 **Ano:** 2026 | **Categoria:** Inteligência Artificial / Agentes
 
-Apresenta um agente local com guardrail, regra de negócio, planner JSON, roteamento semântico, retrieval e trilha de auditoria para operar com autonomia sem perder controle.
+Acompanhe a escolha de ferramentas de um agente local e use os registros para diferenciar decisões por regra, propostas do planner e recusas antes do roteamento.
 
 [📖 Ler Artigo](./0007_agentes_tool_calling/article/ARTICLE.md) | [🔧 Executar Localmente](./0007_agentes_tool_calling/README.md)
 
@@ -80,7 +80,7 @@ Apresenta um agente local com guardrail, regra de negócio, planner JSON, roteam
 
 **Ano:** 2026 | **Categoria:** Inteligência Artificial / LLMs Locais
 
-Prova que um stack de IA roda 100% local: Ollama em Docker com volume persistente, benchmark medido na própria máquina (TTFT, latência e vazão), saída JSON forçada e retrieval semântico — sem chave de API, sem conta e sem custo por token.
+Sirva modelos com Ollama em Docker e compare tempo até o primeiro token, tempo total e taxa de geração. O laboratório também explora formato JSON e recuperação por embeddings.
 
 [📖 Ler Artigo](./0008_llms_locais_ollama/article/ARTICLE.md) | [🔧 Executar Localmente](./0008_llms_locais_ollama/README.md)
 
@@ -90,7 +90,7 @@ Prova que um stack de IA roda 100% local: Ollama em Docker com volume persistent
 
 **Ano:** 2026 | **Categoria:** Inteligência Artificial / Saída Estruturada, Grammar-Guided Sampling e Modelos System 1
 
-Transforma a inferência probabilística em contratos de dados determinísticos e tipados. Compara o prompt livre contra `format: "json"` e `format: <json_schema>` com Grammar-Guided Sampling (máscara de logits), desmonta o mito do retry e apresenta a fronteira dos **Modelos System 1** (Jev da TypeSafe AI vs Laya da Convai / Kev em open-source) para decisões diretas e tipadas em passada única de ~13 ms (> 30x mais velozes).
+Compare geração livre, modo JSON e JSON Schema. O laboratório separa parse, validade de esquema e acerto da tarefa para mostrar quando uma saída bem formada ainda exige validação de domínio.
 
 [📖 Ler Artigo](./0009_saida_estruturada/article/ARTICLE.md) | [🔧 Executar Localmente](./0009_saida_estruturada/README.md)
 
@@ -100,7 +100,7 @@ Transforma a inferência probabilística em contratos de dados determinísticos 
 
 **Ano:** 2026 | **Categoria:** Inteligência Artificial / Model Context Protocol (MCP) e Agentes Locais
 
-Implementa o Model Context Protocol (MCP) da Anthropic 100% offline via transporte `stdio`. Demonstra descoberta dinâmica de ferramentas com `list_tools()`, loop agêntico completo com planner local sob schema rígido e medição forense de overhead de protocolo (~0.99 ms), unindo governança e segurança por isolamento de processo.
+Abra uma sessão MCP via `stdio`, descubra ferramentas com `list_tools()` e compare a chamada direta com a execução planejada por Ollama. Inspecione escolha, argumentos, resposta e latência por etapa.
 
 [📖 Ler Artigo](./0010_mcp_local/article/ARTICLE.md) | [🔧 Executar Localmente](./0010_mcp_local/README.md)
 
@@ -112,7 +112,7 @@ Implementa o Model Context Protocol (MCP) da Anthropic 100% offline via transpor
 
 Segue o laboratório de MCP com um fluxo local que separa proposta, decisão humana e execução. O exemplo usa SQLite para registrar a aprovação e garantir que novas tentativas devolvam o mesmo chamado.
 
-[📖 Ler Artigo](./0011_aprovacao_idempotencia/article/ARTICLE.md) | [🔧 Executar Localmente](./0011_aprovacao_idempotencia/README.md) | [English](./0011_aprovacao_idempotencia/README.en.md) | [Español](./0011_aprovacao_idempotencia/README.es.md)
+[📖 Ler Artigo](./0011_aprovacao_idempotencia/article/ARTICLE.md) | [🔧 Executar Localmente](./0011_aprovacao_idempotencia/README.md)
 
 ---
 
@@ -122,7 +122,7 @@ Segue o laboratório de MCP com um fluxo local que separa proposta, decisão hum
 
 Compare busca lexical, similaridade de cosseno e Reciprocal Rank Fusion. O laboratório mede recall e mostra um caso em que a fusão piora a cobertura apesar de manter a primeira posição correta.
 
-[📖 Ler artigo](./0012_busca_hibrida/article/ARTICLE.md) | [🔧 Executar localmente](./0012_busca_hibrida/README.md) | [English](./0012_busca_hibrida/README.en.md) | [Español](./0012_busca_hibrida/README.es.md)
+[📖 Ler artigo](./0012_busca_hibrida/article/ARTICLE.md) | [🔧 Executar localmente](./0012_busca_hibrida/README.md)
 
 ---
 
@@ -132,7 +132,7 @@ Compare busca lexical, similaridade de cosseno e Reciprocal Rank Fusion. O labor
 
 Organize trechos por relevância, aplique cotas por fonte e meça em bytes UTF-8 o JSON que será entregue. A saída identifica cada trecho excluído e o motivo.
 
-[📖 Ler artigo](./0013_orcamento_contexto/article/ARTICLE.md) | [🔧 Executar localmente](./0013_orcamento_contexto/README.md) | [English](./0013_orcamento_contexto/README.en.md) | [Español](./0013_orcamento_contexto/README.es.md)
+[📖 Ler artigo](./0013_orcamento_contexto/article/ARTICLE.md) | [🔧 Executar localmente](./0013_orcamento_contexto/README.md)
 
 ---
 
@@ -142,7 +142,7 @@ Organize trechos por relevância, aplique cotas por fonte e meça em bytes UTF-8
 
 Confira IDs de fonte e citações literais contra o contexto realmente entregue, trate a abstenção e reproduza um caso em que a origem é válida embora a afirmação ainda precise de evidências.
 
-[📖 Ler artigo](./0014_citacoes_verificaveis/article/ARTICLE.md) | [🔧 Executar localmente](./0014_citacoes_verificaveis/README.md) | [English](./0014_citacoes_verificaveis/README.en.md) | [Español](./0014_citacoes_verificaveis/README.es.md)
+[📖 Ler artigo](./0014_citacoes_verificaveis/article/ARTICLE.md) | [🔧 Executar localmente](./0014_citacoes_verificaveis/README.md)
 
 ---
 

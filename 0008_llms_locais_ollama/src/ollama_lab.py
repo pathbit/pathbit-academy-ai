@@ -2,7 +2,7 @@
 """Laboratorio de LLMs locais com Ollama em Docker.
 
 Objetivos deste runner:
-1. provar que um stack de IA roda 100% local, sem chave de API e sem custo por token
+1. executar chat e embeddings com modelos baixados em um servidor Ollama local
 2. medir latencia, TTFT e vazao de tokens de modelos pequenos na propria maquina
 3. gerar artefatos comparaveis entre modelos para decidir qual modelo usar em producao local
 """
@@ -142,7 +142,7 @@ def check_server(base_url: str) -> dict:
 
 
 def warmup_model(base_url: str, model: str) -> float:
-    """Aquece o modelo no container e devolve o tempo de carga observado."""
+    """Aquece o modelo no container e devolve o tempo total do pedido de aquecimento."""
     start = time.perf_counter()
     http_post_json(
         base_url,
@@ -158,13 +158,13 @@ def warmup_model(base_url: str, model: str) -> float:
 
 
 def chat_with_metrics(base_url: str, model: str, prompt: str, timeout: float = 300.0) -> dict:
-    """Executa um chat em streaming e mede TTFT, tokens e vazao."""
+    """Executa um chat em streaming e mede primeiro conteúdo, tempo total, tokens e vazão."""
     payload = json.dumps(
         {
             "model": model,
             "messages": [{"role": "user", "content": prompt}],
             "stream": True,
-            "options": {"temperature": 0, "num_predict": 128, "num_thread": 4},
+            "options": {"temperature": 0, "num_predict": 128},
         }
     ).encode("utf-8")
     request = urllib.request.Request(
@@ -177,11 +177,15 @@ def chat_with_metrics(base_url: str, model: str, prompt: str, timeout: float = 3
     start = time.perf_counter()
     ttft_ms: float | None = None
     content_parts: list[str] = []
-    final: dict = {}
+    final: dict | None = None
 
     with urllib.request.urlopen(request, timeout=timeout) as response:
         for raw_line in response:
-            chunk = json.loads(raw_line.decode("utf-8"))
+            if not raw_line.strip():
+                continue
+            chunk = json.loads(raw_line)
+            if "error" in chunk:
+                raise RuntimeError(chunk["error"])
             piece = chunk.get("message", {}).get("content", "")
             if piece and ttft_ms is None:
                 ttft_ms = (time.perf_counter() - start) * 1000
@@ -190,6 +194,8 @@ def chat_with_metrics(base_url: str, model: str, prompt: str, timeout: float = 3
                 final = chunk
                 break
 
+    if final is None:
+        raise RuntimeError("O streaming terminou sem a linha final.")
     total_s = time.perf_counter() - start
     eval_count = int(final.get("eval_count", 0))
     eval_duration = float(final.get("eval_duration", 0))
@@ -197,7 +203,7 @@ def chat_with_metrics(base_url: str, model: str, prompt: str, timeout: float = 3
 
     return {
         "resposta": "".join(content_parts).strip(),
-        "ttft_ms": round(ttft_ms, 1) if ttft_ms is not None else round(total_s * 1000, 1),
+        "ttft_ms": round(ttft_ms, 1) if ttft_ms is not None else None,
         "total_ms": round(total_s * 1000, 1),
         "tokens_gerados": eval_count,
         "tokens_por_segundo": round(tokens_per_second, 1),
@@ -234,7 +240,7 @@ def run_chat_benchmark(base_url: str, models: list[str], repeat: int) -> tuple[p
     """Benchmark de chat: repete os prompts por modelo e consolida metricas."""
     rows: list[dict[str, object]] = []
     for model in models:
-        cold_start = warmup_model(base_url, model)
+        warmup_model(base_url, model)
         for repeat_index in range(repeat):
             for case in BENCHMARK_PROMPTS:
                 metrics = chat_with_metrics(base_url, model, case["prompt"])
@@ -392,20 +398,21 @@ def build_relatorio(
     structured: pd.DataFrame,
     embedding_summary: pd.DataFrame,
     results: pd.DataFrame,
+    base_url: str = DEFAULT_BASE_URL,
 ) -> str:
     """Monta o relatorio markdown com os numeros observados na execucao."""
     linhas: list[str] = [
         "# Relatorio do laboratorio local de LLMs",
         "",
-        f"- Servidor: Ollama `{server['version']}` em `http://localhost:11434`",
+        f"- Servidor: Ollama `{server['version']}` em `{base_url}`",
         f"- Modelos no container: {', '.join(model['name'] for model in server['models'])}",
-        f"- Execucao: {len(results)} chamadas de chat, sem chave de API, sem custo por token",
+        f"- Execucao: {len(results)} chamadas de chat registradas",
         "",
         "## Chat: latencia e vazao por modelo",
         "",
         df_to_markdown(summary),
         "",
-        "## Saida estruturada: JSON valido e tool correta",
+        "## Saída estruturada • objeto com campos exigidos e ferramenta correta",
         "",
         df_to_markdown(structured),
         "",
@@ -415,10 +422,10 @@ def build_relatorio(
         "",
         "## Interpretacao",
         "",
-        "- TTFT e total medem a experiencia real de quem usa o sistema local.",
-        "- Tokens/s mostra o tamanho pratico de resposta possivel dentro do SLA.",
-        "- JSON valido e tool correta mostram se o modelo sustenta um planner de agente.",
-        "- Retrieval top-1 prova que a mesma maquina resolve roteamento semantico sem nuvem.",
+        "- TTFT mede até o primeiro texto. Sem texto, a medida fica vazia e não entra na média de TTFT.",
+        "- Tokens/s divide a contagem de geração pela duração dessa fase. O total inclui outras etapas.",
+        "- json_valido conta objetos lidos com tool e reason. A seleção esperada é avaliada separadamente.",
+        "- A taxa top-1 resume os exemplos publicados no corpus deste laboratório.",
         "",
     ]
     return "\n".join(linhas)
@@ -467,7 +474,7 @@ def run_lab(
 
     print("5/5 Persistindo relatorio e grafico...")
     (data_dir / "benchmark_relatorio.md").write_text(
-        build_relatorio(server, summary, structured, embedding_summary, results), encoding="utf-8"
+        build_relatorio(server, summary, structured, embedding_summary, results, base_url), encoding="utf-8"
     )
     if not skip_plots:
         plot_benchmark(results, data_dir / "benchmark_comparativo.png")

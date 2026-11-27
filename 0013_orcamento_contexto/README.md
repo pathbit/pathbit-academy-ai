@@ -1,7 +1,5 @@
 # 0013 — Orçamento de contexto para RAG
 
-[English](README.en.md) · [Español](README.es.md)
-
 Selecione trechos por relevância, limite cada fonte e confira o tamanho do JSON que será enviado.
 
 ## Pré-requisitos obrigatórios
@@ -36,6 +34,7 @@ No Windows, troque `.venv/bin/python` por `.venv\Scripts\python.exe`.
 - [Artigo completo](article/ARTICLE.md)
 - [Artigo para LinkedIn](article/ARTICLE_LINKEDIN.md)
 - [Post para LinkedIn](article/POST_LINKEDIN.md)
+- [Destaques em PDF](highlight/highlights_0013.pdf)
 
 ---
 

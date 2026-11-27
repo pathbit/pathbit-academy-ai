@@ -433,13 +433,13 @@ Contribuições são bem-vindas! Para contribuir:
 
 ### 📧 Contato
 
-- **Website:** [pathbit.com](https://pathbit.com)
+- **Website:** [Pathbit](https://www.pathbit.com.br/)
 - **GitHub:** [@pathbit](https://github.com/pathbit)
 - **Email:** contato@pathbit.com
 
 ---
 
-**Desenvolvido com ❤️ pela [Pathbit](https://pathbit.com)**
+**Desenvolvido com ❤️ pela [Pathbit](https://www.pathbit.com.br/)**
 
 ## Limites das estimativas financeiras
 

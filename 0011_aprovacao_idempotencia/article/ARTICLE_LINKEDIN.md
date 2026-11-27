@@ -1,25 +1,38 @@
-# O agente pode propor um chamado. Quem autoriza a criação?
+# Quando um agente pode abrir um chamado?
 
-Uma requisição pode gravar o chamado e perder a resposta. No laboratório, a aprovação fica ligada à proposta e o SQLite devolve o mesmo ID em duas execuções do mesmo pedido.
+A pessoa de plantão aprovou o chamado “Checkout indisponível”. O sistema gravou o chamado. A conexão caiu antes da resposta. No retry, o executor recebeu a mesma solicitação e precisou decidir se deveria criar outro chamado.
 
-## Desenhe os estados antes da ferramenta
+É o tipo de falha que aparece quando o assistente passa de indicar ações a alterar o estado de um sistema. Um pedido bem escrito ajuda a identificar a intenção. No ponto em que o executor escreve, precisamos de uma autorização vinculada ao pedido e de um mecanismo que preserve o resultado entre tentativas.
 
-| Estado | Como chega nele | Efeito persistido |
-| --- | --- | --- |
-| `pendente` | O agente registra a proposta `pedido-42` | Título e prioridade para revisão |
-| `aprovada` ou `rejeitada` | Uma pessoa registra a decisão | Decisão e identificador do operador |
-| `executada` | O executor encontra uma proposta aprovada | ID de chamado ligado à proposta |
+## O que a aprovação protege
 
-A interface de aprovação deve apresentar o conteúdo que será executado. No exemplo, a etapa `propor` recebe uma chave escolhida pelo cliente. Se `pedido-42` já aponta para outro título ou prioridade, a ferramenta retorna erro. Isso amarra a decisão ao conteúdo que o operador viu. Reenviar a mesma decisão com o mesmo operador recupera o estado salvo.
+No laboratório, a proposta recebe a chave `pedido-42` e persiste o título e a prioridade. Enquanto está pendente, o comando `executar` falha. O operador pode aprovar ou rejeitar aqueles dados. Propor o mesmo ID com outra prioridade é um conflito, assim como tentar trocar uma decisão já registrada. Essa proteção evita aplicar dados diferentes dos que a pessoa viu.
 
-## Onde a idempotência é aplicada
+A flag `--operador` representa um rótulo local. Em um produto, o servidor verificaria a identidade e a autorização do operador e mostraria a proposta exata para revisão.
 
-A aprovação é consultada dentro da mesma transação que tenta inserir o chamado. A coluna `chamados.pedido` tem `UNIQUE`, e o `INSERT ... ON CONFLICT(pedido) DO NOTHING` reaproveita a associação existente. A própria chave do pedido permite recuperar o resultado após um timeout, inclusive em outra execução da CLI. Os comandos usam `BEGIN IMMEDIATE` para coordenar as escritas no SQLite. [Implementação do laboratório](https://github.com/pathbit/pathbit-academy-ai/blob/master/0011_aprovacao_idempotencia/src/main.py) · [Transações do SQLite](https://sqlite.org/lang_transaction.html).
+## Como duas tentativas devolvem o mesmo número
 
-## Faça o experimento no seu terminal
+O executor abre uma transação SQLite, confere a decisão, tenta inserir um chamado e consulta o resultado. A tabela que armazena chamados tem uma restrição de unicidade por `pedido`. A inserção usa `ON CONFLICT(pedido) DO NOTHING`. Se a tentativa anterior já criou a linha, a leitura devolve o mesmo chamado.
 
-Rode uma execução pendente, uma aprovada e uma repetida. Observe `estado` e `chamado` em cada saída. A aprovação explica por que a execução pode acontecer. A chave do pedido explica por que ela não cria outra linha.
+A consequência aparece na execução local. Antes de aprovar, a CLI retorna “A execução exige uma proposta aprovada.” Depois de aprovar, dois comandos de execução devolvem o mesmo ID. Para testar a primeira execução concorrente, registre outra proposta, aprove e inicie dois processos. Compare os IDs retornados e confira se há uma única linha no SQLite para aquele pedido.
 
-[Artigo completo e notebook no GitHub](https://github.com/pathbit/pathbit-academy-ai/tree/master/0011_aprovacao_idempotencia)
+![Dois processos devolvendo o mesmo chamado e uma linha conferida no SQLite](../assets/04.png)
 
-Developed with ❤️ by [Pathbit](https://www.pathbit.com.br/)
+## Faça a falha acontecer
+
+Na pasta do módulo, use Python 3.10 ou superior.
+
+```bash
+base="$(mktemp -d)/agente.sqlite"
+python3 src/main.py --base "$base" propor pedido-42 --titulo "Checkout indisponível" --prioridade alta
+python3 src/main.py --base "$base" executar pedido-42
+python3 src/main.py --base "$base" decidir pedido-42 aprovar --operador plantao
+python3 src/main.py --base "$base" executar pedido-42
+python3 src/main.py --base "$base" executar pedido-42
+```
+
+Observe o primeiro erro e os dois números iguais. Depois compare com outro pedido, registrado com a mesma descrição, mas com um ID diferente. Aí são dois incidentes distintos e dois chamados fazem sentido.
+
+Um fornecedor por HTTP introduz outra janela de falha. Ele pode confirmar internamente e a aplicação cair antes de gravar o retorno. Para preservar o efeito, a chave precisa viajar até o fornecedor ou a aplicação precisa reconciliar o resultado com ele. O exercício usa uma única base SQLite justamente para deixar observável o que foi confirmado.
+
+O [módulo com notebook, comandos concorrentes e exemplos de conflito](https://github.com/pathbit/pathbit-academy-ai/tree/master/0011_aprovacao_idempotencia) integra a série Academy IA da [Pathbit](https://www.pathbit.com.br/).

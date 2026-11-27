@@ -26,14 +26,7 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 CHROME_PATH = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
-DEFAULT_INPUTS = [
-    ROOT / "0005_prompt_engineering_avancado" / "highlight" / "highlight.md",
-    ROOT / "0006_llm_evals_regressao" / "highlight" / "highlight.md",
-    ROOT / "0007_agentes_tool_calling" / "highlight" / "highlight.md",
-    ROOT / "0008_llms_locais_ollama" / "highlight" / "highlight.md",
-    ROOT / "0009_saida_estruturada" / "highlight" / "highlight.md",
-    ROOT / "0010_mcp_local" / "highlight" / "highlight.md",
-]
+DEFAULT_INPUTS = sorted(ROOT.glob("[0-9][0-9][0-9][0-9]_*/highlight/highlight.md"))
 
 
 @dataclass

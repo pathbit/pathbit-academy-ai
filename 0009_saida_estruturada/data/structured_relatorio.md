@@ -25,22 +25,21 @@
 | qwen2.5:1.5b | livre  |            0   |               0 |                0   |           2942.6 |
 | qwen2.5:1.5b | schema |          100   |             100 |               33.3 |            465.3 |
 
-## A Nova Fronteira: Modelos System 1 (Passada Unica sem Geracao)
+## Roteamento por similaridade de embeddings
 
-- **Paradigma:** `System 1 (Single Forward Pass / Decisor Direto)`
-- **Referencias da Industria:** `Laya (Open-Source), Jev (TypeSafe AI), Kev`
-- **Latencia Mediana (p50):** `13.61 ms` (vs ~1.500 ms no modo schema)
-- **Latencia Percentil 95 (p95):** `17.22 ms`
-- **Latencia Media:** `12.97 ms`
-- **Tokens gerados no decoder:** `0` (sem loop autoregressivo)
-- **Conformidade com schema:** `100.0%`
-- **Acuracia de decisao:** `100.0%`
+- Implementação avaliada: `nomic-embed-text` e similaridade de cosseno entre a consulta e três descrições de rota.
+- Chamadas avaliadas: 6 (três consultas em duas repetições).
+- Valor na posição central superior, publicado como p50 pelo runner: 13,61 ms.
+- p95 registrado: 17,22 ms.
+- Média registrada: 12,97 ms.
+- Rótulos esperados: 6 de 6.
+- Tokens gerados no decoder: 0.
 
-> **Conclusao:** Enquanto LLMs generativos com JSON Schema garantem a integridade de payloads complexos com texto livre (~1.500 ms), modelos System 1 (como o Laya em open-source ou Jev na nuvem) resolvem roteamento e selecao de tools com mais de 50x de reducao de latencia.
+> O tempo inclui ler o embedding da consulta e comparar com os vetores de referência já calculados. O formato do resultado vem do código. Este ensaio não é um teste de equivalência com o benchmark generativo.
 
 ## Leitura
 
 - `parse_ok` aceita JSON direto ou apos limpeza de code fences (resgate basico).
 - `schema_ok` exige validacao jsonschema contra o contrato da tarefa.
 - `semantico_ok` exige o valor de negocio correto dentro do contrato.
-- Latencia do modo `schema` inclui o custo de decodificar sob a gramatica.
+- A latência por caso soma as tentativas executadas. As médias não isolam o custo de decodificar sob a gramática.

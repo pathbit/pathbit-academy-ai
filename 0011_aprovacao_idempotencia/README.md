@@ -1,7 +1,5 @@
 # 0011 — Aprovação humana e idempotência em agentes
 
-[English](README.en.md) · [Español](README.es.md)
-
 O laboratório estende o [exemplo de ferramentas MCP](../0010_mcp_local/article/ARTICLE.md). Uma automação pode propor um chamado de suporte. O operador registra a decisão, e o executor aplica apenas a proposta aprovada.
 
 ## Executar o laboratório
@@ -25,3 +23,8 @@ Para abrir o [notebook](notebooks/aprovacao_idempotencia.ipynb), instale `requir
 - [Artigo completo](article/ARTICLE.md)
 - [Versão para LinkedIn](article/ARTICLE_LINKEDIN.md)
 - [Post para LinkedIn](article/POST_LINKEDIN.md)
+- [Destaques em PDF](highlight/highlights_0011.pdf)
+
+---
+
+Developed with ❤️ by [Pathbit](https://www.pathbit.com.br/)

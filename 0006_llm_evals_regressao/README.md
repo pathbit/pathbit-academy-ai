@@ -41,9 +41,11 @@ Tudo usando modelos gratuitos do Hugging Face.
 
 ---
 
-### Como Executar
+### Início rápido
 
-#### Pré-requisitos
+Compare os [resultados versionados sem baixar modelos](article/ARTICLE.md#3-reconstrua-a-decisão-a-partir-dos-dados). O recorte histórico contém três casos de criticidade alta. A seção explica como a regra atual reaplica a decisão aos CSVs.
+
+#### Pré-requisitos da execução com modelos
 
 - Python 3.14+ (compatível com 3.10+) executando em ambiente virtual isolado (.venv)
 - Sem cobrança de API por token após baixar modelos; hardware e energia têm custo
@@ -73,9 +75,7 @@ python src/main.py
 python src/eval_runner.py --limit 3
 ```
 
-O limite seleciona três casos para conferir a esteira. Use o conjunto
-completo para interpretar o gate de liberação apresentado no artigo.
-Execute em uma cópia do módulo para preservar os relatórios em `data/`.
+O limite usa os três primeiros casos, todos de criticidade alta. Para incluir suporte e compliance, retire `--limit 3`. Execute em uma cópia do módulo para preservar os relatórios em `data/`.
 
 #### Escolher candidatos específicos
 
@@ -114,5 +114,12 @@ Depois da execução, você terá:
 
 ### Links úteis
 
-- Artigo completo: [ARTICLE.md](./article/ARTICLE.md)
+- [Artigo completo](article/ARTICLE.md)
+- [Artigo para LinkedIn](article/ARTICLE_LINKEDIN.md)
+- [Post para LinkedIn](article/POST_LINKEDIN.md)
+- [Destaques em PDF](highlight/highlights_0006.pdf)
 - Repositório: [pathbit-academy-ai](https://github.com/pathbit/pathbit-academy-ai)
+
+---
+
+Developed with ❤️ by [Pathbit](https://www.pathbit.com.br/)

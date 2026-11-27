@@ -96,7 +96,7 @@ async def plano_do_modelo(base_url: str, model: str, prompt: str) -> tuple[dict 
             "prompt": prompt,
             "stream": False,
             "format": PLANNER_SCHEMA,
-            "options": {"temperature": 0, "num_predict": 128, "num_thread": 4},
+            "options": {"temperature": 0, "num_predict": 128},
         }
     ).encode("utf-8")
     request = urllib.request.Request(

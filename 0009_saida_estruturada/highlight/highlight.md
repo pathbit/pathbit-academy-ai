@@ -1,98 +1,62 @@
 **Slide 1**
 [layout: cover]
-[eyebrow: Série 0009 · Saída Estruturada]
+[eyebrow: Série 0009 · Saída estruturada]
 [image: ../assets/01.png]
-[caption: Os três níveis de contrato entre LLMs e código corporativo.]
+[caption: Três modos de geração, da instrução textual ao esquema.]
 
-Saída Estruturada com LLMs: Do Prompt ao Schema Validado
+Do JSON que abre à decisão que pode seguir
 
-Este módulo prova, com dados medidos em modelos locais, como distinguir parse, schema e decisão correta. O consumidor continua validando timeout, truncamento e contrato.
+Um erro 500 chegou ao suporte. O modelo respondeu com uma rota permitida pelo esquema, mas o atendimento precisava criar um chamado.
 
 **Slide 2**
 [layout: split]
-[eyebrow: O problema da fragilidade]
-[image: ../assets/01.png]
-[caption: Três níveis: prompt livre, format json e json_schema.]
+[eyebrow: Quatro saídas controladas]
+[image: ../assets/07_validacao_terminal.png]
+[caption: Resultado esperado para entradas fixas que o leitor pode verificar sem inferência.]
 
-Prompt otimista não é contrato de engenharia
+Separe leitura, estrutura e política de atendimento
 
-Pedir JSON no texto livre resulta em markdown fences, preâmbulos e chaves alucinadas. O `json.loads` quebra e derruba o pipeline de produção.
-
-> Em produção corporativa, confiar em prompt livre para gerar JSON é assumir débito técnico no primeiro deploy.
+Observe a terceira linha. O parser lê o objeto, o validador aceita a estrutura e a política rejeita a escolha.
 
 **Slide 3**
 [layout: split]
-[eyebrow: Sob o capô]
-[image: ../assets/02.png]
-[caption: Logits masking guiado por Autômato de Estados Finitos.]
+[eyebrow: Ollama e JSON Schema]
+[image: ../assets/01.png]
+[caption: A aplicação valida o conteúdo interno do campo response.]
 
-Grammar-Guided Sampling: máscara de logits em tempo real
+O formato muda o pedido
 
-O runtime usa o subconjunto de schema suportado para guiar a gramática. JSON aninhado não se reduz a uma FSM simples; valide a saída no consumidor.
-
-> O modelo não tem como errar a sintaxe: a máscara física impede qualquer token ilegal.
+- Livre: instrução no prompt.
+- JSON: format recebe a string json.
+- Esquema: format recebe o objeto que descreve o contrato.
 
 **Slide 4**
 [layout: split]
-[eyebrow: Evidência empírica]
+[eyebrow: Dados históricos • 18 casos por modo]
 [image: ../assets/03.png]
-[caption: Comparativo medido: conformidade e assertividade nos 3 modos.]
+[caption: Parse, esquema e decisão reportados pelo laboratório.]
 
-Dados preservados: forma válida não significa decisão correta
+De 18 objetos válidos, oito seguiram o gabarito
 
-Livre: 0% parse. JSON: 88,9% parse e 0% schema. Schema: 100% conformidade e 44,4% acerto semântico. São 18 linhas consolidadas por modo, com até um retry.
-
-> Schema estrito não engessa o modelo: ele concentra a probabilidade na semântica correta.
+O modo JSON entregou 16 saídas legíveis e nenhuma que atendia ao esquema. O modo com esquema entregou 18 objetos válidos e oito decisões esperadas.
 
 **Slide 5**
 [layout: split]
-[eyebrow: O custo do retry]
+[eyebrow: Latência observada]
 [image: ../assets/04.png]
-[caption: Tempos consolidados e custo acumulado de retry.]
+[caption: Média consolidada, que pode somar uma segunda tentativa.]
 
-O mito do retry compensatório
+Meça tentativas e tamanho de saída
 
-Retries aumentam o custo de forma variável. Neste recorte, schema teve média de 400,5 ms e livre 3.007,7 ms; não é medição isolada de overhead nem SLA.
-
-> Retries devem tratar regras de negócio semânticas, nunca sintaxe quebrada.
+Os modos tiveram durações diferentes, com comprimentos de saída diferentes e uma política de retry. Para avaliar a gramática, controle esses fatores em uma nova rodada.
 
 **Slide 6**
-[layout: split]
-[eyebrow: Arquitetura de produção]
-[image: ../assets/05.png]
-[caption: Pipeline desacoplado do schema Pydantic ao barramento de eventos.]
-
-Contrato desacoplado e tipagem estrita
-
-O contrato em Pydantic/JSON Schema vira especificação única. O backend valida ou rejeita a saída; isso não prova correção semântica ou conformidade regulatória.
-
-> A saída estruturada transforma um gerador probabilístico de texto em uma API determinística.
-
-**Slide 7**
-[layout: split]
-[eyebrow: A fronteira roteamento não generativo]
-[image: ../assets/06.png]
-O benchmark local mede embeddings e três rótulos; não executa modelos comerciais de decisão.
-
-Modelos roteamento não generativo: Decisão Direta em ~30 ms
-
-O benchmark local mede embeddings e três rótulos; não executa modelos comerciais de decisão.
-
-> A separação moderna: decisões em roteamento não generativo (< 40ms) e redação rica em System 2.
-
-**Slide 8**
 [layout: cta]
-[eyebrow: O que este módulo entrega]
-[gallery: ../assets/02.png, ../assets/03.png, ../assets/06.png]
+[eyebrow: Exercício]
+[gallery: ../assets/07_validacao_terminal.png, ../assets/03.png]
 
-Saída Estruturada + Modelos roteamento não generativo
+Escreva uma resposta válida que deve ser recusada
 
-Do prompt otimista à garantia formal via Grammar-Guided Sampling, com benchmarks empíricos em modelos locais.
-
-- 100% de conformidade no recorte, com validação no consumidor
-- Desacoplamento com Pydantic e JSON Schema estrito
-- Avaliação empírica de decisores roteamento não generativo vs autoregressão
+Troque apenas o valor da rota. Em seguida, acrescente um campo desconhecido e teste a regra additionalProperties. Cada falha pede um teste e um tratamento na aplicação.
 
 > github.com/pathbit/pathbit-academy-ai
-
-

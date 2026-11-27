@@ -62,4 +62,91 @@ def overrides():
         [('50 chamadas isoladas',pd.DataFrame([protocol])),
          ('Planner e chamada por modelo',mcp[['modelo','tool_certa_pct','plan_medio_ms','mcp_medio_ms']]),
          ('Segurança','Stdio não é sandbox. Valide argumentos, permissões, timeouts e encerramento de processos.')])
+
+    eval_module = '0006_llm_evals_regressao'
+    finance = pd.read_csv(ROOT / eval_module / 'data/eval_dataset.csv').query("categoria == 'financeiro'").iloc[0]
+    result[f'{eval_module}/assets/01.png'] = measured_page(
+        'O ranking não encerra a avaliação', 'Média ponderada e perdas por caso nos dados preservados.',
+        [('Ranking', summary[['candidate', 'score_ponderado']]),
+         ('Regressões', regressions[['candidate', 'categoria', 'criticidade', 'delta_vs_baseline']])])
+    result[f'{eval_module}/assets/02.png'] = measured_page(
+        'Anatomia de um caso de avaliação', finance['pergunta'],
+        [('Contexto', finance['contexto']), ('Gabarito', finance['gold']),
+         ('Termos e criticidade', f"{finance['palavras_criticas']} · {finance['criticidade']}")])
+    result[f'{eval_module}/assets/03.png'] = measured_page(
+        'Três componentes, uma média', 'A média recebe o multiplicador de criticidade.',
+        [('Similaridade', 'Compara os embeddings da resposta e do gabarito.'),
+         ('Termos críticos', 'Conta expressões do gabarito presentes na resposta.'),
+         ('Sobreposição', 'Conta tokens da resposta presentes no contexto. A medida não verifica suporte lógico.')])
+    result[f'{eval_module}/assets/05.png'] = measured_page(
+        'Abra a evidência por trás do ranking', 'Cada arquivo ajuda a localizar uma decisão da avaliação.',
+        [('Gerações', 'geracoes_evals.csv registra a resposta e os componentes do escore por pergunta.'),
+         ('Ranking e regressões', 'candidate_summary.csv agrega os escores; regressoes_detectadas.csv registra quedas por caso.'),
+         ('Decisão', 'relatorio_evals.md resume as métricas e a regra usada na execução.')])
+
+    agent_module = '0007_agentes_tool_calling'
+    audit_file = ROOT / agent_module / 'data/agent_audit_log.jsonl'
+    audit = [json.loads(line) for line in audit_file.read_text(encoding='utf-8').splitlines()]
+    first_actions = {}
+    for row in audit:
+        first_actions.setdefault(row['acao'], row)
+    no_example = 'Nenhum caso correspondente no recorte.'
+    blocked = first_actions.get('bloqueado', {})
+    policy = first_actions.get('buscar_politica', {})
+    ticket = first_actions.get('criar_ticket', {})
+    ticket_steps = json.loads(ticket.get('audit_steps', '[]'))
+    ticket_step = next((step for step in ticket_steps if step['step'] == 'tool_execution'), {})
+    result[f'{agent_module}/assets/01.png'] = measured_page(
+        'Onde a aplicação escolhe o caminho', 'O runner separa entrada, decisão e ação.',
+        [('Entrada', 'A aplicação verifica a mensagem antes do roteamento.'),
+         ('Decisão', 'A regra conhecida vem primeiro. O planner cobre casos sem regra aplicável.'),
+         ('Ação', 'A aplicação consulta políticas, simula um chamado ou responde diretamente.')])
+    result[f'{agent_module}/assets/02.png'] = measured_page(
+        'Uma recusa antes do roteamento', 'O registro da execução preservada mostra uma única etapa.',
+        [('Registro', pd.DataFrame(json.loads(blocked['audit_steps'])) if blocked else no_example),
+         ('Limite', 'O filtro didático procura palavras. A entrada recusada não chega ao planejador.')])
+    result[f'{agent_module}/assets/03.png'] = measured_page(
+        'De onde veio a decisão', 'Um plano parseável ainda pode ser substituído.',
+        [('Regras', 'business_rule escolhe antes do planner.'),
+         ('Plano', 'planner identifica a ação proposta pelo modelo quando o aplicativo a mantém.'),
+         ('Roteador', 'router_fallback trata falha de parse. router_override trata divergência com similaridade de pelo menos 0,50.')])
+    result[f'{agent_module}/assets/04.png'] = measured_page(
+        'Da rota ao documento e à resposta', 'A ação e a síntese são avaliadas em etapas.',
+        [('Ação', policy.get('planned_tool', no_example)), ('Documento recuperado', policy.get('documento', '—')),
+         ('Síntese', policy.get('resposta', '—'))])
+    result[f'{agent_module}/assets/05.png'] = measured_page(
+        'O log aponta a decisão e a execução', 'O incidente por erro 500 gerou um chamado simulado.',
+        [('Origem da decisão', ticket.get('decision_source', no_example)), ('Ação executada', ticket.get('acao', '—')),
+         ('ID da simulação registrada', ticket_step.get('ticket_id', '—'))])
+
+    mcp_module = '0010_mcp_local'
+    mcp_data = ROOT / mcp_module / 'data'
+    catalog = json.loads((mcp_data / 'catalogo_tools.json').read_text(encoding='utf-8'))
+    tools = [{'ferramenta': tool['nome'], 'obrigatórios': ', '.join(tool['input_schema']['required'])}
+             for tool in catalog]
+    mcp_runs = pd.read_csv(mcp_data / 'mcp_resultados.csv')
+    incidents = mcp_runs[(mcp_runs['consulta_id'] == 'q_incidente') & mcp_runs['acertou'].eq(False)].head(1)
+    incident = next(iter(incidents.to_dict(orient='records')), {})
+    incident_summary = f"Consulta {incident['consulta_id']} com {incident['modelo']}." if incident else no_example
+    incident_details = [
+        ('Escolha', f"{incident['tool_escolhida']} no plano. O gabarito indicou {incident['tool_esperada']}."),
+        ('Validação', f"schema_ok={incident['schema_ok']} · acertou={incident['acertou']}"),
+        ('Resultado', incident['resposta_mcp']),
+    ] if incident else []
+    result[f'{mcp_module}/assets/01.png'] = measured_page(
+        'MCP e Ollama usam canais separados', 'O cliente Python coordena os dois caminhos.',
+        [('Servidor de ferramentas', 'O cliente lança o subprocesso MCP.'),
+         ('Caminho MCP', 'O protocolo usa stdin e stdout. Diagnósticos ficam em stderr.'),
+         ('Caminho Ollama', 'O cliente solicita o plano por HTTP. As permissões do subprocesso vêm do ambiente.')])
+    result[f'{mcp_module}/assets/02.png'] = measured_page(
+        'O catálogo documenta a entrada', 'Os campos vêm do registro de list_tools().',
+        [('Catálogo de ferramentas', pd.DataFrame(tools)),
+         ('Campo opcional', 'criar_ticket também aceita prioridade em forma de string.')])
+    result[f'{mcp_module}/assets/03.png'] = measured_page(
+        'Um plano válido pode escolher mal', incident_summary, incident_details)
+    result[f'{mcp_module}/assets/05.png'] = measured_page(
+        'O CSV ajuda a explicar a chamada', 'O log preservado permite investigar escolha, validação e latência.',
+        [('Campos', incidents[['consulta_id', 'tool_escolhida', 'tool_esperada', 'schema_ok', 'plan_ms', 'mcp_ms']]
+          if incident else no_example),
+         ('Limite', 'O CSV pode ser regravado, e seus campos não registram aprovação do usuário.')])
     return result

@@ -1,7 +1,5 @@
 # 0012 — Busca híbrida em RAG
 
-[English](README.en.md) · [Español](README.es.md)
-
 Compare busca lexical, similaridade de cosseno e Reciprocal Rank Fusion usando consultas rotuladas.
 
 ## Pré-requisitos obrigatórios
@@ -35,6 +33,7 @@ No Windows, troque `.venv/bin/python` por `.venv\Scripts\python.exe`.
 - [Artigo completo](article/ARTICLE.md)
 - [Artigo para LinkedIn](article/ARTICLE_LINKEDIN.md)
 - [Post para LinkedIn](article/POST_LINKEDIN.md)
+- [Destaques em PDF](highlight/highlights_0012.pdf)
 
 ---
 
