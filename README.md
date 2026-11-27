@@ -112,7 +112,7 @@ Implementa o Model Context Protocol (MCP) da Anthropic 100% offline via transpor
 
 Segue o laboratório de MCP com um fluxo local que separa proposta, decisão humana e execução. O exemplo usa SQLite para registrar a aprovação e garantir que novas tentativas devolvam o mesmo chamado.
 
-[📖 Ler Artigo](./0011_aprovacao_idempotencia/article/ARTICLE.md) | [🔧 Executar Localmente](./0011_aprovacao_idempotencia/README.md)
+[📖 Ler Artigo](./0011_aprovacao_idempotencia/article/ARTICLE.md) | [🔧 Executar Localmente](./0011_aprovacao_idempotencia/README.md) | [English](./0011_aprovacao_idempotencia/README.en.md) | [Español](./0011_aprovacao_idempotencia/README.es.md)
 
 ---
 

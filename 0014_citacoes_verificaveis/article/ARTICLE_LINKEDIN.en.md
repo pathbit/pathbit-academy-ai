@@ -1,9 +1,15 @@
-# Verifiable RAG citations
+# Verify citations against the context supplied to a RAG model
 
-[Português (Brasil)](ARTICLE_LINKEDIN.md) · [Español](ARTICLE_LINKEDIN.es.md)
+A shopping assistant says to request a refund from the order panel. It attributes the advice to `refund-summary`. A source in the full index may have been excluded from the generation context, and a citation can quote a real sentence about the wrong part of the claim.
 
-A RAG citation has verifiable provenance when its ID is in the supplied context and the quote occurs in that source. Both checks can run without a model call.
+## Model the decision
 
-The lab accepts an exact quote, abstains when wording changes, and rejects an absent source. It also includes a real quote used to support a five-minute promise. Provenance passes in that case, and the deadline still needs evidence.
+`altered-quote` produces `quote_not_found`. `unknown-source` produces `unknown_source`. `unsupported-claim` can return `citations_verified` while claiming that a refund takes five minutes. The quote only says where to request it. Use a separate evidence review for semantic support and design an abstention state in the UI.
 
-Check source IDs and exact quotes against the supplied context and abstain when a citation fails. [Instructions and runnable examples](https://github.com/pathbit/pathbit-academy-ai/tree/master/0014_citacoes_verificaveis/README.en.md).
+## Run the lab
+
+Run the cases on the same source and compare `status` and `errors`. Then export two context reports from the preceding lab using `245` and `16` bytes. The first can contain `refund-summary`, and the second holds only the empty envelope. Pass each report through `--context-report` to see how the context cutoff changes the verifier's result.
+
+[Full guide](https://github.com/pathbit/pathbit-academy-ai/tree/master/0014_citacoes_verificaveis/article/ARTICLE.en.md)
+
+Developed with ❤️ by [Pathbit](https://www.pathbit.com.br/)

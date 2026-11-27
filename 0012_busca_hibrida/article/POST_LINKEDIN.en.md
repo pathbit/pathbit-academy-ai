@@ -1,5 +1,7 @@
-[Português (Brasil)](POST_LINKEDIN.md) · [Español](POST_LINKEDIN.es.md)
+Combine keyword search and embeddings in a RAG pipeline
 
-In the lab, fusion improves lexical coverage for the password query. On the RE42 query, first place stays relevant, but coverage falls from 1.0 to 0.5 compared with vector retrieval. Evaluate both the first answer and the other results you show.
+A support query may contain an exact policy code such as `RE42`, or refer to password recovery without the wording used in a document. These are two different reasons to retrieve a source.
 
-[Pathbit Academy AI article](https://github.com/pathbit/pathbit-academy-ai/tree/master/0012_busca_hibrida/article/ARTICLE.en.md).
+[Full guide](https://github.com/pathbit/pathbit-academy-ai/tree/master/0012_busca_hibrida/article/ARTICLE.en.md)
+
+#PathbitAcademy #AIEngineering

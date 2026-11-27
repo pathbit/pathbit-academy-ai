@@ -1,28 +1,28 @@
-# Verifiable citations in RAG answers
+# Verify citations against the context supplied to a RAG model
 
-[Português (Brasil)](ARTICLE.md) · [Español](ARTICLE.es.md)
+[Português (Brasil)](ARTICLE.md) · [English](ARTICLE.en.md) · [Español](ARTICLE.es.md)
 
-A support assistant can cite the correct policy with altered wording or reference a source omitted from the context. The verifier receives the actual input envelope and a set of claims with citations. It reports which evidence can be verified against that input.
+A shopping assistant says to request a refund from the order panel. It attributes the advice to `refund-summary`. A source in the full index may have been excluded from the generation context, and a citation can quote a real sentence about the wrong part of the claim.
 
-## Check the source and excerpt
+## Model the decision
 
-Each claim needs at least one citation containing `source_id` and `quote`. The identifier must match a passage's `id`, and the quote must occur literally in the passage. Duplicate IDs make the source ambiguous and are rejected.
+Validate each `source_id` against the chunk IDs in the exact context sent to generation. Check `quote` as a literal substring. Reject duplicate context identifiers. Return `abstained` with an empty claims list and diagnostic codes when any citation fails.
 
-When any citation fails, the output uses `abstained`, returns an empty list of claims, and preserves diagnostic reasons. The interface can show an abstention response, and the team can distinguish a source error from an excerpt error.
+## Read the result
 
-| Case | Result |
-| --- | --- |
-| Identifier and excerpt match the context | `citations_verified` |
-| A word in the citation was changed | `quote_not_found` |
-| The ID exists only in the index, outside the context | `unknown_source` |
-| The claim has no citations | `missing_citation` |
+`altered-quote` produces `quote_not_found`. `unknown-source` produces `unknown_source`. `unsupported-claim` can return `citations_verified` while claiming that a refund takes five minutes. The quote only says where to request it. Use a separate evidence review for semantic support and design an abstention state in the UI.
 
-## Separate provenance from semantic support
+## Run the lab
 
-The `unsupported-claim` case attaches a real excerpt about where to request a refund to a five-minute promise. Literal verification passes. The passage describes where to ask, while the time limit requires separate evidence. Expose that boundary in the API contract and evaluate semantic support separately through human review or a dedicated RAG evaluation stage.
+Run the cases on the same source and compare `status` and `errors`. Then export two context reports from the preceding lab using `245` and `16` bytes. The first can contain `refund-summary`, and the second holds only the empty envelope. Pass each report through `--context-report` to see how the context cutoff changes the verifier's result.
 
-## End-to-end exercise
+```bash
+python3 src/main.py --case valid
+python3 src/main.py --case altered-quote
+python3 src/main.py --case unknown-source
+python3 src/main.py --case unsupported-claim
+```
 
-Follow the [quick start](../README.en.md) and pass the [context packer](../../0013_orcamento_contexto/README.en.md) report to the verifier. At the default size, the `refund-summary` passage fits and the citation passes. At 16 bytes, only the empty envelope fits, and the same ID produces `unknown_source`.
+[Full guide](../README.en.md) · [Notebook](../notebooks/citacoes_verificaveis.en.ipynb)
 
-The lab uses canned answers to exercise the output contract. In a product, validate the model response format first and treat abstention as a normal result the interface can display.
+Developed with ❤️ by [Pathbit](https://www.pathbit.com.br/)

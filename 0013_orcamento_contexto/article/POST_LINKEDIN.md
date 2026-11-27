@@ -1,5 +1,7 @@
-[English](POST_LINKEDIN.en.md) · [Español](POST_LINKEDIN.es.md)
+Quais trechos chegam ao modelo quando o contexto tem limite?
 
-O laboratório reserva 245 bytes e inclui dois trechos em 214 bytes. Um terceiro fica de fora pela cota da fonte e um quarto por tamanho. O relatório registra cada motivo. Para medir um limite de tokens, faça a contagem com o tokenizer da aplicação.
+No exercício, `245` bytes com cota de um preservam duas fontes. Aumentar a cota produz um pacote três bytes menor e perde a evidência de cobrança. Compare a seleção e os motivos do descarte antes de medir só o tamanho.
 
-[Artigo da Pathbit Academy AI](https://github.com/pathbit/pathbit-academy-ai/tree/master/0013_orcamento_contexto/article/ARTICLE.md).
+[Artigo e laboratório](https://github.com/pathbit/pathbit-academy-ai/tree/master/0013_orcamento_contexto)
+
+#RAG #EngenhariaDeIA #PathbitAcademy

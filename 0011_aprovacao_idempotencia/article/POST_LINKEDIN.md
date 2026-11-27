@@ -1,5 +1,7 @@
-Um timeout pode ocorrer depois de o banco já ter criado o chamado. Quando o agente tenta de novo, o cliente precisa recuperar o mesmo chamado.
+O agente pode propor um chamado. Quem autoriza a criação?
 
-No laboratório 0011 da Pathbit Academy AI, uma proposta passa por aprovação humana, e uma chave de idempotência liga a decisão ao efeito gravado. O exemplo usa Python e SQLite e pode ser executado no terminal ou no notebook.
+Rode uma execução pendente, uma aprovada e uma repetida. Observe `estado` e `chamado` em cada saída. A aprovação explica por que a execução pode acontecer. A chave do pedido explica por que ela não cria outra linha.
 
-[Leia o artigo](ARTICLE.md).
+[Artigo e laboratório](https://github.com/pathbit/pathbit-academy-ai/tree/master/0011_aprovacao_idempotencia)
+
+#AgentesDeIA #SQLite #Idempotência

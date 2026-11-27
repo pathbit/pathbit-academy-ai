@@ -1,5 +1,7 @@
-[English](POST_LINKEDIN.en.md) · [Español](POST_LINKEDIN.es.md)
+Uma citação verdadeira pode sustentar a afirmação errada
 
-O laboratório aceita uma citação literal, devolve abstenção ao receber uma frase alterada e recusa uma fonte ausente. Incluí também uma frase verdadeira usada para sustentar uma promessa de cinco minutos. Nesse caso, a origem passa e o prazo ainda precisa de evidência.
+No laboratório, uma promessa de estorno em cinco minutos passa quando cita uma frase real sobre onde pedir. Execute `--case unsupported-claim` e veja por que procedência e suporte semântico precisam de verificações próprias.
 
-[Artigo da Pathbit Academy AI](https://github.com/pathbit/pathbit-academy-ai/tree/master/0014_citacoes_verificaveis/article/ARTICLE.md).
+[Artigo e laboratório](https://github.com/pathbit/pathbit-academy-ai/tree/master/0014_citacoes_verificaveis)
+
+#RAG #AvaliacaoDeIA #PathbitAcademy

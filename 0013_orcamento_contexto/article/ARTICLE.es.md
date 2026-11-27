@@ -1,26 +1,27 @@
-# Presupuesto de contexto con mediciones reproducibles
+# Construye el contexto de un RAG dentro de un límite medible
 
-[Português (Brasil)](ARTICLE.md) · [English](ARTICLE.en.md)
+[Português (Brasil)](ARTICLE.md) · [English](ARTICLE.en.md) · [Español](ARTICLE.es.md)
 
-La [búsqueda híbrida](../../0012_busca_hibrida/README.es.md) entrega una lista ordenada. Antes de montar la solicitud, hay que decidir qué fragmentos caben y registrar las exclusiones. Este laboratorio fija el límite en bytes para medirlo con independencia del proveedor del modelo.
+Una consulta pregunta dónde solicitar un reembolso y cómo consultar el plazo. La búsqueda puede situar dos documentos de devoluciones antes de una nota de facturación. Si se toman los primeros resultados sin comprobar sus fuentes, parte de la pregunta puede quedar sin evidencia.
 
-## Mide la carga que se va a enviar
+## Modela la decisión
 
-El empaquetador conserva el ID, la fuente y el texto. Serializa el sobre `{"documents":[...]}` como JSON compacto en UTF-8. El valor `bytes_used` incluye el sobre, las claves, las comas, los escapes y caracteres multibyte como `ç`. Mide el campo `context` después de decodificar el informe externo. El informe tiene campos adicionales y un tamaño distinto.
+El laboratorio mide los bytes UTF-8 del JSON compacto `{"documents":[...]}`, con sus campos, signos y caracteres multibyte. `bytes_used` corresponde a ese objeto, no al informe que lo contiene. Para un modelo, cuenta los tokens de la solicitud completa con el tokenizador apropiado y reserva espacio para la respuesta.
 
-En una aplicación con límite de tokens, cuenta toda la entrada con el tokenizador del modelo. Incluye instrucciones, mensajes, herramientas y una reserva para la respuesta. Este ejercicio cuenta los bytes que usa el transporte de JSON.
+## Interpreta el resultado
 
-## Selecciona en orden y registra la decisión
+El empaquetador ordena por puntuación y desempata por ID. Comprueba la cuota por fuente y después serializa el objeto con el fragmento candidato. Registra `source_limit` o `byte_budget` y continúa con los siguientes. La estrategia es voraz y no optimiza toda la cobertura.
 
-1. Ordena por pertinencia decreciente, con desempate por ID.
-2. Aplica la cuota por fuente antes de intentar incluir el fragmento.
-3. Acepta el fragmento si cabe el JSON completo.
-4. Sigue recorriendo la lista tras una exclusión. Un candidato más corto puede caber en el espacio restante.
+## Ejecuta el laboratorio
 
-La entrada predeterminada tiene cuatro fragmentos. Con 245 bytes y una entrada por fuente, se incluyen `refund-summary` y `refund-window`, con un total de 214 bytes. El historial supera la cuota de la fuente y el apéndice supera el presupuesto. Cada exclusión devuelve un motivo distinto.
+Con `245` bytes y un fragmento por fuente, `refund-summary` y `refund-window` ocupan `214` bytes. Con `120`, solo cabe el resumen. Con una cuota de dos y `245` bytes, `refund-summary` y `refund-history` ocupan `211` bytes. El resultado más corto pierde la evidencia de facturación. Compara `context` y `skipped`.
 
-## Límites y ejercicio
+```bash
+python3 src/main.py --bytes 245 --per-source 1
+python3 src/main.py --bytes 120 --per-source 1
+python3 src/main.py --bytes 245 --per-source 2
+```
 
-Esta estrategia elige de forma voraz por puntuación. Un fragmento largo y bien posicionado puede ocupar el espacio de dos más cortos. Volver a codificar el JSON completo en cada intento también tiene un coste con entradas grandes. Mide la cobertura de evidencias por unidad de presupuesto antes de cambiar el algoritmo.
+[Guía completa](../README.es.md) · [Cuaderno](../notebooks/orcamento_contexto.es.ipynb)
 
-En el [inicio rápido](../README.es.md), reduce el límite a 120 bytes y comprueba que desaparece el fragmento de facturación. Aumenta la cuota a dos entradas y compara las exclusiones. El [siguiente laboratorio](../../0014_citacoes_verificaveis/README.es.md) verifica las citas de una respuesta frente al contexto exportado.
+Developed with ❤️ by [Pathbit](https://www.pathbit.com.br/)

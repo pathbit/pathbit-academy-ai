@@ -1,28 +1,28 @@
-# Citas verificables en respuestas de RAG
+# Verifica las citas con el contexto que recibió el modelo RAG
 
-[Português (Brasil)](ARTICLE.md) · [English](ARTICLE.en.md)
+[Português (Brasil)](ARTICLE.md) · [English](ARTICLE.en.md) · [Español](ARTICLE.es.md)
 
-Un asistente de soporte puede citar la política correcta con texto modificado o remitir a una fuente que quedó fuera del contexto. El verificador recibe el sobre que se envió y un conjunto de afirmaciones con citas. Informa qué evidencias se pueden verificar frente a esa entrada.
+Un asistente indica que se puede solicitar un reembolso en el panel del pedido y atribuye la recomendación a `refund-summary`. Una fuente que existe en el índice puede haber quedado fuera del contexto. Una cita real también puede usarse para apoyar una parte diferente de la afirmación.
 
-## Comprueba la fuente y el fragmento
+## Modela la decisión
 
-Cada afirmación necesita al menos una cita con `source_id` y `quote`. El identificador debe corresponder al `id` de un fragmento y el texto citado debe aparecer literalmente. Los IDs duplicados vuelven ambiguo el origen y se rechazan.
+Valida cada `source_id` con los identificadores del contexto exacto de la generación. Comprueba que `quote` aparezca de forma literal. Rechaza identificadores duplicados. Si una cita falla, devuelve `abstained`, una lista de afirmaciones vacía y códigos para el diagnóstico.
 
-Si falla alguna cita, la salida usa `abstained`, deja vacía la lista de afirmaciones y conserva los motivos. La interfaz puede mostrar una respuesta de abstención y el equipo puede distinguir un error de fuente de uno de fragmento.
+## Interpreta el resultado
 
-| Caso | Resultado |
-| --- | --- |
-| Identificador y fragmento coinciden con el contexto | `citations_verified` |
-| Se cambió una palabra de la cita | `quote_not_found` |
-| El ID existe solo en el índice y quedó fuera del contexto | `unknown_source` |
-| La afirmación carece de citas | `missing_citation` |
+`altered-quote` devuelve `quote_not_found`. `unknown-source` devuelve `unknown_source`. `unsupported-claim` puede devolver `citations_verified` aunque afirme que el reembolso tarda cinco minutos. El fragmento solo dice dónde solicitarlo. Comprueba el respaldo semántico en otra etapa y diseña un estado de abstención para la interfaz.
 
-## Separa la procedencia del respaldo semántico
+## Ejecuta el laboratorio
 
-El caso `unsupported-claim` vincula un fragmento real sobre dónde solicitar un reembolso con una promesa de cinco minutos. La verificación literal pasa. El texto describe dónde solicitarlo, mientras el plazo requiere otra evidencia. Expón ese límite en el contrato de la API y mide por separado el respaldo semántico con revisión humana o una etapa de evaluación de RAG.
+Ejecuta los casos sobre la misma fuente y compara `status` y `errors`. Exporta después dos informes del laboratorio anterior con `245` y `16` bytes. El primero puede contener `refund-summary`. El segundo solo conserva el objeto vacío. Pasa ambos por `--context-report` para observar el efecto del límite.
 
-## Ejercicio de extremo a extremo
+```bash
+python3 src/main.py --case valid
+python3 src/main.py --case altered-quote
+python3 src/main.py --case unknown-source
+python3 src/main.py --case unsupported-claim
+```
 
-Sigue el [inicio rápido](../README.es.md) y pasa al verificador el informe del [empaquetador de contexto](../../0013_orcamento_contexto/README.es.md). Con el tamaño predeterminado, cabe el fragmento `refund-summary` y la cita pasa. Con 16 bytes solo cabe el sobre vacío y el mismo ID da `unknown_source`.
+[Guía completa](../README.es.md) · [Cuaderno](../notebooks/citacoes_verificaveis.es.ipynb)
 
-El laboratorio usa respuestas preparadas para comprobar el contrato de salida. En un producto, valida primero el formato de la respuesta del modelo y trata la abstención como un resultado normal que la interfaz pueda presentar.
+Developed with ❤️ by [Pathbit](https://www.pathbit.com.br/)
