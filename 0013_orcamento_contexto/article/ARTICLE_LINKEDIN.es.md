@@ -1,9 +1,15 @@
-# Presupuesto de contexto para RAG
+# Construye el contexto de un RAG dentro de un límite medible
 
-[Português (Brasil)](ARTICLE_LINKEDIN.md) · [English](ARTICLE_LINKEDIN.en.md)
+Una consulta pregunta dónde solicitar un reembolso y cómo consultar el plazo. La búsqueda puede situar dos documentos de devoluciones antes de una nota de facturación. Si se toman los primeros resultados sin comprobar sus fuentes, parte de la pregunta puede quedar sin evidencia.
 
-Después de recuperar los documentos, el espacio disponible tiene que admitir el JSON completo. Los IDs, las fuentes, el texto, las comillas y los caracteres UTF-8 contribuyen al tamaño medido.
+## Modela la decisión
 
-El laboratorio reserva 245 bytes e incluye dos fragmentos en 214 bytes. Un tercero se excluye por la cuota de fuente y un cuarto por tamaño. El informe registra ambos motivos. Usa el tokenizador de la aplicación para medir un presupuesto de tokens.
+El empaquetador ordena por puntuación y desempata por ID. Comprueba la cuota por fuente y después serializa el objeto con el fragmento candidato. Registra `source_limit` o `byte_budget` y continúa con los siguientes. La estrategia es voraz y no optimiza toda la cobertura.
 
-Selecciona fragmentos por pertinencia, limita cada fuente y comprueba el tamaño del JSON que se enviará. [Instrucciones y ejemplos ejecutables](https://github.com/pathbit/pathbit-academy-ai/tree/master/0013_orcamento_contexto/README.es.md).
+## Ejecuta el laboratorio
+
+Con `245` bytes y un fragmento por fuente, `refund-summary` y `refund-window` ocupan `214` bytes. Con `120`, solo cabe el resumen. Con una cuota de dos y `245` bytes, `refund-summary` y `refund-history` ocupan `211` bytes. El resultado más corto pierde la evidencia de facturación. Compara `context` y `skipped`.
+
+[Guía completa](https://github.com/pathbit/pathbit-academy-ai/tree/master/0013_orcamento_contexto/article/ARTICLE.es.md)
+
+Developed with ❤️ by [Pathbit](https://www.pathbit.com.br/)

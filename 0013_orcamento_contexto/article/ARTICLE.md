@@ -1,26 +1,42 @@
-# Orçamento de contexto com medidas reproduzíveis
+# Como montar o contexto de um RAG dentro de um limite
 
 [English](ARTICLE.en.md) · [Español](ARTICLE.es.md)
 
-A [busca híbrida](../../0012_busca_hibrida/README.md) entrega uma lista de candidatos. Antes de montar a requisição, é preciso decidir quais trechos cabem e registrar as exclusões. Neste laboratório, o teto é em bytes para permitir uma medida independente de fornecedor de modelo.
+Um assistente de compras recebe «onde peço o estorno e como vejo o prazo?». A busca devolve dois trechos da política de devoluções, um trecho da cobrança e um apêndice. O histórico de estorno pode ter boa pontuação e ocupar o espaço que a regra de prazo precisaria. O ranking é o começo da escolha. A montagem do contexto decide que evidências o modelo terá diante dele.
 
-## Meça o payload que será enviado
+## Meça aquilo que vai para a requisição
 
-O empacotador preserva o ID, a fonte e o texto. Ele serializa o envelope `{"documents":[...]}` como JSON compacto em UTF-8. O valor `bytes_used` inclui o envelope, chaves, vírgulas, escapes e caracteres multibyte como `ç`. Ele mede o campo `context` depois de decodificar o relatório externo. O relatório em si tem outros campos e outro tamanho.
+O exemplo conta os bytes de `{"documents":[...]}` depois de serializar JSON compacto em UTF-8. Cada entrada inclui `id`, `source` e `text`. Conta aspas, chaves, separadores e caracteres multibyte que aparecem em `estorno é solicitado`. O relatório externo inclui `bytes_used`, `context` e motivos de exclusão. A medida refere-se ao JSON interno que você obtém ao interpretar `context`.
 
-Em uma aplicação com limite de tokens, conte a entrada inteira com o tokenizer do modelo. Inclua instruções, mensagens, ferramentas e reserva para a resposta. A contagem de bytes deste exercício mede o transporte do JSON.
+Uma API de modelos normalmente limita tokens, e pode ter limites de payload também. Para planejar a produção, conte tokens com o tokenizer adequado à requisição completa, incluindo mensagens, instruções e ferramentas, e reserve espaço para a resposta. O laboratório usa bytes para repetir a mesma medição sem depender de um modelo.
 
-## Escolha em ordem e registre a decisão
+## Use uma cota quando a mesma fonte domina
 
-1. Ordene por relevância decrescente, com desempate pelo ID.
-2. Aplique a cota por fonte antes de tentar encaixar o trecho.
-3. Aceite o trecho se o JSON completo couber.
-4. Continue percorrendo a lista após uma exclusão. Um candidato menor pode caber no espaço restante.
+```mermaid
+flowchart LR
+    Ranked["Trechos ordenados"] --> Quota{"Cabe na cota da fonte?"}
+    Quota -->|Sim| Budget{"JSON cabe no limite?"}
+    Quota -->|Não| SourceLimit["source_limit"]
+    Budget -->|Sim| Context["Inclui no contexto"]
+    Budget -->|Não| ByteLimit["byte_budget"]
+```
 
-A entrada padrão tem quatro trechos. Com 245 bytes e cota de um por fonte, o empacotador inclui `refund-summary` e `refund-window`, totalizando 214 bytes. O histórico excede a cota da fonte e o apêndice excede o orçamento. Cada exclusão devolve um motivo distinto.
+Os [trechos de exemplo](../data/context.json) são ordenados por relevância e desempate por ID. O empacotador verifica a cota de fonte, mede o envelope com o próximo trecho e registra `source_limit` ou `byte_budget` quando a inclusão falha. Um trecho curto no fim da lista ainda pode caber depois que um anterior ficou de fora.
 
-## Limites e exercício
+| Teto e cota | Contexto que cabe | Bytes |
+| --- | --- | --- |
+| `245`, uma entrada por fonte | `refund-summary` e `refund-window` | 214 |
+| `120`, uma entrada por fonte | `refund-summary` | Confira `bytes_used` no relatório |
+| `245`, duas entradas por fonte | `refund-summary` e `refund-history` | 211 |
 
-Esta estratégia é gulosa pela pontuação. Um trecho comprido bem ranqueado pode ocupar espaço que acomodaria dois trechos menores. Em conjuntos grandes, serializar o JSON inteiro a cada tentativa também tem custo. Meça a cobertura de evidências obtida por unidade de orçamento antes de trocar o algoritmo.
+Na última linha, os dois trechos de `returns` deixam pouco espaço para `billing`. A redução de três bytes no resultado significa que os dois trechos escolhidos são menores juntos. Ela não indica melhora na cobertura da pergunta sobre prazos. Use a coluna de exclusões para explicar a decisão.
 
-No [início rápido](../README.md), reduza o limite para 120 bytes e veja o trecho de cobrança desaparecer. Aumente a cota para duas entradas e compare as exclusões. O [próximo laboratório](../../0014_citacoes_verificaveis/README.md) usa o contexto exportado para conferir as citações de uma resposta.
+## Rode e ajuste uma variável por vez
+
+Reproduza os três cenários do [guia](../README.md), abra o JSON em `context` e compare a origem de cada trecho. Quando for ajustar o algoritmo, mantenha o conjunto de entrada constante durante a comparação. A estratégia gulosa atual favorece relevância por posição e custa uma serialização por tentativa. Para volume maior, meça latência e quantidade de evidências úteis por requisição antes de mudar o mecanismo.
+
+O [notebook](../notebooks/orcamento_contexto.ipynb) usa o mesmo empacotador da CLI. No [próximo artigo](../../0014_citacoes_verificaveis/article/ARTICLE.md), o relatório vira a entrada para verificar as fontes de uma resposta.
+
+---
+
+Developed with ❤️ by [Pathbit](https://www.pathbit.com.br/)

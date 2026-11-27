@@ -1,9 +1,15 @@
-# Citas verificables en RAG
+# Verifica las citas con el contexto que recibió el modelo RAG
 
-[Português (Brasil)](ARTICLE_LINKEDIN.md) · [English](ARTICLE_LINKEDIN.en.md)
+Un asistente indica que se puede solicitar un reembolso en el panel del pedido y atribuye la recomendación a `refund-summary`. Una fuente que existe en el índice puede haber quedado fuera del contexto. Una cita real también puede usarse para apoyar una parte diferente de la afirmación.
 
-Una cita de RAG tiene procedencia verificable cuando el ID está en el contexto enviado y el fragmento aparece en esa fuente. Ambas comprobaciones se pueden hacer sin llamar a un modelo.
+## Modela la decisión
 
-El laboratorio acepta una cita literal, se abstiene ante una frase modificada y rechaza una fuente ausente. También incluye una cita real que intenta respaldar una promesa de cinco minutos. La procedencia se verifica y el plazo sigue necesitando evidencia.
+`altered-quote` devuelve `quote_not_found`. `unknown-source` devuelve `unknown_source`. `unsupported-claim` puede devolver `citations_verified` aunque afirme que el reembolso tarda cinco minutos. El fragmento solo dice dónde solicitarlo. Comprueba el respaldo semántico en otra etapa y diseña un estado de abstención para la interfaz.
 
-Comprueba los IDs y las citas literales frente al contexto entregado y devuelve una abstención si falla alguna cita. [Instrucciones y ejemplos ejecutables](https://github.com/pathbit/pathbit-academy-ai/tree/master/0014_citacoes_verificaveis/README.es.md).
+## Ejecuta el laboratorio
+
+Ejecuta los casos sobre la misma fuente y compara `status` y `errors`. Exporta después dos informes del laboratorio anterior con `245` y `16` bytes. El primero puede contener `refund-summary`. El segundo solo conserva el objeto vacío. Pasa ambos por `--context-report` para observar el efecto del límite.
+
+[Guía completa](https://github.com/pathbit/pathbit-academy-ai/tree/master/0014_citacoes_verificaveis/article/ARTICLE.es.md)
+
+Developed with ❤️ by [Pathbit](https://www.pathbit.com.br/)

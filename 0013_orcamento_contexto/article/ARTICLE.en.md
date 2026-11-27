@@ -1,26 +1,27 @@
-# Context budgets with reproducible measurements
+# Pack RAG context within a measurable budget
 
-[Português (Brasil)](ARTICLE.md) · [Español](ARTICLE.es.md)
+[Português (Brasil)](ARTICLE.md) · [English](ARTICLE.en.md) · [Español](ARTICLE.es.md)
 
-[Hybrid retrieval](../../0012_busca_hibrida/README.en.md) delivers a ranked candidate list. Before building the request, decide which passages fit and record the exclusions. This lab specifies the limit in bytes for a measurement independent of any model provider.
+A request asks where to request a refund and how to find its deadline. The retrieval list can rank two documents from returns above a billing note. Keeping the top hits without checking sources may leave part of the question unanswered.
 
-## Measure the payload that will be sent
+## Model the decision
 
-The packer keeps the ID, source, and text. It encodes the `{"documents":[...]}` envelope as compact UTF-8 JSON. The `bytes_used` value includes the envelope, keys, commas, escapes, and multibyte characters such as `ç`. It measures the `context` field after decoding the outer report. The report itself has extra fields and a different size.
+The lab measures the compact UTF-8 JSON envelope `{"documents":[...]}` including fields, punctuation and escaped or multibyte characters. `bytes_used` describes that envelope, not the containing report. For model input limits, count tokens for the actual model over the complete request and reserve room for output.
 
-In a token-limited application, count the entire input with the model tokenizer. Include instructions, messages, tools, and a reservation for the response. This exercise counts bytes in the JSON sent over the transport.
+## Read the result
 
-## Select in order and record each decision
+The packer sorts by score and breaks ties by ID. It checks the quota per source, then tries the document against the full serialized envelope. It records `source_limit` or `byte_budget` and keeps trying shorter candidates. This is a greedy strategy. It does not optimize total coverage.
 
-1. Sort by decreasing relevance, breaking ties by ID.
-2. Apply the source quota before trying to fit the passage.
-3. Accept the passage when the entire JSON fits.
-4. Keep scanning after an exclusion. A shorter candidate can fit into the remaining space.
+## Run the lab
 
-The default input has four passages. At 245 bytes and one passage per source, the packer includes `refund-summary` and `refund-window`, for 214 bytes. The history exceeds the source quota and the appendix exceeds the budget. Each exclusion produces a distinct reason.
+At `245` bytes and a quota of one per source, `refund-summary` and `refund-window` occupy `214` bytes. At `120` bytes, only the summary fits. Raising the source quota to two with `245` bytes keeps `refund-summary` and `refund-history` in `211` bytes. The shorter result loses the billing evidence. Compare the `context` and `skipped` fields.
 
-## Limitations and exercise
+```bash
+python3 src/main.py --bytes 245 --per-source 1
+python3 src/main.py --bytes 120 --per-source 1
+python3 src/main.py --bytes 245 --per-source 2
+```
 
-This strategy greedily selects by score. A long, highly ranked passage can take the space of two shorter passages. Re-encoding the complete JSON for each attempt also has a cost on large inputs. Measure evidence coverage per unit of budget before changing the algorithm.
+[Full guide](../README.en.md) · [Notebook](../notebooks/orcamento_contexto.en.ipynb)
 
-In the [quick start](../README.en.md), reduce the limit to 120 bytes and watch the billing passage disappear. Raise the quota to two passages and compare the exclusions. The [next lab](../../0014_citacoes_verificaveis/README.en.md) checks answer citations against exported context.
+Developed with ❤️ by [Pathbit](https://www.pathbit.com.br/)

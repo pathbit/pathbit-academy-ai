@@ -1,9 +1,15 @@
-# Context budgeting for RAG
+# Pack RAG context within a measurable budget
 
-[Português (Brasil)](ARTICLE_LINKEDIN.md) · [Español](ARTICLE_LINKEDIN.es.md)
+A request asks where to request a refund and how to find its deadline. The retrieval list can rank two documents from returns above a billing note. Keeping the top hits without checking sources may leave part of the question unanswered.
 
-After retrieval, the space available has to fit the whole JSON document. IDs, sources, text, quotes, and UTF-8 characters all contribute to the measured size.
+## Model the decision
 
-The lab reserves 245 bytes and fits two passages into 214 bytes. A third is excluded by the source quota and a fourth by size. The report records both reasons. Use your application's tokenizer to measure a token budget.
+The packer sorts by score and breaks ties by ID. It checks the quota per source, then tries the document against the full serialized envelope. It records `source_limit` or `byte_budget` and keeps trying shorter candidates. This is a greedy strategy. It does not optimize total coverage.
 
-Select passages by relevance, cap each source, and check the size of the JSON that will be sent. [Instructions and runnable examples](https://github.com/pathbit/pathbit-academy-ai/tree/master/0013_orcamento_contexto/README.en.md).
+## Run the lab
+
+At `245` bytes and a quota of one per source, `refund-summary` and `refund-window` occupy `214` bytes. At `120` bytes, only the summary fits. Raising the source quota to two with `245` bytes keeps `refund-summary` and `refund-history` in `211` bytes. The shorter result loses the billing evidence. Compare the `context` and `skipped` fields.
+
+[Full guide](https://github.com/pathbit/pathbit-academy-ai/tree/master/0013_orcamento_contexto/article/ARTICLE.en.md)
+
+Developed with ❤️ by [Pathbit](https://www.pathbit.com.br/)

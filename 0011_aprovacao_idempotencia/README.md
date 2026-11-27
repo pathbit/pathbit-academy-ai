@@ -1,5 +1,7 @@
 # 0011 — Aprovação humana e idempotência em agentes
 
+[English](README.en.md) · [Español](README.es.md)
+
 O laboratório estende o [exemplo de ferramentas MCP](../0010_mcp_local/article/ARTICLE.md). Uma automação pode propor um chamado de suporte. O operador registra a decisão, e o executor aplica apenas a proposta aprovada.
 
 ## Executar o laboratório

@@ -1,5 +1,7 @@
-[English](POST_LINKEDIN.en.md) · [Español](POST_LINKEDIN.es.md)
+Quando juntar duas buscas piora o resultado do RAG
 
-No laboratório, a fusão melhora a cobertura da busca lexical na consulta de senha. Na consulta do protocolo RE42, a primeira posição continua correta, mas a cobertura cai de 1,0 para 0,5 em relação à busca vetorial. A avaliação precisa medir a primeira resposta e os demais resultados exibidos.
+Com dois resultados, o recall híbrido cai de `1,0` para `0,5` em relação à busca vetorial. A primeira resposta relevante continua no lugar. Rode com `--top 2` e `--top 3` e compare quais IDs ficaram de fora.
 
-[Artigo da Pathbit Academy AI](https://github.com/pathbit/pathbit-academy-ai/tree/master/0012_busca_hibrida/article/ARTICLE.md).
+[Artigo e laboratório](https://github.com/pathbit/pathbit-academy-ai/tree/master/0012_busca_hibrida)
+
+#RAG #Embeddings #PathbitAcademy

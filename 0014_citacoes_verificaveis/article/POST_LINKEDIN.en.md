@@ -1,5 +1,7 @@
-[Português (Brasil)](POST_LINKEDIN.md) · [Español](POST_LINKEDIN.es.md)
+Verify citations against the context supplied to a RAG model
 
-The lab accepts an exact quote, abstains when wording changes, and rejects an absent source. It also includes a real quote used to support a five-minute promise. Provenance passes in that case, and the deadline still needs evidence.
+A shopping assistant says to request a refund from the order panel. It attributes the advice to `refund-summary`. A source in the full index may have been excluded from the generation context, and a citation can quote a real sentence about the wrong part of the claim.
 
-[Pathbit Academy AI article](https://github.com/pathbit/pathbit-academy-ai/tree/master/0014_citacoes_verificaveis/article/ARTICLE.en.md).
+[Full guide](https://github.com/pathbit/pathbit-academy-ai/tree/master/0014_citacoes_verificaveis/article/ARTICLE.en.md)
+
+#PathbitAcademy #AIEngineering
