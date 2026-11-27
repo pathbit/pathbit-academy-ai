@@ -12,7 +12,7 @@ Conteúdos sobre inteligência artificial publicados pela **Pathbit**.
 
 Explora as diferenças entre **LLM (Large Language Models)** e **LRM (Large Reasoning Models)**, cobrindo conceitos, casos de uso, vantagens e limitações. Inclui exemplos práticos, código em Python e comparações de desempenho.
 
-[📖 Ler Artigo](./0001_llm_x_lrm/) | [🔧 Executar Localmente](./0001_llm_x_lrm/README.md)
+[📖 Ler Artigo](./0001_llm_x_lrm/article/ARTICLE.md) | [🔧 Executar Localmente](./0001_llm_x_lrm/README.md)
 
 ---
 
@@ -22,7 +22,7 @@ Explora as diferenças entre **LLM (Large Language Models)** e **LRM (Large Reas
 
 Explora **Embeddings e Vetorização**, fundamentais para que a IA entenda e processe texto de forma eficiente. Cobrimos conceitos teóricos, implementações práticas, diferentes tipos de embeddings e casos de uso reais. Inclui exemplos práticos, código em Python e comparações de performance entre diferentes modelos.
 
-[📖 Ler Artigo](./0002_embeddings_vetorizacao/) | [🔧 Executar Localmente](./0002_embeddings_vetorizacao/README.md)
+[📖 Ler Artigo](./0002_embeddings_vetorizacao/article/ARTICLE.md) | [🔧 Executar Localmente](./0002_embeddings_vetorizacao/README.md)
 
 ---
 
@@ -32,7 +32,7 @@ Explora **Embeddings e Vetorização**, fundamentais para que a IA entenda e pro
 
 Explora **RAG (Retrieval Augmented Generation)** e **Vector Databases**, tecnologias fundamentais para construir sistemas de IA que acessam informações específicas e atualizadas. Cobrimos conceitos teóricos, implementações práticas, diferentes tipos de vector databases e casos de uso reais. Inclui exemplos práticos, código em Python e comparações de performance entre diferentes abordagens.
 
-[📖 Ler Artigo](./0003_rag_vector_database/) | [🔧 Executar Localmente](./0003_rag_vector_database/README.md)
+[📖 Ler Artigo](./0003_rag_vector_database/article/ARTICLE.md) | [🔧 Executar Localmente](./0003_rag_vector_database/README.md)
 
 ---
 
@@ -42,7 +42,7 @@ Explora **RAG (Retrieval Augmented Generation)** e **Vector Databases**, tecnolo
 
 Explora as diferenças entre **RAG** e **Fine-Tuning**, ajudando você a escolher a abordagem certa para seu projeto de IA. Cobrimos comparações técnicas, análise de custos, casos práticos de sucesso e fracasso, e quando usar cada estratégia. Inclui fine-tuning REAL com LoRA, matriz de decisão objetiva e exemplos executáveis em Python com caso de uso de assistente de investimentos.
 
-[📖 Ler Artigo](./0004_rag_vs_finetuning/) | [🔧 Executar Localmente](./0004_rag_vs_finetuning/README.md)
+[📖 Ler Artigo](./0004_rag_vs_finetuning/article/ARTICLE.md) | [🔧 Executar Localmente](./0004_rag_vs_finetuning/README.md)
 
 ---
 
@@ -52,7 +52,7 @@ Explora as diferenças entre **RAG** e **Fine-Tuning**, ajudando você a escolhe
 
 Transforma prompt engineering em um laboratório comparativo entre `Qwen` e `FLAN`, medindo estrutura, keywords, prioridade e semântica para separar ganho de prompt de ganho de modelo.
 
-[📖 Ler Artigo](./0005_prompt_engineering_avancado/) | [🔧 Executar Localmente](./0005_prompt_engineering_avancado/README.md)
+[📖 Ler Artigo](./0005_prompt_engineering_avancado/article/ARTICLE.md) | [🔧 Executar Localmente](./0005_prompt_engineering_avancado/README.md)
 
 ---
 
@@ -62,7 +62,7 @@ Transforma prompt engineering em um laboratório comparativo entre `Qwen` e `FLA
 
 Mostra uma esteira de evals que compara candidatos completos, pondera criticidade, detecta regressões por caso e explicita quando o melhor score ainda não é suficiente para liberar deploy.
 
-[📖 Ler Artigo](./0006_llm_evals_regressao/) | [🔧 Executar Localmente](./0006_llm_evals_regressao/README.md)
+[📖 Ler Artigo](./0006_llm_evals_regressao/article/ARTICLE.md) | [🔧 Executar Localmente](./0006_llm_evals_regressao/README.md)
 
 ---
 
@@ -72,7 +72,7 @@ Mostra uma esteira de evals que compara candidatos completos, pondera criticidad
 
 Apresenta um agente local com guardrail, regra de negócio, planner JSON, roteamento semântico, retrieval e trilha de auditoria para operar com autonomia sem perder controle.
 
-[📖 Ler Artigo](./0007_agentes_tool_calling/) | [🔧 Executar Localmente](./0007_agentes_tool_calling/README.md)
+[📖 Ler Artigo](./0007_agentes_tool_calling/article/ARTICLE.md) | [🔧 Executar Localmente](./0007_agentes_tool_calling/README.md)
 
 ---
 
@@ -82,7 +82,7 @@ Apresenta um agente local com guardrail, regra de negócio, planner JSON, roteam
 
 Prova que um stack de IA roda 100% local: Ollama em Docker com volume persistente, benchmark medido na própria máquina (TTFT, latência e vazão), saída JSON forçada e retrieval semântico — sem chave de API, sem conta e sem custo por token.
 
-[📖 Ler Artigo](./0008_llms_locais_ollama/) | [🔧 Executar Localmente](./0008_llms_locais_ollama/README.md)
+[📖 Ler Artigo](./0008_llms_locais_ollama/article/ARTICLE.md) | [🔧 Executar Localmente](./0008_llms_locais_ollama/README.md)
 
 ---
 
@@ -92,7 +92,7 @@ Prova que um stack de IA roda 100% local: Ollama em Docker com volume persistent
 
 Transforma a inferência probabilística em contratos de dados determinísticos e tipados. Compara o prompt livre contra `format: "json"` e `format: <json_schema>` com Grammar-Guided Sampling (máscara de logits), desmonta o mito do retry e apresenta a fronteira dos **Modelos System 1** (Jev da TypeSafe AI vs Laya da Convai / Kev em open-source) para decisões diretas e tipadas em passada única de ~13 ms (> 30x mais velozes).
 
-[📖 Ler Artigo](./0009_saida_estruturada/) | [🔧 Executar Localmente](./0009_saida_estruturada/README.md)
+[📖 Ler Artigo](./0009_saida_estruturada/article/ARTICLE.md) | [🔧 Executar Localmente](./0009_saida_estruturada/README.md)
 
 ---
 
@@ -102,7 +102,7 @@ Transforma a inferência probabilística em contratos de dados determinísticos 
 
 Implementa o Model Context Protocol (MCP) da Anthropic 100% offline via transporte `stdio`. Demonstra descoberta dinâmica de ferramentas com `list_tools()`, loop agêntico completo com planner local sob schema rígido e medição forense de overhead de protocolo (~0.99 ms), unindo governança e segurança por isolamento de processo.
 
-[📖 Ler Artigo](./0010_mcp_local/) | [🔧 Executar Localmente](./0010_mcp_local/README.md)
+[📖 Ler Artigo](./0010_mcp_local/article/ARTICLE.md) | [🔧 Executar Localmente](./0010_mcp_local/README.md)
 
 ---
 
