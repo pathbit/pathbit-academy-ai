@@ -3,8 +3,8 @@
 
 Compara tres niveis de contrato sobre os mesmos modelos e prompts:
 - livre:  sem constraint, o prompt apenas pede JSON
-- json:   format="json" garante sintaxe parseavel
-- schema: format=<json schema> garante o contrato completo (campos, tipos, enum)
+- json:   format="json" solicita restricao de sintaxe
+- schema: format=<json schema> orienta a geracao; o cliente valida campos, tipos e enum
 
 Para cada chamada mede parse, validacao de schema, correcao semantica e latencia,
 inclusive o efeito de uma unica tentativa de retry apos falha.
@@ -113,7 +113,7 @@ def gerar(base_url: str, model: str, prompt: str, modo: str, schema: dict | None
         "model": model,
         "prompt": prompt,
         "stream": False,
-        "options": {"temperature": temperature, "num_predict": 128, "num_thread": 4},
+        "options": {"temperature": temperature, "num_predict": 128},
     }
     if modo == "json":
         payload["format"] = "json"
@@ -160,7 +160,7 @@ def avaliar(raw: str, schema: dict) -> tuple[bool, bool, dict | None]:
 
 def run_task_case(base_url: str, model: str, task: dict, modo: str) -> dict:
     """Uma linha de resultado: primeira tentativa + retry unico quando falha."""
-    schema = task["schema"] if modo == "schema" else task["schema"]
+    schema = task["schema"]
 
     tentativas: list[dict] = []
     for index, temperature in enumerate((0.0, 0.7)):
@@ -330,7 +330,7 @@ def run_lab(base_url: str, models: list[str], repeat: int, skip_plots: bool = Fa
     )
     por_modelo.to_csv(data_dir / "structured_resumo_modelo.csv", index=False, encoding="utf-8")
 
-    # Benchmark do Paradigma System 1 (Single Forward Pass)
+    # Mede o roteador por similaridade de embeddings
     sys1_metrics = benchmark_system_one(base_url, repeat=max(2, repeat))
     with open(data_dir / "system_one_comparativo.json", "w", encoding="utf-8") as f:
         json.dump(sys1_metrics, f, indent=2)
@@ -400,16 +400,15 @@ def montar_relatorio(server: dict, resumo: pd.DataFrame, por_modelo: pd.DataFram
             [
                 "## Baseline não generativa: roteamento por embeddings",
                 "",
-                f"- **Paradigma:** `{sys1['paradigma']}`",
-                f"- **Referencias da Industria:** `{', '.join(sys1['frameworks_referencia'])}`",
-                f"- **Latencia Mediana (p50):** `{sys1['latencia_p50_ms']} ms`",
+                f"- Implementação: `{sys1['paradigma']}`",
+                f"- Chamadas avaliadas: `{sys1['chamadas_avaliadas']}`",
+                f"- **Valor na posição central superior (p50 do runner):** `{sys1['latencia_p50_ms']} ms`",
                 f"- **Latencia Percentil 95 (p95):** `{sys1['latencia_p95_ms']} ms`",
                 f"- **Latencia Media:** `{sys1['latencia_media_ms']} ms`",
                 f"- **Tokens gerados no decoder:** `{sys1['tokens_gerados']}` (sem loop autoregressivo)",
-                f"- **Conformidade com schema:** `{sys1['conformidade_schema_pct']}%`",
                 f"- **Acuracia de decisao:** `{sys1['acuracia_pct']}%`",
                 "",
-                "> **Limite:** esta baseline escolhe entre três rótulos fixos usando embeddings. Não mede Jev ou Laya, não extrai argumentos e não demonstra equivalência com um modelo generativo. Compare a latência com o resumo desta execução, sem extrapolar para outros produtos.",
+                "> A baseline escolhe entre três rótulos fixos. O tempo inclui ler o embedding da consulta e comparar com os vetores de referência já calculados. O formato do resultado é montado pelo código.",
                 "",
             ]
         )
@@ -420,7 +419,7 @@ def montar_relatorio(server: dict, resumo: pd.DataFrame, por_modelo: pd.DataFram
             "- `parse_ok` aceita JSON direto ou apos limpeza de code fences (resgate basico).",
             "- `schema_ok` exige validacao jsonschema contra o contrato da tarefa.",
             "- `semantico_ok` exige o valor de negocio correto dentro do contrato.",
-            "- Latencia do modo `schema` inclui o custo de decodificar sob a gramatica.",
+            "- A latência por caso soma as tentativas executadas e inclui transporte, processamento e decodificação. Estas médias não isolam o custo da gramática.",
             "",
         ]
     )
@@ -443,7 +442,7 @@ def main() -> None:
     print(resumo.to_string(index=False))
     print("\nResumo por modelo e nivel:")
     print(por_modelo.to_string(index=False))
-    print("\nFronteira System 1 (Passada Unica sem Tokens de Decoder):")
+    print("\nRoteamento por similaridade de embeddings:")
     print(f"  Latencia media: {sys1['latencia_media_ms']} ms | p50: {sys1['latencia_p50_ms']} ms | Acuracia: {sys1['acuracia_pct']}%")
     print(f"\nArtefatos em: {(Path(__file__).parent.parent / 'data').resolve()}")
 

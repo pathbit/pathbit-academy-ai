@@ -16,4 +16,6 @@ O laboratório prático em Python, com execução 100% local em CPU e notebooks 
 Repositório no GitHub: https://github.com/pathbit/pathbit-academy-ai
 Módulo: 0005_prompt_engineering_avancado
 
+![Resultados medidos na comparação de prompts](../assets/05.png)
+
 #InteligenciaArtificial #PromptEngineering #LLM #Qwen #NLP #Python #EngenhariaDeSoftware #PathbitAcademy

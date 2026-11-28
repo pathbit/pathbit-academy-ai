@@ -17,4 +17,6 @@ O laboratório completo em Python, com cálculos práticos, notebook interativo 
 Repositório no GitHub: https://github.com/pathbit/pathbit-academy-ai
 Módulo: 0002_embeddings_vetorizacao
 
+![Processo de vetorização de texto](../assets/02.png)
+
 #InteligenciaArtificial #Embeddings #BuscaSemantica #Vetorizacao #Python #SentenceBERT #EngenhariaDeSoftware #PathbitAcademy

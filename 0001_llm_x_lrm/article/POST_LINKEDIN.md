@@ -17,4 +17,6 @@ O laboratório completo com notebook interativo, scripts executáveis e apresent
 Repositório no GitHub: https://github.com/pathbit/pathbit-academy-ai
 Módulo: 0001_llm_x_lrm
 
+![Arquitetura de decisão entre modelos de linguagem e modelos de raciocínio](../assets/05_arquitetura_llm_vs_lrm.png)
+
 #InteligenciaArtificial #LLM #LRM #OpenAIo1 #DeepSeekR1 #Groq #EngenhariaDeSoftware #PathbitAcademy

@@ -1,308 +1,172 @@
-# Saída estruturada com LLMs locais, contratos formais e a fronteira dos modelos System 1
+# Saída estruturada com Ollama. Do JSON que abre à decisão que o sistema pode usar
 
-Grande parte dos desenvolvedores que começam a integrar Modelos de Linguagem em sistemas de produção corporativos passa pelo mesmo ritual ao redigir um prompt detalhado pedindo que o modelo responda apenas em formato JSON, sem preâmbulos, sem markdown e com aspas duplas estritas.
+Imagine que o atendimento de uma loja recebeu esta frase: “Meu app mostra erro 500 desde ontem”. O seu modelo devolveu um objeto com `rota` e `urgencia`. O Python conseguiu ler o JSON e todos os campos passaram na validação. A rota, porém, veio como `resposta_direta`: um valor permitido pelo esquema e uma escolha errada segundo a política do exercício. A fila de incidentes nem chegou a receber o caso.
 
-O desenvolvedor testa três vezes no terminal, comemora que o resultado veio em formato de dicionário e coloca o serviço em deploy na sexta-feira à tarde.
-
-Na segunda-feira de manhã, o primeiro incidente de severidade alta acontece. O modelo decidiu prefixar a resposta com blocos de markdown na primeira linha, inseriu uma saudação cortês antes das chaves, trocou o nome da chave `status` por `situacao`, formatou um valor monetário como texto em vez de número decimal ou alucinou uma opção inexistente fora do enum esperado. O backend executa o parser JSON, estoura uma exceção fatal de sintaxe ou de chave ausente, e a esteira inteira de atendimento é interrompida.
-
-No [Artigo 0008 da Pathbit Academy](https://github.com/pathbit/pathbit-academy-ai/blob/master/0008_llms_locais_ollama/article/ARTICLE.md), provamos como rodar uma stack completa de IA 100% local em Docker via Ollama, eliminando cobrança de API por token, após baixar pesos e dependências. No entanto, ter o modelo rodando localmente não resolve por si só a fragilidade da interface de saída.
-
-O contrato precisa separar três perguntas: a saída é JSON válido, respeita o schema e contém a decisão correta? As duas primeiras podem ser verificadas pelo software; a terceira exige dados rotulados e regras de negócio. Saída estruturada reduz erros de integração, mas não transforma a inferência probabilística em uma função semanticamente determinística.
+Esse é o ponto de partida do laboratório. Vamos medir separadamente se a resposta pode ser lida, se tem a forma combinada e se expressa a decisão esperada. Depois vamos repetir a mesma validação com respostas fixas, para que você consiga observar os três níveis mesmo sem carregar um modelo. Se o Ollama ainda não estiver de pé, o [artigo anterior](../../0008_llms_locais_ollama/article/ARTICLE.md) acompanha a instalação, o primeiro chat e a leitura das métricas no terminal.
 
 ---
 
-## Os três níveis de contrato entre LLMs e software corporativo
+## Três perguntas antes de despachar um chamado
 
-A relação entre código de engenharia e modelos de linguagem evoluiu através de três paradigmas bem definidos de acoplamento.
+1. **Sintaxe.** O consumidor consegue transformar a saída em um valor JSON? Uma aspa aberta ou um prefixo em linguagem natural já pode interromper a leitura.
+2. **Estrutura.** O valor atende ao contrato da operação? `{}` é JSON válido e não contém nenhum dos campos obrigatórios de um chamado.
+3. **Decisão.** A política do atendimento considera o valor correto para a entrada recebida? Tanto `criar_ticket` quanto `resposta_direta` podem estar no enum. É a política que diz qual deve ser escolhido.
 
-![Os Três Níveis de Contrato com LLMs](../assets/01.png)
+![Três formas de pedir uma resposta estruturada ao Ollama](../assets/01.png)
 
-> Figura 1. Da solicitação textual à restrição de formato e validação no consumidor.
+> **Figura 1.** O cliente pode enviar só o prompt, solicitar JSON ou enviar um esquema. A aplicação continua responsável por verificar a resposta que consome.
 
-### O prompt otimista em modo livre
+Um bom exemplo precisa de saída ruim que pareça plausível. Eis quatro respostas para o mesmo erro 500:
 
-Neste modelo inicial, o desenvolvedor não utiliza nenhuma restrição nativa do motor de inferência. Todo o peso do contrato recai sobre o prompt textual.
+| Saída do modelo | Parse | Esquema de rota | Política do exercício |
+| --- | --- | --- | --- |
+| `{"rota": "criar_ticket",` | Falha | Não avaliado | Não avaliada |
+| `{"rota": "criar_ticket"}` | Passa | Falha, falta `urgencia` | Não avaliada |
+| `{"rota": "resposta_direta", "urgencia": "alta"}` | Passa | Passa | Falha |
+| `{"rota": "criar_ticket", "urgencia": "alta"}` | Passa | Passa | Passa |
 
-```python
-prompt = """Você é um assistente de suporte.
-Responda EXATAMENTE um JSON com as chaves "produto" e "prazo_dias".
-Não inclua explicações nem blocos markdown.
-Entrada: 'Quero devolver uma televisão comprada há 10 dias.'"""
-```
+O conceito se transfere para extração de dados. Um inteiro no campo `prazo_dias` pode satisfazer o contrato e ainda devolver 1 quando a frase dizia 10. Para número de dias, o problema é fidelidade ao texto. Para uma ação no sistema, o problema pode incluir política, autorização e consequência da ação.
 
-O problema desse nível é que ele falha sob qualquer variação de contexto. Como os modelos são treinados em bases massivas de código com tutoriais, a probabilidade estatística de envolver o JSON em blocos markdown com crases triplas é altíssima. Além disso, saudações de cortesia poluem o início e o fim da mensagem.
+## Valide quatro saídas com o código do repositório
 
-Limpar code fences pode resgatar JSON, mas não corrige campos ou decisões erradas. Nos dados preservados, o modo livre teve 0% de parse; schema chegou a 100% de conformidade, mas somente 44,4% de acerto de negócio. Não confunda robustez sintática com qualidade da decisão.
+Na pasta `0009_saida_estruturada`, com o ambiente Python configurado conforme o [README](../README.md), execute este bloco. Ele importa as regras do laboratório e não acessa o Ollama. Os quatro textos são entradas fixas escolhidas para expor uma diferença de cada vez.
 
-### O modo JSON sintático
+```bash
+PYTHONPATH=src python - <<'PY'
+from structured_lab import TASKS, avaliar
 
-O motor pode restringir a geração à sintaxe JSON. Ainda assim, timeout, limite de tokens ou interrupção podem produzir saída incompleta, e JSON válido pode ser um objeto com campos errados. Faça parsing e validação no consumidor, mesmo em modo JSON.
-
-```json
-{
-  "item_retornado": "televisão",
-  "dias_passados": "10 dias"
+task = next(task for task in TASKS if task["id"] == "roteamento")
+cases = {
+    "truncado": '{"rota": "criar_ticket",',
+    "sem_urgencia": '{"rota": "criar_ticket"}',
+    "rota_errada": '{"rota": "resposta_direta", "urgencia": "alta"}',
+    "rota_esperada": '{"rota": "criar_ticket", "urgencia": "alta"}',
 }
+
+for name, raw in cases.items():
+    parse_ok, schema_ok, value = avaliar(raw, task["schema"])
+    business_ok = task["semantico"](value) if schema_ok else None
+    print(f"{name:<15} parse={parse_ok}  schema={schema_ok}  negocio={business_ok}")
+PY
 ```
 
-O parser tradicional executa com sucesso sem lançar exceções de sintaxe. Contudo, o esquema interno de dados permanece desgovernado. O modelo pode inventar nomes de propriedades diferentes dos esperados pelo backend, converter números em strings ou, pior ainda, devolver um objeto vazio `{}`. Em nossos experimentos com o Llama 3.2 1B sob essa opção genérica, o modelo descobriu que devolver chaves vazias cumpria a exigência de sintaxe válida, entregando um objeto inútil em todas as tentativas.
+![Resultado esperado do validador para JSON truncado, campo ausente, rota errada e rota correta](../assets/07_validacao_terminal.png)
 
-### O contrato formal com JSON Schema
+> **Figura 2.** Resultados esperados para as quatro entradas fixas. No bloco, `None` indica que a lógica pulou a regra de negócio após a falha de estrutura. No CSV do benchmark, as etapas anteriores são registradas como falso para permitir a agregação.
 
-O motor de inferência recebe uma especificação JSON Schema formal que dita rigorosamente as propriedades permitidas, a lista de campos obrigatórios, os tipos primitivos estritos e os valores aceitos em enumerações fechadas.
+Abra [`avaliar()`](../src/structured_lab.py) e siga o caminho inverso a partir da saída. O primeiro `try` chama `json.loads`. O segundo só tenta remover as cercas de Markdown de um bloco, caso o parse direto falhe. Depois, `jsonschema.validate` testa a instância contra o contrato da tarefa. O validador retorna o valor lido mesmo quando o esquema falha. O chamador deve usar o indicador de validação antes de trabalhar com esse valor.
+
+Essa tolerância a cercas permite estudar respostas de modelos pequenos. Se o contrato da sua API exige JSON cru, registre a tolerância como uma decisão do consumidor. Em uma fronteira que rejeita qualquer conteúdo extra, use o parse direto e mantenha um teste de regressão para a cerca e para o texto após o objeto.
+
+---
+
+## Envie o esquema na requisição e conserve a verificação local
+
+A rota `/api/generate` devolve um envelope com métricas e uma propriedade `response`. O texto gerado vive dentro de `response`. Decodificar o envelope HTTP com sucesso diz pouco sobre a validade do texto interno.
+
+O código de [`gerar()`](../src/structured_lab.py) mantém a interface igual para os três modos. Em modo livre, o payload omite `format`. No modo JSON, `format` vale `"json"`. No modo com esquema, `format` recebe o objeto que descreve a tarefa. Para rodar a comparação em seu ambiente, siga as instruções da [API de geração do Ollama](https://docs.ollama.com/api/generate).
+
+Este trecho monta um esquema mais estrito para uma integração de demonstração. A rejeição de campos extras é uma decisão desse exemplo. O benchmark preservado usa o contrato original e não será reclassificado com essas regras novas.
 
 ```python
-PLANNER_SCHEMA = {
+ROUTING_SCHEMA = {
     "type": "object",
     "properties": {
-        "tool": {
+        "rota": {
             "type": "string",
             "enum": ["buscar_politica", "criar_ticket", "resposta_direta"],
         },
-        "confianca": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+        "urgencia": {"type": "string", "enum": ["baixa", "media", "alta"]},
     },
-    "required": ["tool", "confianca"],
+    "required": ["rota", "urgencia"],
     "additionalProperties": False,
 }
 ```
 
-Qualquer token do vocabulário que gere uma chave inexistente, viole a tipagem numérica ou fuja das opções do enum é matematicamente eliminado da amostragem em tempo real durante a geração de cada caractere.
+Conserve os campos indispensáveis no `required`. Descrever uma propriedade em `properties` diz como validá-la quando estiver presente. Para exigir sua presença, use `required`. Use um enum para os estados de negócio que o código sabe tratar. No planner, o contrato histórico aceita qualquer número em `confianca`, inclusive 27. Se a interface precisar de intervalo de 0 a 1, expresse isso com `minimum` e `maximum`. Mesmo dentro da faixa, o número continua sendo uma saída do modelo cuja calibração precisa de avaliação própria.
+
+### O que ocorre durante a geração
+
+Na decodificação livre, o modelo atribui uma pontuação a cada token possível e o gerador escolhe o próximo de acordo com suas opções de amostragem. Com uma restrição de gramática, o motor pode excluir tokens incompatíveis com o prefixo permitido antes de escolher. Depois de abrir uma lista de valores, por exemplo, o conjunto de próximos tokens válidos depende do que já foi escrito. Um token pode até representar mais de um caractere.
+
+![Fluxo conceitual do filtro de próximos tokens em uma gramática](../assets/02.png)
+
+> **Figura 3.** O desenho ilustra pontuações e uma etapa de escolha. A regra aplicada nesse ponto depende do prefixo e do subconjunto de esquema aceito pelo motor.
+
+A implementação e o conjunto de regras suportadas variam com a versão do motor. Se a geração terminar cedo, o objeto pode continuar incompleto. Mantenha o contrato na aplicação e trate recusa, timeout, resposta vazia e JSON truncado como estados observáveis. Em produção, evite aceitar uma saída parcial para “salvar” uma operação de escrita. [Saídas estruturadas do Ollama](https://docs.ollama.com/capabilities/structured-outputs), [especificação JSON Schema 2020-12](https://json-schema.org/draft/2020-12).
 
 ---
 
-## A matemática do Grammar-Guided Sampling sob o capô
+## Rode o teste completo com o modelo local
 
-Para compreender como o Nível 3 restringe a estrutura, sem dispensar validação de parse, é preciso examinar o ciclo autoregressivo de geração de um modelo.
-
-![Mecanismo de Decodificação Constrangida](../assets/02.png)
-
-> Figura 2. Máscara dinâmica de logits guiada por Autômato de Estados Finitos a cada token gerado.
-
-A cada passo de tempo $t$, o modelo processa o contexto acumulado e calcula um vetor de afinidade estatística, chamado de logits não normalizados.
-
-$$\mathbf{z}_t = [z_{t, 1}, z_{t, 2}, \dots, z_{t, V}] \in \mathbb{R}^V$$
-
-onde $V$ representa o tamanho total do vocabulário do tokenizer, que depende do modelo e do tokenizer (não há uma faixa universal).
-
-Em amostragem livre com temperatura $T$, a probabilidade de selecionar determinado token é calculada pela função Softmax.
-
-$$P(\text{token}_i) = \frac{e^{z_{t, i} / T}}{\sum_{j=1}^V e^{z_{t, j} / T}}$$
-
-O runtime converte o subconjunto suportado de JSON Schema em uma gramática e restringe tokens compatíveis com o prefixo gerado. JSON aninhado requer estado de pilha; não é correto reduzir toda gramática livre de contexto a um autômato finito. Nem toda palavra-chave de JSON Schema é suportada pelo motor: valide novamente no consumidor.
-
-Para um schema de objeto, a geração pode começar com whitespace permitido e a abertura `{`. Uma vez aberta a chave, o autômato passa para o estado que exige o nome de uma propriedade declarada. Se o modelo tentar emitir qualquer letra que não inicie uma chave válida, essa transição é considerada proibida.
-
-Para aplicar essa regra fisicamente, o motor calcula o conjunto de tokens válidos no estado atual da máquina de estados. Todos os tokens ilegais têm seus valores de logits sobrescritos para menos infinito.
-
-$$\tilde{z}_{t, i} = \begin{cases} z_{t, i}, & \text{se } i \in V_{\text{válidos}} \\ -\infty, & \text{se } i \notin V_{\text{válidos}} \end{cases}$$
-
-Como a exponencial de menos infinito é exatamente zero, a probabilidade de qualquer token fora da gramática torna-se absolutamente nula na equação da Softmax.
-
-A máscara elimina escolhas incompatíveis com a gramática, não decisões de negócio incorretas entre opções permitidas. Os dados deste laboratório mostram ganho semântico relativo, mas não justificam atribuí-lo a uma suposta redistribuição de atenção nem garantem precisão fora do recorte.
-
----
-
-## O experimento e as evidências empíricas
-
-Para avaliar esse comportamento na prática, construímos um laboratório automatizado cobrindo três casos reais de uso corporativo. O primeiro foi um planejador de suporte técnico encarregado de escolher entre buscar políticas ou abrir tickets. O segundo foi um extrator de entidades para identificar produtos e prazos de devolução em linguagem informal. E o terceiro foi um classificador de incidentes operacionais para atribuir rotas e níveis de urgência.
-
-Avaliamos três modelos compactos em CPU com 54 chamadas distribuídas uniformemente, cobrindo o Qwen 2.5 0.5B, o Qwen 2.5 1.5B e o Llama 3.2 1B.
-
-![Resultados Comparativos Medidos](../assets/03.png)
-
-> Figura 3. Taxa de parse direto, conformidade formal com schema e assertividade semântica medida na máquina.
-
-Os resultados consolidados por nível de contrato demonstram com clareza o salto de maturidade.
-
-| Modo | Parse (%) | Schema (%) | Acerto semântico (%) | Média consolidada (ms) |
-| :--- | ---: | ---: | ---: | ---: |
-| Livre | 0,0 | 0,0 | 0,0 | 3.007,7 |
-| JSON | 88,9 | 0,0 | 0,0 | 1.158,3 |
-| Schema | 100,0 | 100,0 | 44,4 | 400,5 |
-
-Fonte: `data/structured_resumo.csv`, com 18 linhas consolidadas por modo.
-O runner tenta novamente quando parse/schema falham; portanto 54 linhas não
-significam apenas 54 requisições físicas. O parse também admite limpeza de
-code fences. Schema melhorou o contrato neste recorte, mas não resolveu a
-maioria das decisões de negócio: 44,4% de acerto não basta para produção.
-
----
-
-## O mito do retry compensatório e o custo real de latência
-
-Um padrão comum em pipelines frágeis é o loop de retry reativo. Quando o backend falha ao ler o JSON gerado, ele captura a mensagem de erro do parser, monta um novo prompt e reenvia para o modelo tentar consertar a saída.
-
-![Trade-off de Latência e Retry](../assets/04.png)
-
-> Figura 4. O custo real do retry reativo em comparação ao overhead desprezível da máscara de gramática.
-
-Retries aumentam latência e consumo, mas não necessariamente dobram o tempo: o custo depende das duas chamadas e filas. O runner faz no máximo uma nova tentativa de parse/schema, com temperatura diferente e o mesmo prompt; não corrige erros semânticos se o schema passou. Meça recuperação e custo acumulado, imponha limites e evite repetir ações não idempotentes.
-
-Prefira restrição de formato quando disponível, mas mantenha parsing, validação, timeout e uma política de falha. Retries limitados podem tratar falhas transitórias ou truncamento; não substituem avaliação semântica nem justificam repetir indefinidamente.
-
----
-
-## Implementação de produção com Pydantic v2
-
-Em sistemas empresariais em Python, os contratos de dados devem ser mantidos como modelos tipados com Pydantic, aproveitando a extração automática de JSON Schema e a validação ultrarrápida compilada em Rust.
-
-![Arquitetura de Integração em Produção](../assets/05.png)
-
-> Figura 5. Pipeline desacoplado e tipado entre LLMs locais e serviços de backend.
-
-```python
-import json
-import urllib.request
-from typing import Literal
-from pydantic import BaseModel, Field, field_validator
-
-class PlanoAtendimento(BaseModel):
-    tool: Literal["buscar_politica", "criar_ticket", "resposta_direta"] = Field(
-        description="Ferramenta operacional necessária para atender a solicitação."
-    )
-    confianca: float = Field(
-        ge=0.0, le=1.0, description="Nível de certeza da decisão entre 0 e 1."
-    )
-    justificativa: str = Field(
-        description="Breve raciocínio que fundamentou a escolha da ferramenta."
-    )
-
-    @field_validator("justificativa")
-    def validar_justificativa(cls, v: str) -> str:
-        if len(v.strip()) < 5:
-            raise ValueError("Justificativa muito curta.")
-        return v
-
-SCHEMA_PLANO = PlanoAtendimento.model_json_schema()
-
-def executar_triagem_estruturada(pergunta_cliente: str, base_url: str = "http://localhost:11434") -> PlanoAtendimento:
-    prompt = f"Analise a solicitação do cliente e decida o plano de ação: '{pergunta_cliente}'"
-
-    payload = json.dumps({
-        "model": "qwen2.5:0.5b",
-        "prompt": prompt,
-        "stream": False,
-        "format": SCHEMA_PLANO,
-        "options": {"temperature": 0.0, "num_predict": 128}
-    }).encode("utf-8")
-
-    req = urllib.request.Request(
-        f"{base_url}/api/generate",
-        data=payload,
-        headers={"Content-Type": "application/json"}
-    )
-
-    with urllib.request.urlopen(req, timeout=30) as res:
-        resposta_raw = json.loads(res.read().decode("utf-8"))
-
-    return PlanoAtendimento.model_validate_json(resposta_raw["response"])
-```
-
-Esse fluxo valida a saída e produz uma instância tipada ou uma exceção. Trate ValidationError, timeout e truncamento antes de executar ferramentas; schema não garante decisão correta.
-
----
-
-## Decisão sem gerar texto: a baseline de embeddings e a proposta System 1
-
-Se a aplicação só precisa escolher entre rótulos fixos, gerar um objeto longo
-pode ser desnecessário. O laboratório oferece uma alternativa concreta:
-`benchmark_system_one` calcula embeddings com `nomic-embed-text`, compara-os
-com três descrições de rota e escolhe a maior similaridade.
-
-![Decisão direta versus geração](../assets/06.png)
-
-> Figura 6. Comparação conceitual. O código deste repo mede embeddings, não
-> um produto comercial de decisão.
-
-Em `data/system_one_comparativo.json`, essa baseline registrou **12,97 ms de
-média**, p50 de **13,61 ms**, p95 de **17,22 ms** e seis chamadas corretas.
-O nome histórico do arquivo e seus rótulos foram preservados, mas não devem
-ser interpretados como evidência de execução de Jev, Laya ou Kev.
-
-Uma chamada ao encoder não tem complexidade constante em relação ao tamanho
-do texto. Além disso, converter similaridades com softmax não produz, por si
-só, probabilidades calibradas. O catálogo pequeno e o teste de seis chamadas
-também não permitem concluir precisão de 100% em produção.
-
-| Aspecto | LLM com schema | Baseline deste laboratório |
-| :--- | :--- | :--- |
-| Saída | JSON com campos e texto gerados | Um entre três rótulos fixos |
-| Validação | Parsing e schema no consumidor | Rótulo conhecido por construção |
-| Latência média preservada | 400,5 ms | 12,97 ms |
-| Limite da comparação | Extração, classificação e geração | Apenas roteamento simples |
-
-A TypeSafe AI apresenta **Jev** como modelo de decisões tipadas com confiança.
-Isso é uma proposta comercial distinta desta baseline. Não há chamada à API
-Jev neste código, e o link anteriormente citado para `convai/laya` retorna
-404; por isso, não atribuímos arquitetura, licença ou desempenho a Laya/Kev.
-
-O desenho em dois níveis continua útil: um roteador escolhe caminhos simples;
-um LLM atende os casos que exigem geração. Antes de agir, calibre limiares,
-inclua uma opção de abstenção e valide ambos com casos não vistos.
-
----
-
-## O que quebra na prática
-
-Mesmo operando com JSON Schema formal, existem sutilezas que afetam a estabilidade em produção.
-
-A primeira é que a ordem dos campos no JSON influencia o raciocínio do modelo. Em decoders autoregressivos, os tokens são gerados na sequência em que as chaves aparecem na gramática. Se o schema exigir o campo de decisão antes do campo de justificativa, o modelo precisará cravar a resposta antes de ponderar os fatos. Sempre que possível, declare o campo de raciocínio antes da decisão final, permitindo que a própria geração prévia sirva de contexto para a atenção neural.
-
-A segunda é que esquemas com listas de opções excessivamente extensas tornam a compilação da gramática pesada. Quando o catálogo de opções ultrapassa centenas de itens, o ideal é decompor a escolha em duas etapas, primeiro identificando uma categoria macro e em seguida filtrando o subconjunto correspondente.
-
----
-
-## Execução prática do laboratório passo a passo
-
-Os códigos completos do laboratório de saída estruturada e dos benchmarks de System 1 estão versionados no repositório.
-
-### Execução pelo terminal
+A partir da pasta do módulo anterior, mantenha o Docker Compose em execução. No primeiro teste use um modelo de chat e baixe também o modelo de embeddings, porque o roteiro mede uma rota alternativa usando essa segunda dependência.
 
 ```bash
-cd pathbit-academy-ai/0009_saida_estruturada
+docker exec pathbit-ollama ollama pull qwen2.5:0.5b
+docker exec pathbit-ollama ollama pull nomic-embed-text
+curl -fsS http://127.0.0.1:11434/api/tags
 
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-
-python src/structured_lab.py --repeat 2
+python src/structured_lab.py --base-url http://127.0.0.1:11434 \
+  --models qwen2.5:0.5b --repeat 1 --skip-plots
 ```
 
-A execução gera todos os dados brutos e relatórios consolidados diretamente na pasta `data`. O arquivo `structured_resultados.csv` contém o registro individual de cada chamada e seus respectivos tempos, enquanto `structured_resumo.csv` compila as taxas de parse e conformidade por modelo. Os tempos do decisor em passada única ficam registrados em `system_one_comparativo.json`, o relatório analítico formatado pode ser conferido em `structured_relatorio.md`, e a visualização gráfica dos resultados está salva em `structured_comparativo.png`.
+Rode a última linha em `0009_saida_estruturada`. O script escreve os CSVs e o relatório em `data/` dentro da pasta do módulo. Para guardar o histórico do Git junto com o seu experimento, rode o laboratório em uma cópia de trabalho separada. O [notebook](../notebooks/saida_estruturada.ipynb) usa os mesmos dados e permite conferir como o resultado chega ao gráfico.
 
-### Execução pelo notebook
+Na comparação há três tarefas. A segunda via da fatura pede a escolha de uma ferramenta. A devolução do televisor pede produto e prazo, exigindo que o modelo conserve “10 dias”. O caso do erro 500 pede rota e urgência. Para cada combinação de tarefa, modelo e modo, a primeira chamada usa temperatura 0. Se falhar o parse ou o esquema, o código faz uma segunda chamada com temperatura 0,7. Um resultado estruturalmente válido com decisão errada termina aquela linha sem pedir outra geração.
 
-O fluxo também pode ser acompanhado passo a passo no notebook.
+Abra [`structured_resultados.csv`](../data/structured_resultados.csv) e filtre `tarefa=roteamento`. Compare `modo`, `tentativa`, `schema_ok`, `semantico_ok` e o trecho guardado em `resposta`. Cada linha representa uma decisão consolidada. Quando houve duas tentativas, `total_ms` e `tokens` somam as duas, e a coluna de resposta guarda até 160 caracteres do texto da última. O CSV permite encontrar um caso final ruim. Ele não preserva a primeira resposta bruta de um retry.
 
-```bash
-python src/main.py
-```
+## O que os números históricos mostram
 
-O [relatório versionado](../data/structured_relatorio.md) registra os resultados da execução de referência.
+A tabela vem do resultado incluído no repositório, produzido com Ollama 0.35.1. Ela descreve 18 casos consolidados por modo, três modelos e os prompts deste exercício. `parse_ok` inclui o resgate de cercas do validador. A latência é a média de ponta a ponta do cliente para aquela linha.
+
+| Modo | JSON lido | Esquema válido | Decisão esperada | Média por caso |
+| --- | ---: | ---: | ---: | ---: |
+| Livre | 0/18 | 0/18 | 0/18 | 3.007,7 ms |
+| JSON | 16/18 | 0/18 | 0/18 | 1.158,3 ms |
+| Esquema | 18/18 | 18/18 | 8/18 | 400,5 ms |
+
+![Percentuais medidos de parse, esquema e decisão e latência média dos três modos](../assets/03.png)
+
+> **Figura 4.** Resultados agregados do CSV publicado. A distância entre a barra de esquema e a de decisão é a observação central. [Relatório da execução](../data/structured_relatorio.md).
+
+Se a sua análise terminar na taxa de parse, o modo JSON parece atender ao contrato na maior parte dos casos. Troque para a coluna seguinte e aparecem 16 respostas lidas que, mesmo assim, não satisfazem os campos esperados. Olhe então para o modo com esquema. Das 18 saídas válidas, dez ainda não correspondem ao gabarito.
+
+A diferença de latência combina tempo de execução, número de tokens e ocorrência de uma segunda tentativa. Ela não mede isoladamente o custo da gramática. Para medir esse custo, mantenha a política de retry e as opções de geração constantes, isole a primeira chamada, registre o volume de tokens e separe as chamadas frias das aquecidas. Aí você consegue discutir o efeito da restrição com outras variáveis sob controle.
+
+![Latência consolidada, contagem de tokens e política de retry no benchmark](../assets/04.png)
+
+> **Figura 5.** A tabela reúne latência e números de saída. O tempo por caso pode reunir mais de uma tentativa.
+
+Ao repetir o benchmark, procure o caso que combina esquema válido com decisão errada. Abra a linha correspondente no CSV novo e compare a resposta final com o predicado de negócio.
+
+### Quando a pergunta só pede um rótulo
+
+O laboratório também mede `nomic-embed-text` como roteador por similaridade. Ele transforma cada entrada em um vetor e o compara com exemplos representativos de três rotas. A maior similaridade escolhe o rótulo. O código entrega esse resultado como estrutura definida pela aplicação, sem gerar texto token a token.
+
+![Métricas registradas do roteador por similaridade com três rótulos](../assets/06.png)
+
+> **Figura 6.** Resultado histórico do roteador por embeddings. Os vetores das classes foram preparados antes do cronômetro.
+
+Na amostra histórica, a posição central superior foi 13,61 ms. O runner rotula esse valor como p50 e, com seis chamadas, escolhe o maior dos dois valores centrais. O tempo inclui calcular o embedding da consulta e classificá-la. Os vetores das rotas já estavam calculados. O caminho não extrai argumentos nem produz uma resposta ao cliente. Para experimentar com seus dados, reserve mensagens que não entraram nos exemplos e observe também quais duas rotas ficam mais próximas em casos de empate. A pontuação de similaridade continua sendo uma medida vetorial, não uma probabilidade de decisão certa. [Resultados do roteador](../data/system_one_comparativo.json).
 
 ---
 
-## Próximos passos
+## Da decisão proposta ao efeito no sistema
 
-Com validação de saída e limites semânticos explícitos, o próximo passo conecta decisões à execução de ferramentas. Contratos devem ser verificados antes de qualquer efeito colateral.
+Uma integração de atendimento pode aplicar o seguinte percurso: validar o envelope recebido, decodificar o objeto, validar sua estrutura, consultar as permissões e a política vigente, gravar a decisão ou encaminhar o caso para revisão. Em chamadas que alteram dados, coloque o mecanismo de idempotência ao lado da escrita. Um segundo pedido de classificação não pode gerar dois chamados para o mesmo incidente.
 
-No [Artigo 0010 (MCP Local via Stdio)](../../0010_mcp_local/article/ARTICLE.md), descobrimos ferramentas e medimos chamadas por pipes. Stdio reduz exposição de rede, mas não é sandbox; tempos são medições locais, não garantias do protocolo.
+![Etapas do contrato de saída até uma escrita validada](../assets/05.png)
 
----
+> **Figura 7.** A leitura da resposta, a validação e a operação são pontos distintos de diagnóstico. O resultado da inferência alimenta somente a proposta.
 
-## Referências
+Quando o serviço rejeita uma saída, prefira guardar metadados que permitam investigar: versão do modelo, versão do esquema, ID de correlação, estágio da falha e latência. Retire do log os dados pessoais e os segredos do atendimento. Se fizer retry, delimite o caso que pode ganhar com outra chamada e preserve a razão da primeira recusa. Repetir a mesma estrutura dificilmente resolve uma rota que já tinha forma correta e contrariava a política.
 
-- [Documentação oficial de saídas estruturadas do Ollama](https://ollama.com/blog/structured-outputs)
-- [Especificação formal do JSON Schema Draft 2020-12](https://json-schema.org/)
-- [Documentação técnica sobre amostragem guiada por gramática no llama.cpp](https://github.com/ggerganov/llama.cpp/blob/master/grammars/README.md)
-- [Documentação oficial do framework de validação tipada Pydantic](https://docs.pydantic.dev/)
-- [Documentação e especificações do modelo Jev pela TypeSafe AI](https://typesafe.ai)
-- [Model card do embedding usado na baseline local](https://huggingface.co/nomic-ai/nomic-embed-text-v1.5)
-- [Obra Thinking Fast and Slow de Daniel Kahneman](https://en.wikipedia.org/wiki/Thinking,_Fast_and_Slow)
+### Exercício de revisão com mudança sob controle
 
----
+1. Acrescente ao teste das quatro saídas uma urgência fora da enumeração e confira a falha de esquema.
+2. Acrescente um campo `canal` sem alterar o CSV histórico. Rode primeiro com a definição do laboratório e depois com `additionalProperties: False` na cópia do contrato. Compare as duas decisões de formato.
+3. Escreva duas mensagens de erro 500 que exijam encaminhamentos diferentes conforme a política do seu exemplo. Defina os rótulos antes de chamar o modelo. A tarefa continua igual no tipo, mas muda na interpretação.
+4. Confira o total de chamados que seria criado com cada modo. Preserve as entradas rejeitadas para explicar se houve falha de leitura, formato ou decisão.
 
-Repositório oficial no GitHub no endereço https://github.com/pathbit/pathbit-academy-ai no módulo 0009_saida_estruturada.
-
-#EngenhariaDeSoftware #InteligenciaArtificial #LLM #Ollama #JSONSchema #Python #PathbitAcademy #SystemOne #Pydantic
+No próximo módulo, o [MCP local](../../0010_mcp_local/article/ARTICLE.md) usa contratos de ferramentas com parâmetros e respostas observáveis. Leve a mesma disciplina para a ferramenta: receber argumentos válidos é apenas a primeira condição para executar a operação pedida.

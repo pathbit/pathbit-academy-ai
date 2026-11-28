@@ -1,9 +1,7 @@
 {
-  "paradigma": "System 1 (Single Forward Pass / Decisor Direto)",
+  "paradigma": "Roteador por embeddings nomic-embed-text e similaridade de cosseno",
   "frameworks_referencia": [
-    "Laya (Open-Source)",
-    "Jev (TypeSafe AI)",
-    "Kev"
+    "Ollama / nomic-embed-text"
   ],
   "chamadas_avaliadas": 6,
   "acuracia_pct": 100.0,

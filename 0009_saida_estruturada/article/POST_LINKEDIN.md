@@ -1,16 +1,17 @@
-Pedir JSON para um modelo de linguagem em texto livre é assumir débito técnico no primeiro deploy.
+# O JSON passou. O chamado foi para a fila errada.
 
-Todo desenvolvedor que já trabalhou com LLMs em produção já escreveu algo como "responda apenas em formato JSON, sem explicações". No começo parece funcionar. Na semana seguinte, o modelo insere uma saudação antes da chave, altera o nome de um campo ou devolve uma resposta incompleta. O backend tenta fazer o parse, lança uma exceção e o pipeline para.
+“Meu app está com erro 500 desde ontem.”
 
-No módulo 0009 da Pathbit Academy, mostramos por que prompt não é contrato e como implementar saída estruturada com garantias matemáticas de conformidade.
+No laboratório da Pathbit Academy, `{"rota":"resposta_direta","urgencia":"alta"}` é um objeto válido. O parser lê. O esquema aceita. Pela regra do exercício, o cliente deveria ir para a rota `criar_ticket`.
 
-Analisamos o Grammar-Guided Sampling por baixo dos panos. Em vez de torcer para o modelo gerar a sintaxe certa, o JSON Schema é compilado em uma máquina de estados finitos que mascara os logits a cada token gerado. Qualquer caractere que viole a gramática recebe probabilidade zero antes mesmo da amostragem. O resultado é 100% de conformidade sintática e tipada.
+A figura mostra os quatro resultados esperados com as entradas fixas do exemplo. Começa com JSON truncado, passa por um campo faltando e chega a dois objetos com exatamente a mesma estrutura e decisões diferentes.
 
-A baseline local usa embeddings para escolher entre três rotas; não mede produtos comerciais e não substitui validação semântica.
+![Resultados esperados para as quatro entradas do exemplo](../assets/07_validacao_terminal.png)
 
-O laboratório prático com validação Pydantic, scripts de benchmark e dados reais medidos na máquina já está disponível no repositório.
+No resultado histórico, o modo com esquema entregou 18 de 18 objetos válidos. Só oito seguiram o gabarito de negócio. Se a sua métrica termina na validação do JSON, há dez decisões desse conjunto que ficam fora da conversa.
 
-Repositório no GitHub: https://github.com/pathbit/pathbit-academy-ai
-Módulo: 0009_saida_estruturada
+O artigo traz o teste de quatro entradas para rodar sem Ollama e o benchmark local para comparar os três modos. O exercício que fica é simples. Pegue uma decisão que sua aplicação toma hoje e escreva um exemplo de resposta bem formada que deveria ser recusada.
 
-#EngenhariaDeSoftware #InteligenciaArtificial #LLM #Ollama #JSONSchema #Python #PathbitAcademy #SystemOne
+[Leia e execute o módulo 0009 da Pathbit Academy](https://github.com/pathbit/pathbit-academy-ai/blob/master/0009_saida_estruturada/article/ARTICLE.md).
+
+#InteligenciaArtificial #Ollama #EngenhariaDeSoftware

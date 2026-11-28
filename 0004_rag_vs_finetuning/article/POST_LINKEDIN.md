@@ -17,4 +17,6 @@ O laboratório prático em Python, com notebooks interativos e simulações comp
 Repositório no GitHub: https://github.com/pathbit/pathbit-academy-ai
 Módulo: 0004_rag_vs_finetuning
 
+![Comparação entre RAG e fine-tuning](../assets/04.png)
+
 #InteligenciaArtificial #RAG #FineTuning #LoRA #QLoRA #VectorDatabase #Python #EngenhariaDeSoftware #PathbitAcademy

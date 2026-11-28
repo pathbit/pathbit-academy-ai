@@ -1,7 +1,5 @@
 # 0014 — Citações verificáveis em RAG
 
-[English](README.en.md) · [Español](README.es.md)
-
 Valide IDs de fonte e citações literais contra o contexto entregue e devolva uma abstenção quando uma citação falhar.
 
 ## Pré-requisitos obrigatórios
@@ -48,6 +46,7 @@ No Windows, troque `.venv/bin/python` por `.venv\Scripts\python.exe`.
 - [Artigo completo](article/ARTICLE.md)
 - [Artigo para LinkedIn](article/ARTICLE_LINKEDIN.md)
 - [Post para LinkedIn](article/POST_LINKEDIN.md)
+- [Destaques em PDF](highlight/highlights_0014.pdf)
 
 ---
 

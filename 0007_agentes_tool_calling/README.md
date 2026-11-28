@@ -11,7 +11,7 @@
 
 ### Resumo
 
-Este módulo mostra um agente local com autonomia limitada por arquitetura, não por promessa de marketing:
+Acompanhe as etapas que escolhem e executam as ferramentas de um agente local.
 
 - guardrail e regra de negócio antes de qualquer execução
 - planner que escolhe tool via JSON
@@ -42,9 +42,11 @@ Tudo roda sem chave de API.
 
 ---
 
-### Como Executar
+### Início rápido
 
-#### Pré-requisitos
+Abra [o log dos cinco cenários de referência](article/ARTICLE.md#4-abra-o-log-antes-de-interpretar-a-taxa-de-acerto) e compare a origem das decisões sem carregar modelos. O código do chamado devolve um resultado local simulado.
+
+#### Pré-requisitos da execução com modelos
 
 - Python 3.14+ (compatível com 3.10+) executando em ambiente virtual isolado (.venv)
 - Sem cobrança de API por token após baixar modelos; hardware e energia têm custo
@@ -74,9 +76,7 @@ python src/main.py
 python src/agent_runner.py --limit 5
 ```
 
-O limite percorre os cinco primeiros cenários. Execute em uma cópia do
-módulo para preservar a trilha de referência em `data/`. Os chamados
-gerados são resultados do laboratório local.
+O limite percorre os cinco primeiros cenários. Execute em uma cópia do módulo para preservar os registros de referência em `data/`.
 
 #### Executar notebook diretamente
 
@@ -114,5 +114,12 @@ Arquivos de suporte usados pelo runner:
 
 ### Links úteis
 
-- Artigo completo: [ARTICLE.md](./article/ARTICLE.md)
+- [Artigo completo](article/ARTICLE.md)
+- [Artigo para LinkedIn](article/ARTICLE_LINKEDIN.md)
+- [Post para LinkedIn](article/POST_LINKEDIN.md)
+- [Destaques em PDF](highlight/highlights_0007.pdf)
 - Repositório: [pathbit-academy-ai](https://github.com/pathbit/pathbit-academy-ai)
+
+---
+
+Developed with ❤️ by [Pathbit](https://www.pathbit.com.br/)

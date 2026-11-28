@@ -1,21 +1,34 @@
-# Quando juntar duas buscas piora o resultado do RAG
+# A busca híbrida acertou o primeiro resultado. A evidência ficou incompleta.
 
-No laboratório, uma busca conta termos em comum e outra ordena por similaridade vetorial. A fusão RRF usa a posição de cada resultado. A consulta `RE42` mostra um caso em que uma fonte secundária sobe porque aparece nos dois rankings.
+Uma pessoa pergunta “protocolo RE42 para cancelar reserva”. A busca híbrida devolve a política certa em primeiro. O sistema pode parecer pronto para responder. Só que o documento que informa onde consultar o alerta aparece em terceiro, e o modelo recebe apenas dois trechos.
 
-## O que cada busca consegue enxergar
+Esse foi o caso mais interessante no laboratório de busca híbrida da Academy IA. Fixei seis documentos, duas consultas rotuladas e vetores didáticos de três dimensões. A CLI roda offline e mostra quais documentos cada método entregou.
 
-O laboratório lexical conta termos únicos que ocorrem na consulta e no documento com caixa normalizada. É uma maneira de inspecionar a lógica em poucas linhas. Em uma aplicação real, um índice com BM25 ou técnica equivalente pode tratar melhor a frequência e a raridade dos termos. A busca vetorial usa similaridade de cosseno com vetores pequenos escritos no [conjunto de dados](https://github.com/pathbit/pathbit-academy-ai/blob/master/0012_busca_hibrida/data/search.json). Eles representam ordens controladas para o exercício. Ao usar embeddings reais, gere vetores para consultas e documentos com o mesmo modelo.
+## Por que a fusão põe o aviso genérico na frente
 
-Pontuações menores ou iguais a zero ficam de fora. Cada método ordena seus candidatos e entrega até três IDs. A fusão recebe esses candidatos, então aumentar apenas o corte final não recupera o que nunca entrou em nenhuma lista.
+A busca lexical do laboratório conta termos em comum. A vetorial ordena por similaridade de cosseno. Cada lista descarta escores não positivos e entrega até três candidatos.
 
-## Una as posições com Reciprocal Rank Fusion
+Na consulta sobre o protocolo de cancelamento, `rain-policy` lidera as duas buscas. A busca lexical põe `notification` em segundo e a vetorial põe esse mesmo documento em terceiro. O trecho relevante `weather-alert` aparece em segundo apenas no ranking vetorial.
 
-Para um documento na posição `r`, conte `1 / (60 + r)` a partir de `r = 1`. Some as contribuições das listas em que o documento aparece. Uma entrada nas posições 1 e 2 soma `1/61 + 1/62`, cerca de `0,03252`. Uma entrada que aparece apenas em primeiro soma cerca de `0,01639`. O método usa posições para combinar rankings com escalas diferentes. [Artigo original sobre RRF](https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf).
+A Reciprocal Rank Fusion soma `1 / (60 + posição)` para cada lista em que o ID aparece. Assim, `notification` recebe cerca de 0,0320 e `weather-alert` recebe cerca de 0,0161. A fusão dá a segunda posição a `notification`. Os dois sinais concordaram sobre um documento que não pertence ao gabarito daquela pergunta.
 
-## Faça o experimento no seu terminal
+![Contribuição da posição de cada candidato na fusão do caso RE42](../assets/02.png)
 
-Com dois resultados, o recall híbrido cai de `1,0` para `0,5` em relação à busca vetorial. A primeira resposta relevante continua no lugar. Rode com `--top 2` e `--top 3` e compare quais IDs ficaram de fora.
+## Duas métricas contam histórias diferentes
 
-[Artigo completo e notebook no GitHub](https://github.com/pathbit/pathbit-academy-ai/tree/master/0012_busca_hibrida)
+Com `--top 2`, o ranking híbrido encontra um de dois documentos pertinentes ao caso RE42. O Recall@2 é 0,5. Seu primeiro resultado é pertinente, então RR@2 permanece 1,0. A busca vetorial acha os dois relevantes com o mesmo corte. Com `--top 3`, a fusão inclui o alerta e chega a Recall@3 de 1,0.
 
-Developed with ❤️ by [Pathbit](https://www.pathbit.com.br/)
+Na outra consulta, “redefinir senha”, o ranking híbrido já recupera os dois documentos relevantes com o corte 2. O registro por consulta mantém essa diferença visível. Os dois casos servem para entender a mecânica da fusão; para escolher uma estratégia em produção, rotule consultas de código, paráfrases e perguntas que dependem de várias fontes.
+
+## Reproduza, depois investigue o empate
+
+Na pasta do módulo, execute com Python 3.10+.
+
+```bash
+python3 src/main.py --top 2
+python3 src/main.py --top 3
+```
+
+Compare `results` antes de olhar as métricas. Depois faça uma cópia do dataset e reduza `candidate_depth` de 3 para 2. O aviso deixa de ocupar a terceira posição vetorial e empata no escore de fusão com o alerta. O desempate pelo ID ainda favorece o aviso. O caso mostra por que vale guardar os candidatos antes e depois de fundir. Quando evidência some, a equipe consegue localizar a decisão que mudou a lista.
+
+O [laboratório com notebook e dados rotulados](https://github.com/pathbit/pathbit-academy-ai/tree/master/0012_busca_hibrida) integra a Academy IA da [Pathbit](https://www.pathbit.com.br/). O próximo módulo investiga o que acontece quando a lista recuperada compete com um orçamento de contexto.

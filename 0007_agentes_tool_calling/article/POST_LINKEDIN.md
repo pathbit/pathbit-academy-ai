@@ -1,20 +1,13 @@
-Agente inteligente sem controle de risco não é automação. É incidente em produção esperando para acontecer.
+O assistente abriu o chamado porque entendeu o incidente ou porque uma regra encontrou “erro 500”?
 
-A maioria das demonstrações de agentes autônomos falha no primeiro choque com a realidade operacional: ferramentas disparadas sem validação de tipos, chamadas fantasmas de APIs e zero rastreabilidade do que o modelo decidiu.
+Nos registros do laboratório de tool calling da Academy IA, três ações vieram de regras, uma veio do planner e uma entrada foi bloqueada antes da escolha. A origem muda o que devemos testar.
 
-No módulo 0007 da Pathbit Academy, construímos um agente híbrido e observável em Python com foco em contenção de risco e governança corporativa.
+O artigo mostra como ler o log, o que acontece com um plano malformado e por que uma ação simulada exige outro desenho quando passa a alterar dados reais.
 
-Analisamos a arquitetura de defesa em profundidade sob o capô:
-- Guardrails determinísticos para interceptar dados sensíveis e credenciais antes de qualquer inferência.
-- Regras de negócio estáticas que resolvem intenções óbvias sem gastar tokens desnecessários.
-- Um planner constrangido em JSON estruturado com contrato estrito de tool, argumento e justificativa.
-- Roteamento semântico por embeddings como rede de segurança para salvar a execução caso o modelo emita sintaxe malformada.
-- Desacoplamento cirúrgico entre decisão, execução de efeitos colaterais e síntese da resposta ao usuário.
-- Trilha forense de auditoria gravando cada transição de estado e latência em CSV.
+📎 Artigo, código, registros e notebook
 
-O laboratório prático em Python, executando 100% local em CPU com o Qwen 2.5 0.5B e Sentence-BERT, já está disponível no nosso repositório open-source.
+https://github.com/pathbit/pathbit-academy-ai/tree/master/0007_agentes_tool_calling
 
-Repositório no GitHub: https://github.com/pathbit/pathbit-academy-ai
-Módulo: 0007_agentes_tool_calling
+![Quem escolheu a ação?](../assets/06.png)
 
-#InteligenciaArtificial #AgentesAI #ToolCalling #ReAct #Qwen #Python #EngenhariaDeSoftware #PathbitAcademy
+#AgentesIA #ToolCalling #Python #PathbitAcademy

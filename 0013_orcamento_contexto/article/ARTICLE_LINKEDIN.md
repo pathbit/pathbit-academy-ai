@@ -1,29 +1,35 @@
-# Quais trechos chegam ao modelo quando o contexto tem limite?
+# Seu RAG recuperou quatro trechos. Quais entram na requisição?
 
-Na pergunta sobre estorno, os dois documentos mais parecidos podem ser da mesma fonte. Uma cota por fonte abre espaço para um trecho de cobrança que responde à parte da pergunta sobre prazos.
+Uma pessoa pergunta como pedir o estorno e onde conferir o prazo. O primeiro trecho explica como fazer o pedido. O segundo fala do histórico. O terceiro é um apêndice de exceções. A instrução de prazo vem em quarto.
 
-## Meça aquilo que vai para a requisição
+Se o sistema montar o contexto só pela ordem de relevância, os dois trechos da mesma fonte podem ocupar o orçamento. O gerador recebe informações sobre como pedir e acompanhar o estorno, mas perde justamente onde conferir o prazo.
 
-O exemplo conta os bytes de `{"documents":[...]}` depois de serializar JSON compacto em UTF-8. Cada entrada inclui `id`, `source` e `text`. Conta aspas, chaves, separadores e caracteres multibyte que aparecem em `estorno é solicitado`. O relatório externo inclui `bytes_used`, `context` e motivos de exclusão. A medida refere-se ao JSON interno que você obtém ao interpretar `context`.
+## Relevância e cobertura tomam decisões diferentes
 
-Uma API de modelos normalmente limita tokens, e pode ter limites de payload também. Para planejar a produção, conte tokens com o tokenizer adequado à requisição completa, incluindo mensagens, instruções e ferramentas, e reserve espaço para a resposta. O laboratório usa bytes para repetir a mesma medição sem depender de um modelo.
+No laboratório da Academy IA, a seleção ordena por escore, percorre os candidatos e testa cada adição na versão JSON já serializada. Uma cota limita quantos trechos por fonte podem entrar. Se um candidato não couber, a seleção continua. Assim, um parágrafo curto pode chegar ao contexto depois que o apêndice maior foi descartado.
 
-## Use uma cota quando a mesma fonte domina
+Rodando com orçamento de 245 bytes e cota de um, entram `refund-summary` e `refund-window`, em 214 bytes. Com os mesmos 245 bytes e cota de dois, o histórico entra no lugar da instrução de prazo. O contexto fica três bytes menor e perde uma das fontes.
 
-Os [trechos de exemplo](https://github.com/pathbit/pathbit-academy-ai/blob/master/0013_orcamento_contexto/data/context.json) são ordenados por relevância e desempate por ID. O empacotador verifica a cota de fonte, mede o envelope com o próximo trecho e registra `source_limit` ou `byte_budget` quando a inclusão falha. Um trecho curto no fim da lista ainda pode caber depois que um anterior ficou de fora.
+![Quatro execuções variando cota por fonte e tamanho do payload](../assets/03.png)
 
-| Teto e cota | Contexto que cabe | Bytes |
-| --- | --- | --- |
-| `245`, uma entrada por fonte | `refund-summary` e `refund-window` | 214 |
-| `120`, uma entrada por fonte | `refund-summary` | Confira `bytes_used` no relatório |
-| `245`, duas entradas por fonte | `refund-summary` e `refund-history` | 211 |
+A cota foi útil neste conjunto porque duas passagens de `returns` competiam com a passagem de `billing`. Imagine agora duas instruções necessárias vindas da mesma política. Nesse cenário, a cota de um poderia jogar fora uma evidência indispensável. A unidade de agrupamento, a pergunta e o conteúdo disponível precisam aparecer na avaliação.
 
-Na última linha, os dois trechos de `returns` deixam pouco espaço para `billing`. A redução de três bytes no resultado significa que os dois trechos escolhidos são menores juntos. Ela não indica melhora na cobertura da pergunta sobre prazos. Use a coluna de exclusões para explicar a decisão.
+## Meça o JSON que será enviado
 
-## Faça o experimento no seu terminal
+O tamanho inclui chaves, aspas, separadores e texto em UTF-8. A palavra `já` tem dois caracteres, mas três bytes em UTF-8. Uma aspa dentro do texto também ganha escape no JSON. Por isso o código mede o payload serializado em vez de somar o comprimento do texto de cada candidato.
 
-No exercício, `245` bytes com cota de um preservam duas fontes. Aumentar a cota produz um pacote três bytes menor e perde a evidência de cobrança. Compare a seleção e os motivos do descarte antes de medir só o tamanho.
+A conta em bytes vale para o payload interno do relatório. Se sua aplicação também limita a janela do modelo, conte os tokens deles com a representação e os limites do provedor, incluindo instruções, pergunta e espaço para a resposta.
 
-[Artigo completo e notebook no GitHub](https://github.com/pathbit/pathbit-academy-ai/tree/master/0013_orcamento_contexto)
+## Compare a cota e a fronteira do envelope
 
-Developed with ❤️ by [Pathbit](https://www.pathbit.com.br/)
+Na pasta do módulo, use Python 3.10 ou superior:
+
+```bash
+python3 src/main.py --bytes 245 --per-source 1
+python3 src/main.py --bytes 245 --per-source 2
+python3 src/main.py --bytes 16 --per-source 1
+```
+
+Abra o campo `skipped`. Na primeira execução ele identifica o histórico como `source_limit`. Na segunda ele identifica a passagem de cobrança como `byte_budget`. Com 16 bytes cabe exatamente `{"documents":[]}`. Com 15 o envelope fica inviável e a CLI sinaliza erro de configuração. Isso distingue um contexto vazio válido de um limite impossível.
+
+O [módulo com notebook e exemplos de serialização](https://github.com/pathbit/pathbit-academy-ai/tree/master/0013_orcamento_contexto) integra a Academy IA da [Pathbit](https://www.pathbit.com.br/). O próximo exercício conecta o contexto efetivamente enviado a um verificador de citações.

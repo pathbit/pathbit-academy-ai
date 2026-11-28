@@ -11,13 +11,13 @@
 
 ### Resumo
 
-Este módulo demonstra a implementação prática e isolada do **Model Context Protocol (MCP)** da Anthropic, conectando um servidor MCP local via transporte `stdio` a modelos locais de inferência no Ollama (`qwen2.5:0.5b`, `qwen2.5:1.5b` e `llama3.2:1b`):
+Abra uma sessão **Model Context Protocol (MCP)** via `stdio` e, em seguida, deixe os modelos locais `qwen2.5:0.5b`, `qwen2.5:1.5b` e `llama3.2:1b` proporem chamadas por meio de Ollama.
 
-- **Transporte Stdio Seguro:** Comunicação IPC via `stdin`/`stdout` sem abrir portas de rede locais nem depender de tráfego externo.
-- **Descoberta Dinâmica de Ferramentas:** Uso de `session.list_tools()` para desacoplar o agente do catálogo de funções corporativas.
-- **Loop Agêntico Completo:** O Ollama atua como planner sob JSON Schema constrangido (módulo 0009), chamando a ferramenta MCP correspondente via `session.call_tool()`.
-- **Medição Cirúrgica de Overhead:** 50 chamadas históricas registram p50 de 0,99 ms e p95 de 1,53 ms; a execução do planner registra médias de chamada de 4,7 a 7,5 ms. Não é um SLA.
-- **Trilha de Auditoria Forense:** Registro estruturado de decisões em CSV/JSONL para governança em ambientes regulados.
+- O servidor de ferramentas se comunica com o cliente por `stdin` e `stdout`. A consulta a Ollama usa HTTP em um caminho separado.
+- O cliente descobre três ferramentas de demonstração com `session.list_tools()`.
+- Ollama propõe o plano. O cliente valida o formato e, quando aplicável, chama a ferramenta via `session.call_tool()`.
+- A série de 50 chamadas isoladas de uma ferramenta já inicializada registrou p50 de 0,99 ms e p95 de 1,53 ms. O teste com planner tem outro recorte.
+- Consulte o CSV para acompanhar decisões, resultados e tempo por etapa.
 
 ---
 
@@ -37,16 +37,18 @@ Este módulo demonstra a implementação prática e isolada do **Model Context P
 - `article/ARTICLE.md` - Conteúdo técnico completo com diagramas e explicações aprofundadas.
 - `article/ARTICLE_LINKEDIN.md` - Versão formatada para publicação no LinkedIn Pulse.
 - `article/POST_LINKEDIN.md` - Post conciso para o feed do LinkedIn.
-- `assets/` e `highlight/` - Imagens técnicas em 1920x1080 e apresentação em PDF de alta resolução.
+- `assets/` e `highlight/` - Figuras técnicas e [destaques em PDF](highlight/highlights_0010.pdf).
 - `data/` - Catálogo de tools descobertas, métricas de protocolo e auditoria de chamadas agênticas.
 - `notebooks/` - Notebook interativo passo a passo.
 - `src/` - Servidor MCP (`mcp_server.py`), laboratório (`mcp_lab.py`) e launcher (`main.py`).
 
 ---
 
-### Como Executar
+### Início rápido
 
-#### Pré-requisitos
+Para inspecionar o servidor antes de instalar Ollama, prepare o ambiente Python e execute [a sessão MCP sem modelo](article/ARTICLE.md#3-faça-a-primeira-chamada-sem-ollama) do artigo.
+
+#### Pré-requisitos do laboratório com modelo
 
 1. **Ollama em Execução:**
    ```bash
@@ -104,11 +106,11 @@ python src/main.py
 Ao executar o laboratório, você terá:
 
 - `data/catalogo_tools.json` - catálogo de ferramentas descobertas dinamicamente em runtime via `session.list_tools()`
-- `data/mcp_latencia_protocolo.json` - medição isolada de 50 chamadas de transporte stdio (p50 de 0.99 ms)
-- `data/mcp_resultados.csv` - trilha de auditoria forense linha a linha de cada decisão agêntica
+- `data/mcp_latencia_protocolo.json` - medição isolada de 50 chamadas de transporte stdio (p50 de 0,99 ms)
+- `data/mcp_resultados.csv` - escolha, gabarito, indicadores de validação e tempos por consulta
 - `data/mcp_resumo.csv` - consolidação de conformidade, acerto de ferramenta e latência por modelo
 - `data/mcp_relatorio.md` - relatório técnico executivo consolidado
-- `data/mcp_comparativo.png` - gráfico comparativo de latência do planner vs overhead do protocolo MCP
+- `data/mcp_comparativo.png` - gráfico de latência de planejamento e das chamadas de ferramenta
 
 ---
 
@@ -131,6 +133,7 @@ Ao executar o laboratório, você terá:
 
 ### Licença e Créditos
 
-Desenvolvido com dedicação pela equipe de engenharia da **[Pathbit](https://pathbit.com)**.
-Código e artigos distribuídos sob a licença MIT.
+Código e artigos sob a [licença MIT](../LICENSE).
+
+Developed with ❤️ by [Pathbit](https://www.pathbit.com.br/)
 

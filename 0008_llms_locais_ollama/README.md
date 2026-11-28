@@ -11,15 +11,15 @@
 
 ### Resumo
 
-Este módulo prova que um stack de IA roda 100% local, sem chave de API, sem conta externa e sem custo por token:
+Este módulo mostra como baixar modelos e executar chat e embeddings via Ollama em loopback, sem chave de API externa nas chamadas do exercício.
 
 - Ollama em container Docker com volume persistente de modelos
 - benchmark de chat com TTFT, latência total e vazão (tokens/s) por modelo
-- saída estruturada em JSON forçado (`format: "json"`) com taxa de acerto de tool
+- modo JSON (`format: "json"`) com parse, presença de campos e taxa de acerto da ferramenta
 - retrieval semântico com `nomic-embed-text` na mesma instância
 - relatório markdown, CSVs e gráfico comparativo como evidência da execução
 
-Tudo medido na própria máquina, em CPU.
+O artigo distingue o benchmark histórico em CPU da execução de conferência de streaming, com primeira chamada e modelo aquecido.
 
 ---
 
@@ -118,7 +118,7 @@ jupyter notebook notebooks/llms_locais_ollama.ipynb
 
 1. Como subir um servidor de modelos local com Docker e volume persistente.
 2. Como medir TTFT, latência total e vazão de tokens de modelos locais sem SDK.
-3. Como forçar saída JSON com `format: "json"` e medir a taxa de acerto de um planner.
+3. Como solicitar JSON com `format: "json"` e medir a taxa de acerto de um planner.
 4. Como rodar retrieval semântico na mesma instância que serve o chat.
 5. Como transformar a escolha de modelo em decisão baseada em artefatos, e não em opinião.
 
@@ -126,11 +126,11 @@ jupyter notebook notebooks/llms_locais_ollama.ipynb
 
 ### Artefatos gerados
 
-Ao executar o laboratório, você terá:
+O laboratório grava na pasta `data/` do módulo. Para preservar a rodada versionada, rode em uma cópia de trabalho. Os arquivos são:
 
 - `data/benchmark_resultados.csv` - linha a linha de cada chamada medida
 - `data/benchmark_resumo.csv` - consolidação por modelo, ordenada por vazão
-- `data/structured_output.csv` - taxa de JSON válido e tool correta por modelo
+- `data/structured_output.csv` - taxa de objetos lidos com os campos exigidos e ferramentas corretas por modelo
 - `data/embedding_routes.csv` - retrieval top-1 de cada consulta de teste
 - `data/embedding_summary.csv` - latência e dimensão dos embeddings locais
 - `data/benchmark_relatorio.md` - relatório pronto para leitura
@@ -139,9 +139,10 @@ Ao executar o laboratório, você terá:
 
 ---
 
-### Versão para LinkedIn
+### Versões para LinkedIn
 
-- `article/ARTICLE_LINKEDIN.md` - post pronto para publicar, dentro do limite de caracteres do LinkedIn (3.000).
+- [Artigo para LinkedIn](article/ARTICLE_LINKEDIN.md)
+- [Post para o feed](article/POST_LINKEDIN.md)
 
 ---
 

@@ -14,10 +14,10 @@
 Este módulo prova como validar sintaxe e contrato das respostas sem confundir isso com correção de negócio, comparando três níveis de contrato em modelos compactos (`qwen2.5:0.5b`, `qwen2.5:1.5b` e `llama3.2:1b`):
 
 - **Modo Livre (Prompt Only):** apenas pede JSON no prompt textual (fragilidade de parse e fences).
-- **Modo JSON (`format: "json"`):** garante sintaxe parseável, mas campos e enums permanecem desgovernados.
-- **Modo Schema (`format: <json_schema>`):** impõe contrato estrito via decodificação constrangida (Grammar-Guided Sampling com máscara de logits).
-- **Baseline não generativa:** roteador por embeddings `nomic-embed-text`; não executa Jev, Laya ou Kev e não oferece probabilidades calibradas.
-- **Análise de Latência e Retry:** demonstra empiricamente por que retries via prompt duplicam o tempo de resposta, enquanto contratos formais resolvem na largada.
+- **Modo JSON (`format: "json"`):** pede que o motor restrinja a sintaxe. O consumidor ainda valida parse, campos e valores.
+- **Modo Schema (`format: <json_schema>`):** envia o esquema para restringir a geração e executa uma validação de contrato no consumidor.
+- **Baseline não generativa:** roteador por similaridade de embeddings com `nomic-embed-text` e três rótulos fixos.
+- **Análise de Latência e Retry:** soma o tempo de até duas tentativas por caso e distingue falhas de formato das de negócio.
 
 Tudo testado e medido em CPU local via Ollama.
 
@@ -63,6 +63,7 @@ Tudo testado e medido em CPU local via Ollama.
    docker exec pathbit-ollama ollama pull qwen2.5:0.5b
    docker exec pathbit-ollama ollama pull qwen2.5:1.5b
    docker exec pathbit-ollama ollama pull llama3.2:1b
+   docker exec pathbit-ollama ollama pull nomic-embed-text
    ```
 
 3. **Ambiente Virtual Python:**
@@ -104,7 +105,7 @@ python src/main.py
 
 ### Artefatos gerados
 
-Ao executar o laboratório, você terá:
+O laboratório grava na pasta `data/` do módulo. Para comparar com o histórico sem sobrescrevê-lo, rode em uma cópia de trabalho. Os arquivos são:
 
 - `data/structured_resultados.csv` - linha a linha de cada chamada medida (parse, validação de schema, assertividade semântica, latência e tokens)
 - `data/structured_resumo.csv` - consolidação por nível de contrato (Livre, JSON, Schema)
@@ -117,8 +118,8 @@ Ao executar o laboratório, você terá:
 
 ### Versão para LinkedIn
 
-- `article/ARTICLE_LINKEDIN.md` - artigo para LinkedIn Pulse com análise aprofundada.
-- `article/POST_LINKEDIN.md` - post conciso pronto para publicar no feed do LinkedIn.
+- [Artigo para LinkedIn](article/ARTICLE_LINKEDIN.md)
+- [Post para o feed](article/POST_LINKEDIN.md)
 
 ---
 
@@ -133,6 +134,6 @@ Ao executar o laboratório, você terá:
 
 ### Licença e Créditos
 
-Desenvolvido com dedicação pela equipe de engenharia da **[Pathbit](https://pathbit.com)**.
+Desenvolvido com dedicação pela equipe de engenharia da **[Pathbit](https://www.pathbit.com.br/)**.
 Código e artigos distribuídos sob a licença MIT.
 

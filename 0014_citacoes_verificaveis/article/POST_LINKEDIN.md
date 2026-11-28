@@ -1,7 +1,13 @@
-Uma citação verdadeira pode sustentar a afirmação errada
+A fonte existe. O trecho foi copiado corretamente. O prazo foi inventado.
 
-No laboratório, uma promessa de estorno em cinco minutos passa quando cita uma frase real sobre onde pedir. Execute `--case unsupported-claim` e veja por que procedência e suporte semântico precisam de verificações próprias.
+No laboratório da Academy IA, a frase “Todo estorno é concluído em cinco minutos” vem acompanhada de uma citação que só diz onde solicitar o estorno. O verificador confirma a localização do trecho. Para saber se ele sustenta o prazo, precisamos avaliar outra coisa.
 
-[Artigo e laboratório](https://github.com/pathbit/pathbit-academy-ai/tree/master/0014_citacoes_verificaveis)
+O laboratório mostra quatro resultados locais, incluindo o que passa no teste literal apesar de acrescentar um fato. Também dá para repetir a verificação com o contexto selecionado no módulo anterior.
 
-#RAG #AvaliacaoDeIA #PathbitAcademy
+📎 Exemplos, código e notebook
+
+https://github.com/pathbit/pathbit-academy-ai/tree/master/0014_citacoes_verificaveis
+
+![Um trecho autêntico, um prazo sem fonte](../assets/03.png)
+
+#RAG #Citações #AvaliaçãoDeIA #PathbitAcademy

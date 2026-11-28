@@ -16,4 +16,6 @@ O laboratório prático em Python com ChromaDB, Sentence-BERT e modelos da Groq 
 Repositório no GitHub: https://github.com/pathbit/pathbit-academy-ai
 Módulo: 0003_rag_vector_database
 
+![Fluxo de recuperação e geração em RAG](../assets/02.png)
+
 #InteligenciaArtificial #RAG #VectorDatabase #ChromaDB #Embeddings #Python #EngenhariaDeSoftware #PathbitAcademy

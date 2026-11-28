@@ -1,7 +1,15 @@
-O agente pode propor um chamado. Quem autoriza a criação?
+O agente abriu um chamado. A conexão caiu antes de devolver o número.
 
-Rode uma execução pendente, uma aprovada e uma repetida. Observe `estado` e `chamado` em cada saída. A aprovação explica por que a execução pode acontecer. A chave do pedido explica por que ela não cria outra linha.
+Quando a aplicação tenta de novo, quantos chamados aparecem no banco?
 
-[Artigo e laboratório](https://github.com/pathbit/pathbit-academy-ai/tree/master/0011_aprovacao_idempotencia)
+No laboratório 0011 da Academy IA, aprovei uma proposta e iniciei dois executores locais para a mesma chave. Os dois devolveram o mesmo chamado. Uma consulta ao SQLite mostrou uma linha.
 
-#AgentesDeIA #SQLite #Idempotência
+O exercício também mostra a execução bloqueada antes da aprovação e o conflito ao tentar mudar a prioridade sob o mesmo ID. Dá para repetir com Python e um arquivo temporário.
+
+📎 Laboratório, notebook e fluxo passo a passo
+
+https://github.com/pathbit/pathbit-academy-ai/tree/master/0011_aprovacao_idempotencia
+
+![Dois processos, uma linha em SQLite](../assets/04.png)
+
+#AgentesIA #ToolCalling #SQLite #PathbitAcademy

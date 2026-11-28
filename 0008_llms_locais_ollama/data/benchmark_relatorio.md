@@ -12,7 +12,7 @@
 | qwen2.5:1.5b | 81.3 | 320.0 | 106.1 | 21.2 | 12 |
 | llama3.2:1b | 47.5 | 436.1 | 89.0 | 33.3 | 12 |
 
-## Saida estruturada: JSON valido e tool correta
+## Saída estruturada • objeto com campos exigidos e ferramenta correta
 
 | modelo | tentativas | json_valido | json_valido_pct | tool_correta | tool_correta_pct |
 | --- | --- | --- | --- | --- | --- |
@@ -26,9 +26,9 @@
 | --- | --- | --- | --- | --- | --- |
 | nomic-embed-text | 768 | 8 | 1278.4 | 43.7 | 1.0 |
 
-## Interpretacao
+## Leitura dos resultados
 
-- TTFT e total medem a experiencia real de quem usa o sistema local.
-- Tokens/s mostra o tamanho pratico de resposta possivel dentro do SLA.
-- JSON valido e tool correta mostram se o modelo sustenta um planner de agente.
-- Retrieval top-1 prova que a mesma maquina resolve roteamento semantico sem nuvem.
+- O runner da época media o tempo até o primeiro texto e usava o total quando não havia texto visível.
+- A vazão usa contagem e duração da geração. A latência total inclui outras etapas.
+- `json_valido` registra objetos lidos com as chaves `tool` e `reason`. A ferramenta escolhida é avaliada em outra coluna.
+- A taxa top-1 representa quatro consultas de demonstração sobre oito documentos.

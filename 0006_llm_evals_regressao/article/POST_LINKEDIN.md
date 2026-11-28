@@ -1,19 +1,13 @@
-Avaliar modelos de linguagem no "olhômetro" é assumir incidentes silenciosos em produção.
+O mesmo modelo. Um prompt estruturado. Uma média melhor. Um passo errado no portal de faturas.
 
-Um prompt novo pode soar muito mais elegante em conversas triviais e, ao mesmo tempo, quebrar regras críticas em contratos financeiros ou políticas de reembolso. Se a sua esteira mede apenas médias gerais, você não tem um processo de engenharia, tem uma aposta.
+Nos dados do laboratório de LLM Evals da Academy IA, o Qwen estruturado sobe de 0,750 para 0,936 no escore médio ponderado, mas perde 0,198 pontos no caso de fatura. A resposta indica uma aba que não aparece no contexto.
 
-No módulo 0006 da Pathbit Academy, implementamos uma esteira completa de LLM Evals e testes de regressão automatizados em Python.
+O artigo abre as três métricas que compõem a nota, reconstrói a regra de escolha a partir dos CSVs e mostra onde a revisão humana faz diferença.
 
-Analisamos a metodologia sob o capô:
-- A avaliação de candidatos completos de implantação combinando modelos e prompts de forma atômica.
-- Um dataset estruturado com contextos, gabaritos de referência, palavras-chave mandatórias e pesos de criticidade por risco de negócio.
-- O cálculo da pontuação técnica integrando similaridade semântica por embeddings, retenção de termos essenciais e sobreposição lexical com o contexto (uma heurística, não prova factual).
-- A detecção determinística de regressões por cenário contra a baseline histórica.
-- Um gate automatizado de release que reprova deploys se houver qualquer regressão em casos de alta criticidade, mesmo que a média agregada tenha subido.
+📎 Artigo, código e notebook
 
-O laboratório prático em Python, com suíte completa de avaliação e relatórios em markdown, já está disponível no nosso repositório open-source.
+https://github.com/pathbit/pathbit-academy-ai/tree/master/0006_llm_evals_regressao
 
-Repositório no GitHub: https://github.com/pathbit/pathbit-academy-ai
-Módulo: 0006_llm_evals_regressao
+![Média sobe. A fatura piora.](../assets/06.png)
 
-#InteligenciaArtificial #LLMEvals #TestesDeRegressao #QA #DevOps #Python #EngenhariaDeSoftware #PathbitAcademy
+#LLMEvals #PromptEngineering #AvaliaçãoDeIA #PathbitAcademy
